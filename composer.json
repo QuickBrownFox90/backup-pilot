@@ -1,0 +1,35 @@
+{
+    "name": "backuppilot/backuppilot",
+    "description": "BackupPilot - WordPress Backup Plugin (fork of BackWPup)",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=8.1",
+        "aws/aws-sdk-php": "3.135.0",
+        "christian-riesen/base32": "1.3.2",
+        "guzzlehttp/guzzle": "7.8.2",
+        "guzzlehttp/promises": "1.5.3",
+        "guzzlehttp/psr7": "1.9.1",
+        "inpsyde/backwpup-shared": "dev-master",
+        "inpsyde/plugin-environment-checker": "dev-main",
+        "microsoft/azure-storage-blob": "1.5.4",
+        "microsoft/azure-storage-common": "1.5.2",
+        "mtdowling/jmespath.php": "2.9.1",
+        "phpseclib/phpseclib": "2.0.55",
+        "psr/http-client": "1.0.3",
+        "psr/http-message": "1.1",
+        "psr/log": "3.0.2",
+        "swiftmailer/swiftmailer": "5.4.12",
+        "symfony/deprecation-contracts": "3.5.1",
+        "symfony/options-resolver": "6.4.30",
+        "symfony/polyfill-intl-idn": "1.38.1",
+        "symfony/polyfill-intl-normalizer": "1.38.0",
+        "symfony/polyfill-mbstring": "1.38.2"
+    },
+    "config": {
+        "platform": {
+            "php": "8.1"
+        },
+        "sort-packages": true
+    }
+}
