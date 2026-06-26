@@ -1,5 +1,24 @@
 == Changelog ==
 
+= Version 1.0.1 =
+
+* Security: Escaped role slug and display name in the BackupPilot role dropdown on user profile pages (esc_attr/esc_html)
+* Security: Escaped log filename in the title attribute of the log list view action link (esc_attr)
+* Security: Admin notice messages passed through wp_kses_post() to prevent stored XSS via crafted notice content
+* Security: Job name is now escaped with esc_html() when written into the log file's HTML <title> to prevent stored XSS
+* Security: Added capability check (backuppilot_backups_download) and nonce verification to the backup file download AJAX handler before any output is sent, closing an auth bypass that allowed unauthenticated users to trigger downloads
+* Security: $_POST['anchor'] is now sanitized with sanitize_html_class() before being appended to the redirect URL, preventing potential header injection
+* Fixed: Fatal PHP error in cron log-compression routine when the log directory is unreadable — catch block incorrectly called a method on $job_object which is guaranteed non-object in that branch; now falls back to error_log()
+* Fixed: Null dereference when get_destination() returns null in the download handler; early return added
+* Fixed: Null dereference when deleting a backup with a malformed jobdest string containing no underscore; explode() now called with limit 2
+* Fixed: PHP 8 TypeError in bulk-delete action when $_GET['backupfiles'] is not an array; cast to array defensively
+* Fixed: PHP 8 undefined array key notice in save_post_form() when the page parameter is absent from $_POST
+* Fixed: PHP 8 TypeError in folder downloader destructor when file handles were never opened; fclose() calls now guarded with is_resource()
+* Fixed: Dead try/catch around fopen() in folder downloader replaced with an is_resource() check, matching the source_file_handler() pattern
+* Fixed: Log entries with identical modification timestamps silently overwrote each other in the log list; array key now includes the filename to guarantee uniqueness
+* Fixed: get_job() accessed a missing array key for deleted or non-existent job IDs, silently returning defaults instead of false
+* Fixed: file_download() ignored its validated $jobid parameter and re-read $_GET['jobid'] directly; now uses the passed value
+
 = Version 1.0.0 =
 Release Date: June 24, 2026
 

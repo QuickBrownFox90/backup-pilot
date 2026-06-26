@@ -114,6 +114,30 @@ define( 'WP_TEMP_DIR', '/absolute/path/to/your/temp-dir' );
 
 ## Changelog
 
+### 1.0.1
+
+**Security**
+- Escaped role slug and display name in the BackupPilot role dropdown on user profile pages (`esc_attr`/`esc_html`)
+- Escaped log filename in the title attribute of the log list view action link (`esc_attr`)
+- Admin notice messages are now passed through `wp_kses_post()` to prevent stored XSS via crafted notice content
+- Job name is now escaped with `esc_html()` when written into the log file's HTML `<title>` (stored XSS)
+- Added `current_user_can()` + nonce check to the backup file download AJAX handler before any output, closing an auth bypass
+- `$_POST['anchor']` is sanitized with `sanitize_html_class()` before being appended to the redirect URL (header injection)
+
+**Bug fixes**
+- Fatal error in cron log-compression when the log directory is unreadable — catch block called a method on a non-object; falls back to `error_log()` now
+- Null dereference when `get_destination()` returns `null` in the download handler; early return added
+- Null dereference when deleting a backup with a malformed destination string (no underscore); `explode()` now called with limit 2
+- PHP 8 `TypeError` in bulk-delete when `$_GET['backupfiles']` is not an array
+- PHP 8 `TypeError` in folder downloader destructor when file handles were never opened; `fclose()` calls now guarded with `is_resource()`
+- Dead `try/catch` around `fopen()` in folder downloader replaced with an `is_resource()` check
+- PHP 8 undefined key notice in `save_post_form()` when the `page` parameter is missing from `$_POST`
+- Log entries with identical modification timestamps silently overwrote each other; array key now includes the filename
+- `get_job()` silently returned defaults for deleted/non-existent job IDs instead of `false`
+- `file_download()` ignored its validated `$jobid` parameter and re-read `$_GET['jobid']` directly
+
+---
+
 ### 1.0.0 — 2026-06-24
 
 **Fork & rebrand**

@@ -356,11 +356,11 @@ final class BackupPilot_Page_Backups extends WP_List_Table {
 					return;
 				}
 
-				list( $jobid, $dest ) = explode( '_', $jobdest );
+				list( $jobid, $dest ) = explode( '_', $jobdest, 2 );
 				/** @var BackupPilot_Destinations $dest_class */
 				$dest_class = BackupPilot::get_destination( $dest );
 				$files = $dest_class->file_get_list( $jobdest );
-				foreach ( $_GET['backupfiles'] as $backupfile ) {
+				foreach ( (array) $_GET['backupfiles'] as $backupfile ) {
 					foreach ( $files as $file ) {
 						if ( is_array( $file ) && $file['file'] == $backupfile ) {
 							$dest_class->file_delete( $jobdest, $backupfile );

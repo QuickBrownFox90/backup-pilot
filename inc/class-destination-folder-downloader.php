@@ -46,8 +46,12 @@ final class BackupPilot_Destination_Folder_Downloader implements BackupPilot_Des
 	 */
 	public function __destruct() {
 
-		fclose( $this->local_file_handler );
-		fclose( $this->source_file_handler );
+		if ( is_resource( $this->local_file_handler ) ) {
+			fclose( $this->local_file_handler );
+		}
+		if ( is_resource( $this->source_file_handler ) ) {
+			fclose( $this->source_file_handler );
+		}
 	}
 
 	/**
@@ -131,16 +135,9 @@ final class BackupPilot_Destination_Folder_Downloader implements BackupPilot_Des
 			return;
 		}
 
-		try {
-			$this->local_file_handler = @fopen( $this->data->local_file_path(), 'wb' );
-		} catch ( \RuntimeException $exc ) {
+		$this->local_file_handler = @fopen( $this->data->local_file_path(), 'wb' );
+		if ( ! is_resource( $this->local_file_handler ) ) {
 			throw new \RuntimeException( __( 'File could not be opened for writing.', 'backuppilot' ) );
-		} catch ( \LogicException $exc ) {
-			throw new \RuntimeException( sprintf(
-			/* translators: $1 is the path of the local file where the backup will be stored */
-				__( '%s is a directory not a file.', 'backuppilot' ),
-				$this->data->local_file_path()
-			) );
 		}
 	}
 }

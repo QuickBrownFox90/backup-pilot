@@ -1,0 +1,39 @@
+# --- Builds ---
+build/
+bin/
+obj/
+Debug/
+Release/
+
+# --- IDE/Editor ---
+.vscode/
+.sublime/
+.idea/
+.settings/
+.project
+.cproject
+.claude
+*.suo
+*.user
+*.userosscache
+*.sln
+*.vcxproj
+*.swp
+
+# --- Misc ---
+*.log
+*.tmp
+*.dSYM/
+.tmp_versions/
+modules.order
+Module.symvers
+
+# --- Mac files ---
+.DS_Store
+.localized
+__MACOSX/
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.fuse_*

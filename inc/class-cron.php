@@ -102,8 +102,7 @@ class BackupPilot_Cron {
 					}
 				}
 			} catch ( UnexpectedValueException $e ) {
-				$job_object->log( sprintf( __( "Could not open path: %s", 'backuppilot' ), $e->getMessage() ),
-					E_USER_WARNING );
+				error_log( 'BackupPilot: Could not open log folder for compression: ' . $e->getMessage() );
 			}
 		}
 

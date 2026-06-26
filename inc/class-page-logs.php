@@ -73,7 +73,7 @@ class BackupPilot_Page_Logs extends WP_List_Table {
 			$dir = new BackupPilot_Directory( $this->log_folder );
 			foreach ( $dir as $file ) {
 				if ( $file->isFile() && $file->isReadable() && strpos( $file->getFilename(), 'backuppilot_log_' ) !== false && strpos( $file->getFilename(), '.html' ) !== false ) {
-					$logfiles[$file->getMTime()] = $file->getFilename();
+					$logfiles[ $file->getMTime() . '_' . $file->getFilename() ] = $file->getFilename();
 				}
 			}
 		}
@@ -224,7 +224,7 @@ class BackupPilot_Page_Logs extends WP_List_Table {
 		$log_name        = str_replace( array( '.html', '.gz' ), '', basename( $item['file'] ) );
 		$r               = "<strong><a class=\"thickbox\" href=\"" . admin_url( 'admin-ajax.php' ) . '?&action=backuppilot_view_log&log=' . $log_name . '&_ajax_nonce=' . wp_create_nonce( 'view-log_' . $log_name ) . "&amp;TB_iframe=true&amp;width=640&amp;height=440\" title=\"" . esc_attr( $item['file'] ) . "\n" . sprintf( __( 'Job ID: %d', 'backuppilot' ), $item['jobid'] ) . "\">" . esc_html( ! empty( $item['name'] ) ? $item['name'] : $item['file'] ) . "</a></strong>";
 		$actions         = array();
-		$actions['view'] = '<a class="thickbox" href="' . admin_url( 'admin-ajax.php' ) . '?&action=backuppilot_view_log&log=' . $log_name . '&_ajax_nonce=' . wp_create_nonce( 'view-log_' . $log_name ) . '&amp;TB_iframe=true&amp;width=640&amp;height=440" title="' . $item['file'] . '">' . __( 'View', 'backuppilot' ) . '</a>';
+		$actions['view'] = '<a class="thickbox" href="' . admin_url( 'admin-ajax.php' ) . '?&action=backuppilot_view_log&log=' . $log_name . '&_ajax_nonce=' . wp_create_nonce( 'view-log_' . $log_name ) . '&amp;TB_iframe=true&amp;width=640&amp;height=440" title="' . esc_attr( $item['file'] ) . '">' . __( 'View', 'backuppilot' ) . '</a>';
 		if ( current_user_can( 'backuppilot_logs_delete' ) ) {
 			$actions['delete'] = "<a class=\"submitdelete\" href=\"" . wp_nonce_url( network_admin_url( 'admin.php' ) . '?page=backuppilotlogs&action=delete&paged=' . $this->get_pagenum() . '&logfiles[]=' . $item['file'], 'bulk-logs' ) . "\" onclick=\"return showNotice.warn();\">" . __( 'Delete', 'backuppilot' ) . "</a>";
 		}

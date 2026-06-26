@@ -98,7 +98,7 @@ abstract class BackupPilot_Destinations {
 
 		$capability = 'backuppilot_backups_download';
 		$filename = untrailingslashit( BackupPilot::get_plugin_data( 'temp' ) ) . '/' . basename( $local_file_path ?: $file_path );
-		$job_id = filter_var( $_GET['jobid'], FILTER_SANITIZE_NUMBER_INT );
+		$job_id = (int) $jobid;
 
 		// Dynamically get downloader class
 		$class_name = get_class( $this );

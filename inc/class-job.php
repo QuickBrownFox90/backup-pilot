@@ -391,7 +391,7 @@ class BackupPilot_Job {
 		$head .= "<head>" . PHP_EOL;
 		$head .= "<meta charset=\"" . get_bloginfo( 'charset' ) . "\" />" . PHP_EOL;
 		$head .= "<title>" . sprintf( __( 'BackupPilot log for %1$s from %2$s at %3$s', 'backuppilot' ),
-				$this->job['name'],
+				esc_html( $this->job['name'] ),
 				date_i18n( get_option( 'date_format' ) ),
 				date_i18n( get_option( 'time_format' ) ) ) . "</title>" . PHP_EOL;
 		$head .= "<meta name=\"robots\" content=\"noindex, nofollow\" />" . PHP_EOL;

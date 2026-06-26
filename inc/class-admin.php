@@ -128,12 +128,12 @@ final class BackupPilot_Admin {
 
 		if ( ! empty( $saved_message['updated'] ) ) {
 			foreach ( $saved_message['updated'] as $msg ) {
-				$message_updated .= '<p>' . $msg . '</p>';
+				$message_updated .= '<p>' . wp_kses_post( $msg ) . '</p>';
 			}
 		}
 		if ( ! empty( $saved_message['error'] ) ) {
 			foreach ( $saved_message['error'] as $msg ) {
-				$message_error .= '<p>' . $msg . '</p>';
+				$message_error .= '<p>' . wp_kses_post( $msg ) . '</p>';
 			}
 		}
 
@@ -462,7 +462,7 @@ final class BackupPilot_Admin {
 			'backuppilotsettings',
 		);
 
-		if ( ! in_array( $_POST['page'], $allowed_pages, true ) ) {
+		if ( ! isset( $_POST['page'] ) || ! in_array( $_POST['page'], $allowed_pages, true ) ) {
 			wp_die( esc_html__( 'Cheating, huh?', 'backuppilot' ) );
 		}
 
@@ -474,8 +474,9 @@ final class BackupPilot_Admin {
 		}
 
 		//build query for redirect
-		if ( ! isset( $_POST['anchor'] ) ) {
-			$_POST['anchor'] = null;
+		$anchor = '';
+		if ( isset( $_POST['anchor'] ) && $_POST['anchor'] !== '' ) {
+			$anchor = '#' . sanitize_html_class( ltrim( wp_unslash( $_POST['anchor'] ), '#' ) );
 		}
 		$query_args = array();
 		if ( isset( $_POST['page'] ) ) {
@@ -502,7 +503,7 @@ final class BackupPilot_Admin {
 		}
 
 		//Back to topic
-		wp_safe_redirect( add_query_arg( $query_args, network_admin_url( 'admin.php' ) ) . $_POST['anchor'] );
+		wp_safe_redirect( add_query_arg( $query_args, network_admin_url( 'admin.php' ) ) . $anchor );
 		exit;
 	}
 
@@ -586,9 +587,9 @@ final class BackupPilot_Admin {
 								'backuppilot' ); ?></option>
 						<?php
 						foreach ( $backuppilot_roles as $role => $role_value ) {
-							echo '<option value="' . $role . '" ' . selected( $user->has_cap( $role ),
+							echo '<option value="' . esc_attr( $role ) . '" ' . selected( $user->has_cap( $role ),
 									true,
-									false ) . '>' . $role_value['name'] . '</option>';
+									false ) . '>' . esc_html( $role_value['name'] ) . '</option>';
 						}
 						?>
 					</select>

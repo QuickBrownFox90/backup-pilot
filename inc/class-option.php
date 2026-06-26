@@ -261,6 +261,10 @@ final class BackupPilot_Option {
 			);
 		}
 
+		if ( ! isset( $jobs_options[ $id ] ) ) {
+			return false;
+		}
+
 		$options = wp_parse_args( $jobs_options[ $id ], self::defaults_job() );
 
 		if ( isset( $options['archiveformat'] ) && $options['archiveformat'] === '.tar.bz2' ) {

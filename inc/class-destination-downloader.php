@@ -39,6 +39,11 @@ class BackupPilot_Destination_Downloader {
 	 */
 	public static function download_by_ajax() {
 
+		if ( ! current_user_can( self::CAPABILITY ) ) {
+			wp_die( -1, 403 );
+		}
+		check_ajax_referer( 'backuppilot_action_nonce', 'backuppilot_action_nonce' );
+
 		$dest = isset( $_GET['destination'] ) ? sanitize_text_field( wp_unslash( $_GET['destination'] ) ) : '';
 		if ( ! $dest ) {
 			return;
@@ -71,6 +76,9 @@ class BackupPilot_Destination_Downloader {
 
 		/** @var \BackupPilot_Destinations $dest_class */
 		$dest_class = BackupPilot::get_destination( $dest );
+		if ( ! $dest_class ) {
+			return;
+		}
 		$dest_class->file_download(
 			$job_id,
 			trim( sanitize_text_field( $file ) ),
