@@ -7,7 +7,7 @@ namespace QBF\BackupPilot\Settings;
  */
 interface SettingUpdatable {
 
-	public function update();
+    public function update();
 
-	public function reset();
+    public function reset();
 }

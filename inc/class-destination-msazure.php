@@ -17,102 +17,102 @@ class BackupPilot_Destination_MSAzure extends BackupPilot_Destinations {
     const NEWMSAZURECONTAINER = 'newmsazurecontainer';
 
     /**
-	 * @return array
-	 */
-	public function option_defaults() {
+     * @return array
+     */
+    public function option_defaults() {
 
-		return array( MsAzureDestinationConfiguration::MSAZURE_ACCNAME => '', MsAzureDestinationConfiguration::MSAZURE_KEY => '', MsAzureDestinationConfiguration::MSAZURE_CONTAINER => '', self::MSAZUREDIR => trailingslashit( sanitize_file_name( get_bloginfo( 'name' ) ) ), self::MSAZUREMAXBACKUPS => 15, self::MSAZURESYNCNODELETE => TRUE );
-	}
+        return [ MsAzureDestinationConfiguration::MSAZURE_ACCNAME => '', MsAzureDestinationConfiguration::MSAZURE_KEY => '', MsAzureDestinationConfiguration::MSAZURE_CONTAINER => '', self::MSAZUREDIR => trailingslashit( sanitize_file_name( get_bloginfo( 'name' ) ) ), self::MSAZUREMAXBACKUPS => 15, self::MSAZURESYNCNODELETE => TRUE ];
+    }
 
-	/**
-	 * @param $jobid
-	 */
-	public function edit_tab( $jobid ) {
-		?>
-		<h3 class="title"><?php esc_html_e( 'MS Azure access keys', 'backuppilot' ); ?></h3>
-		<p></p>
-		<table class="form-table">
-			<tr>
-				<th scope="row"><label for="msazureaccname"><?php esc_html_e( 'Account name', 'backuppilot' ); ?></label></th>
-				<td>
-					<input id="msazureaccname" name="msazureaccname" type="text"
-						   value="<?php echo esc_attr( BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_ACCNAME ) );?>" class="regular-text" autocomplete="off" />
-				</td>
-			</tr>
-			<tr>
-				<th scope="row"><label for="msazurekey"><?php esc_html_e( 'Access key', 'backuppilot' ); ?></label></th>
-				<td>
-					<input id="msazurekey" name="msazurekey" type="password"
-						   value="<?php echo esc_attr( BackupPilot_Encryption::decrypt( BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_KEY ) ) );?>" class="regular-text" autocomplete="off" />
-				</td>
-			</tr>
-		</table>
+    /**
+     * @param $jobid
+     */
+    public function edit_tab( $jobid ) {
+        ?>
+        <h3 class="title"><?php esc_html_e( 'MS Azure access keys', 'backuppilot' ); ?></h3>
+        <p></p>
+        <table class="form-table">
+            <tr>
+                <th scope="row"><label for="msazureaccname"><?php esc_html_e( 'Account name', 'backuppilot' ); ?></label></th>
+                <td>
+                    <input id="msazureaccname" name="msazureaccname" type="text"
+                           value="<?php echo esc_attr( BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_ACCNAME ) );?>" class="regular-text" autocomplete="off" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="msazurekey"><?php esc_html_e( 'Access key', 'backuppilot' ); ?></label></th>
+                <td>
+                    <input id="msazurekey" name="msazurekey" type="password"
+                           value="<?php echo esc_attr( BackupPilot_Encryption::decrypt( BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_KEY ) ) );?>" class="regular-text" autocomplete="off" />
+                </td>
+            </tr>
+        </table>
 
-		<h3 class="title"><?php esc_html_e( 'Blob container', 'backuppilot' ); ?></h3>
-		<p></p>
-		<table class="form-table">
-			<tr>
-				<th scope="row"><label for="msazurecontainerselected"><?php esc_html_e( 'Container selection', 'backuppilot' ); ?></label></th>
-				<td>
-					<input id="msazurecontainerselected" name="msazurecontainerselected" type="hidden" value="<?php echo esc_attr( BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_CONTAINER ) );?>" />
-					<?php if ( BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_ACCNAME ) && BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_KEY ) ) $this->edit_ajax( array(
-																																						 MsAzureDestinationConfiguration::MSAZURE_ACCNAME  => BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_ACCNAME ),
-																																						 MsAzureDestinationConfiguration::MSAZURE_KEY      => BackupPilot_Encryption::decrypt( BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_KEY ) ),
-																																						 'msazureselected' => BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_CONTAINER )
-																																					) ); ?>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row"><label for="newmsazurecontainer"><?php esc_html_e( 'Create a new container', 'backuppilot' ); ?></label></th>
-				<td>
-					<input id="newmsazurecontainer" name="newmsazurecontainer" type="text" value="" class="regular-text" autocomplete="off" />
-				</td>
-			</tr>
-		</table>
+        <h3 class="title"><?php esc_html_e( 'Blob container', 'backuppilot' ); ?></h3>
+        <p></p>
+        <table class="form-table">
+            <tr>
+                <th scope="row"><label for="msazurecontainerselected"><?php esc_html_e( 'Container selection', 'backuppilot' ); ?></label></th>
+                <td>
+                    <input id="msazurecontainerselected" name="msazurecontainerselected" type="hidden" value="<?php echo esc_attr( BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_CONTAINER ) );?>" />
+                    <?php if ( BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_ACCNAME ) && BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_KEY ) ) $this->edit_ajax( [
+                                                                                                                                                         MsAzureDestinationConfiguration::MSAZURE_ACCNAME  => BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_ACCNAME ),
+                                                                                                                                                         MsAzureDestinationConfiguration::MSAZURE_KEY      => BackupPilot_Encryption::decrypt( BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_KEY ) ),
+                                                                                                                                                         'msazureselected' => BackupPilot_Option::get( $jobid, MsAzureDestinationConfiguration::MSAZURE_CONTAINER )
+                                                                                                                                                    ] ); ?>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="newmsazurecontainer"><?php esc_html_e( 'Create a new container', 'backuppilot' ); ?></label></th>
+                <td>
+                    <input id="newmsazurecontainer" name="newmsazurecontainer" type="text" value="" class="regular-text" autocomplete="off" />
+                </td>
+            </tr>
+        </table>
 
-		<h3 class="title"><?php esc_html_e( 'Backup settings', 'backuppilot' ); ?></h3>
-		<p></p>
-		<table class="form-table">
-			<tr>
-				<th scope="row"><label for="idmsazuredir"><?php esc_html_e( 'Folder in container', 'backuppilot' ); ?></label></th>
-				<td>
-					<input id="idmsazuredir" name="msazuredir" type="text" value="<?php echo esc_attr( BackupPilot_Option::get( $jobid,
+        <h3 class="title"><?php esc_html_e( 'Backup settings', 'backuppilot' ); ?></h3>
+        <p></p>
+        <table class="form-table">
+            <tr>
+                <th scope="row"><label for="idmsazuredir"><?php esc_html_e( 'Folder in container', 'backuppilot' ); ?></label></th>
+                <td>
+                    <input id="idmsazuredir" name="msazuredir" type="text" value="<?php echo esc_attr( BackupPilot_Option::get( $jobid,
                         self::MSAZUREDIR
                     ) ); ?>" class="regular-text" />
-				</td>
-			</tr>
-			<tr>
-				<th scope="row"><?php esc_html_e( 'File deletion', 'backuppilot' ); ?></th>
-				<td>
-					<?php
-					if ( BackupPilot_Option::get( $jobid, 'backuptype' ) === 'archive' ) {
-						?>
-						<label for="idmsazuremaxbackups">
-							<input id="idmsazuremaxbackups" name="msazuremaxbackups" type="number" min="0" step="1" value="<?php echo esc_attr( BackupPilot_Option::get( $jobid,
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php esc_html_e( 'File deletion', 'backuppilot' ); ?></th>
+                <td>
+                    <?php
+                    if ( BackupPilot_Option::get( $jobid, 'backuptype' ) === 'archive' ) {
+                        ?>
+                        <label for="idmsazuremaxbackups">
+                            <input id="idmsazuremaxbackups" name="msazuremaxbackups" type="number" min="0" step="1" value="<?php echo esc_attr( BackupPilot_Option::get( $jobid,
                                 self::MSAZUREMAXBACKUPS
                             ) ); ?>" class="small-text" />
-							&nbsp;<?php esc_html_e( 'Number of files to keep in folder.', 'backuppilot' ); ?>
-						</label>
-						<p><?php _e( '<strong>Warning</strong>: Files belonging to this job are now tracked. Old backup archives which are untracked will not be automatically deleted.', 'backuppilot' ) ?></p>
-					<?php } else { ?>
-						<label for="idmsazuresyncnodelete">
-							<input class="checkbox" value="1" type="checkbox" <?php checked( BackupPilot_Option::get( $jobid,
+                            &nbsp;<?php esc_html_e( 'Number of files to keep in folder.', 'backuppilot' ); ?>
+                        </label>
+                        <p><?php _e( '<strong>Warning</strong>: Files belonging to this job are now tracked. Old backup archives which are untracked will not be automatically deleted.', 'backuppilot' ); ?></p>
+                    <?php } else { ?>
+                        <label for="idmsazuresyncnodelete">
+                            <input class="checkbox" value="1" type="checkbox" <?php checked( BackupPilot_Option::get( $jobid,
                                 self::MSAZURESYNCNODELETE
                             ), true ); ?> name="msazuresyncnodelete" id="idmsazuresyncnodelete" />
-							&nbsp;<?php esc_html_e( 'Do not delete files while syncing to destination!', 'backuppilot' ); ?>
-						</label>
-					<?php } ?>
-				</td>
-			</tr>
-		</table>
-		<?php
-	}
+                            &nbsp;<?php esc_html_e( 'Do not delete files while syncing to destination!', 'backuppilot' ); ?>
+                        </label>
+                    <?php } ?>
+                </td>
+            </tr>
+        </table>
+        <?php
+    }
 
     /**
      * @param int $jobid
      * @return void
      */
-	public function edit_form_post_save( $jobid ) {
+    public function edit_form_post_save( $jobid ) {
 
         try {
             $msazureConfiguration = $this->msazureConfiguration();
@@ -158,7 +158,7 @@ class BackupPilot_Destination_MSAzure extends BackupPilot_Destinations {
             : '';
 
         if ($newmsazurecontainer) {
-			try {
+            try {
                 $this->createContainer(
                     $newmsazurecontainer,
                     $msazureConfiguration
@@ -171,9 +171,9 @@ class BackupPilot_Destination_MSAzure extends BackupPilot_Destinations {
                     )
                 );
             } catch ( Exception $e ) {
-				BackupPilot_Admin::message( sprintf( __( 'MS Azure container create: %s', 'backuppilot' ), $e->getMessage() ), TRUE );
-			    return;
-			}
+                BackupPilot_Admin::message( sprintf( __( 'MS Azure container create: %s', 'backuppilot' ), $e->getMessage() ), TRUE );
+                return;
+            }
 
             BackupPilot_Option::update(
                 $jobid,
@@ -181,21 +181,21 @@ class BackupPilot_Destination_MSAzure extends BackupPilot_Destinations {
                 sanitize_text_field($newmsazurecontainer)
             );
         }
-	}
+    }
 
-	/**
-	 * @param $jobdest
-	 * @param $backupfile
-	 */
-	public function file_delete( $jobdest, $backupfile ) {
+    /**
+     * @param $jobdest
+     * @param $backupfile
+     */
+    public function file_delete( $jobdest, $backupfile ) {
 
-		$files = get_site_transient( 'backuppilot_'. strtolower( $jobdest ) );
-		list( $jobid, $dest ) = explode( '_', $jobdest );
+        $files = get_site_transient( 'backuppilot_'. strtolower( $jobdest ) );
+        list( $jobid, $dest ) = explode( '_', $jobdest );
 
         if (BackupPilot_Option::get($jobid, MsAzureDestinationConfiguration::MSAZURE_ACCNAME)
             && BackupPilot_Option::get($jobid, MsAzureDestinationConfiguration::MSAZURE_KEY)
             && BackupPilot_Option::get($jobid, MsAzureDestinationConfiguration::MSAZURE_CONTAINER)) {
-			try {
+            try {
                 $blobClient = $this->createBlobClient(
                     BackupPilot_Option::get($jobid, MsAzureDestinationConfiguration::MSAZURE_ACCNAME),
                     BackupPilot_Encryption::decrypt(
@@ -213,86 +213,88 @@ class BackupPilot_Destination_MSAzure extends BackupPilot_Destinations {
                 );
 
                 //update file list
-				foreach ( $files as $key => $file ) {
-					if ( is_array( $file ) && $file[ 'file' ] == $backupfile )
-						unset( $files[ $key ] );
-				}
-			}
-			catch ( Exception $e ) {
-				BackupPilot_Admin::message( 'MS AZURE: ' . $e->getMessage(), TRUE );
-			}
-		}
+                foreach ( $files as $key => $file ) {
+                    if ( is_array( $file ) && $file[ 'file' ] == $backupfile )
+                        unset( $files[ $key ] );
+                }
+            }
+            catch ( Exception $e ) {
+                BackupPilot_Admin::message( 'MS AZURE: ' . $e->getMessage(), TRUE );
+            }
+        }
 
-		set_site_transient( 'backuppilot_' . strtolower( $jobdest ), $files, YEAR_IN_SECONDS );
-	}
+        set_site_transient( 'backuppilot_' . strtolower( $jobdest ), $files, YEAR_IN_SECONDS );
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function file_get_list( $jobdest ) {
+    /**
+     * @inheritdoc
+     */
+    public function file_get_list( $jobdest ) {
 
-		$list = (array) get_site_transient( 'backuppilot_' . strtolower( $jobdest ) );
-		$list = array_filter( $list );
+        $list = (array) get_site_transient( 'backuppilot_' . strtolower( $jobdest ) );
+        $list = array_filter( $list );
 
-		return $list;
-	}
+        return $list;
+    }
 
-	/**
-	 * @param $job_object
-	 * @return bool
-	 */
-	public function job_run_archive( BackupPilot_Job $job_object ) {
+    /**
+     * @param $job_object
+     * @return bool
+     */
+    public function job_run_archive( BackupPilot_Job $job_object ) {
 
-		$job_object->substeps_todo = $job_object->backup_filesize + 2;
+        $job_object->substeps_todo = $job_object->backup_filesize + 2;
 
-		if ( $job_object->steps_data[ $job_object->step_working ]['SAVE_STEP_TRY'] != $job_object->steps_data[ $job_object->step_working ][ 'STEP_TRY' ] )
-			$job_object->log( sprintf( __( '%d. Try sending backup to a Microsoft Azure (Blob)&#160;&hellip;', 'backuppilot' ), $job_object->steps_data[ $job_object->step_working ][ 'STEP_TRY' ] ), E_USER_NOTICE );
+        if ( $job_object->steps_data[ $job_object->step_working ]['SAVE_STEP_TRY'] != $job_object->steps_data[ $job_object->step_working ][ 'STEP_TRY' ] )
+            $job_object->log( sprintf( __( '%d. Try sending backup to a Microsoft Azure (Blob)&#160;&hellip;', 'backuppilot' ), $job_object->steps_data[ $job_object->step_working ][ 'STEP_TRY' ] ), E_USER_NOTICE );
 
-		try {
+        try {
             $blobRestProxy = $this->createBlobClient(
                 $job_object->job[MsAzureDestinationConfiguration::MSAZURE_ACCNAME],
                 BackupPilot_Encryption::decrypt($job_object->job[MsAzureDestinationConfiguration::MSAZURE_KEY])
             );
 
-			if ( $job_object->steps_data[ $job_object->step_working ]['SAVE_STEP_TRY'] != $job_object->steps_data[ $job_object->step_working ][ 'STEP_TRY' ] ) {
+            if ( $job_object->steps_data[ $job_object->step_working ]['SAVE_STEP_TRY'] != $job_object->steps_data[ $job_object->step_working ][ 'STEP_TRY' ] ) {
 
-				//test vor existing container
+                //test vor existing container
                 $containers = $this->getContainers($blobRestProxy);
 
-				$job_object->steps_data[ $job_object->step_working ][ 'container_url' ] = '';
-				foreach( $containers as $container ) {
-					if ( $container->getName() == $job_object->job[ MsAzureDestinationConfiguration::MSAZURE_CONTAINER ] ) {
-						$job_object->steps_data[ $job_object->step_working ][ 'container_url' ] = $container->getUrl();
-						break;
-					}
-				}
+                $job_object->steps_data[ $job_object->step_working ][ 'container_url' ] = '';
+                foreach( $containers as $container ) {
+                    if ( $container->getName() == $job_object->job[ MsAzureDestinationConfiguration::MSAZURE_CONTAINER ] ) {
+                        $job_object->steps_data[ $job_object->step_working ][ 'container_url' ] = $container->getUrl();
+                        break;
+                    }
+                }
 
-				if ( ! $job_object->steps_data[ $job_object->step_working ][ 'container_url' ] ) {
-					$job_object->log( sprintf( __( 'MS Azure container "%s" does not exist!', 'backuppilot'), $job_object->job[ MsAzureDestinationConfiguration::MSAZURE_CONTAINER ] ), E_USER_ERROR );
+                if ( ! $job_object->steps_data[ $job_object->step_working ][ 'container_url' ] ) {
+                    $job_object->log( sprintf( __( 'MS Azure container "%s" does not exist!', 'backuppilot'), $job_object->job[ MsAzureDestinationConfiguration::MSAZURE_CONTAINER ] ), E_USER_ERROR );
 
-					return TRUE;
-				} else {
-					$job_object->log( sprintf( __( 'Connected to MS Azure container "%s".', 'backuppilot'), $job_object->job[ MsAzureDestinationConfiguration::MSAZURE_CONTAINER ] ), E_USER_NOTICE );
-				}
+                    return TRUE;
+                }
 
-				$job_object->log( __( 'Starting upload to MS Azure&#160;&hellip;', 'backuppilot' ), E_USER_NOTICE );
-			}
+                else {
+                    $job_object->log( sprintf( __( 'Connected to MS Azure container "%s".', 'backuppilot'), $job_object->job[ MsAzureDestinationConfiguration::MSAZURE_CONTAINER ] ), E_USER_NOTICE );
+                }
 
-			//Prepare Upload
-			if ( $file_handel = fopen( $job_object->backup_folder . $job_object->backup_file, 'rb' ) ) {
-				fseek( $file_handel, $job_object->substeps_done );
+                $job_object->log( __( 'Starting upload to MS Azure&#160;&hellip;', 'backuppilot' ), E_USER_NOTICE );
+            }
 
-				if ( empty( $job_object->steps_data[ $job_object->step_working ][ 'BlockList' ] ) ) {
-					$job_object->steps_data[ $job_object->step_working ][ 'BlockList' ] = array();
-				}
+            //Prepare Upload
+            if ( $file_handel = fopen( $job_object->backup_folder . $job_object->backup_file, 'rb' ) ) {
+                fseek( $file_handel, $job_object->substeps_done );
 
-				while ( ! feof( $file_handel ) ) {
-					$data = fread( $file_handel, 1048576 * 4 ); //4MB
-					if ( strlen( $data ) == 0 ) {
-						continue;
-					}
-					$chunk_upload_start = microtime( TRUE );
-					$block_count = count( $job_object->steps_data[ $job_object->step_working ][ 'BlockList' ] ) + 1;
+                if ( empty( $job_object->steps_data[ $job_object->step_working ][ 'BlockList' ] ) ) {
+                    $job_object->steps_data[ $job_object->step_working ][ 'BlockList' ] = [];
+                }
+
+                while ( ! feof( $file_handel ) ) {
+                    $data = fread( $file_handel, 1048576 * 4 ); //4MB
+                    if ( strlen( $data ) == 0 ) {
+                        continue;
+                    }
+                    $chunk_upload_start = microtime( TRUE );
+                    $block_count = count( $job_object->steps_data[ $job_object->step_working ][ 'BlockList' ] ) + 1;
                     $block_id = base64_encode(str_pad($block_count, 6, "0", STR_PAD_LEFT));
 
                     $blobRestProxy->createBlobBlock(
@@ -302,53 +304,55 @@ class BackupPilot_Destination_MSAzure extends BackupPilot_Destinations {
                         $data
                     );
 
-					$job_object->steps_data[ $job_object->step_working ][ 'BlockList' ][] = $block_id;
-					$chunk_upload_time = microtime( TRUE ) - $chunk_upload_start;
-					$job_object->substeps_done = $job_object->substeps_done + strlen( $data );
-					$time_remaining = $job_object->do_restart_time();
-					if ( $time_remaining < $chunk_upload_time ) {
-						$job_object->do_restart_time( TRUE );
-					}
-					$job_object->update_working_data();
-				}
-				fclose( $file_handel );
-			} else {
-				$job_object->log( __( 'Can not open source file for transfer.', 'backuppilot' ), E_USER_ERROR );
-				return FALSE;
-			}
+                    $job_object->steps_data[ $job_object->step_working ][ 'BlockList' ][] = $block_id;
+                    $chunk_upload_time = microtime( TRUE ) - $chunk_upload_start;
+                    $job_object->substeps_done = $job_object->substeps_done + strlen( $data );
+                    $time_remaining = $job_object->do_restart_time();
+                    if ( $time_remaining < $chunk_upload_time ) {
+                        $job_object->do_restart_time( TRUE );
+                    }
+                    $job_object->update_working_data();
+                }
+                fclose( $file_handel );
+            }
+
+            else {
+                $job_object->log( __( 'Can not open source file for transfer.', 'backuppilot' ), E_USER_ERROR );
+                return FALSE;
+            }
 
             $blocklist = $this->createBlockList();
 
             foreach( $job_object->steps_data[ $job_object->step_working ][ 'BlockList' ] as $block_id ) {
-				$blocklist->addUncommittedEntry( $block_id );
-			}
-			unset( $job_object->steps_data[ $job_object->step_working ][ 'BlockList' ] );
+                $blocklist->addUncommittedEntry( $block_id );
+            }
+            unset( $job_object->steps_data[ $job_object->step_working ][ 'BlockList' ] );
 
-			//Commit Blocks
-			$blobRestProxy->commitBlobBlocks( $job_object->job[ MsAzureDestinationConfiguration::MSAZURE_CONTAINER ], $job_object->job[self::MSAZUREDIR] . $job_object->backup_file, $blocklist->getEntries() );
+            //Commit Blocks
+            $blobRestProxy->commitBlobBlocks( $job_object->job[ MsAzureDestinationConfiguration::MSAZURE_CONTAINER ], $job_object->job[self::MSAZUREDIR] . $job_object->backup_file, $blocklist->getEntries() );
 
-			$job_object->substeps_done ++;
-			$job_object->log( sprintf( __( 'Backup transferred to %s', 'backuppilot' ), $job_object->steps_data[ $job_object->step_working ][ 'container_url' ] . '/' . $job_object->job[self::MSAZUREDIR] . $job_object->backup_file ), E_USER_NOTICE );
-			if ( !empty( $job_object->job[ 'jobid' ] ) ) {
-				BackupPilot_Option::update( $job_object->job[ 'jobid' ] , 'lastbackupdownloadurl', network_admin_url( 'admin.php' ) . '?page=backuppilotbackups&action=downloadmsazure&file=' . $job_object->job[self::MSAZUREDIR] . $job_object->backup_file . '&jobid=' . $job_object->job[ 'jobid' ] );
-			}
-		}
-		catch ( Exception $e ) {
-			$job_object->log( E_USER_ERROR, sprintf( __( 'Microsoft Azure API: %s', 'backuppilot' ), $e->getMessage() ), $e->getFile(), $e->getLine() );
-			$job_object->substeps_done = 0;
-			unset( $job_object->steps_data[ $job_object->step_working ][ 'BlockList' ] );
-			if ( isset( $file_handel ) && is_resource( $file_handel ) )
-				fclose( $file_handel );
+            $job_object->substeps_done ++;
+            $job_object->log( sprintf( __( 'Backup transferred to %s', 'backuppilot' ), $job_object->steps_data[ $job_object->step_working ][ 'container_url' ] . '/' . $job_object->job[self::MSAZUREDIR] . $job_object->backup_file ), E_USER_NOTICE );
+            if ( !empty( $job_object->job[ 'jobid' ] ) ) {
+                BackupPilot_Option::update( $job_object->job[ 'jobid' ] , 'lastbackupdownloadurl', network_admin_url( 'admin.php' ) . '?page=backuppilotbackups&action=downloadmsazure&file=' . $job_object->job[self::MSAZUREDIR] . $job_object->backup_file . '&jobid=' . $job_object->job[ 'jobid' ] );
+            }
+        }
+        catch ( Exception $e ) {
+            $job_object->log( E_USER_ERROR, sprintf( __( 'Microsoft Azure API: %s', 'backuppilot' ), $e->getMessage() ), $e->getFile(), $e->getLine() );
+            $job_object->substeps_done = 0;
+            unset( $job_object->steps_data[ $job_object->step_working ][ 'BlockList' ] );
+            if ( isset( $file_handel ) && is_resource( $file_handel ) )
+                fclose( $file_handel );
 
-			return FALSE;
-		}
+            return FALSE;
+        }
 
 
-		try {
+        try {
 
-			$backupfilelist = array();
-			$filecounter    = 0;
-			$files          = array();
+            $backupfilelist = [];
+            $filecounter    = 0;
+            $files          = [];
 
             $blob_options = $this->createListBlobsOptions();
             $blob_options->setPrefix($job_object->job[self::MSAZUREDIR]);
@@ -359,108 +363,108 @@ class BackupPilot_Destination_MSAzure extends BackupPilot_Destinations {
                 $blob_options
             );
 
-			if ( is_array( $blobs ) ) {
-				foreach ( $blobs as $blob ) {
-					$file = basename( $blob->getName() );
-					if ( $this->is_backup_archive( $file ) && $this->is_backup_owned_by_job( $file, $job_object->job['jobid'] ) == true )
-						$backupfilelist[ $blob->getProperties()->getLastModified()->getTimestamp() ] = $file;
-					$files[ $filecounter ][ 'folder' ]      = $job_object->steps_data[ $job_object->step_working ][ 'container_url' ] . "/" . dirname( $blob->getName() ) . "/";
-					$files[ $filecounter ][ 'file' ]        = $blob->getName();
-					$files[ $filecounter ][ 'filename' ]    = basename( $blob->getName() );
-					$files[ $filecounter ][ 'downloadurl' ] = network_admin_url( 'admin.php' ) . '?page=backuppilotbackups&action=downloadmsazure&file=' . $blob->getName() . '&jobid=' . $job_object->job[ 'jobid' ];
-					$files[ $filecounter ][ 'filesize' ]    = $blob->getProperties()->getContentLength();
-					$files[ $filecounter ][ 'time' ]        = $blob->getProperties()->getLastModified()->getTimestamp()  + ( get_option( 'gmt_offset' ) * 3600 );
-					$filecounter ++;
-				}
-			}
-			// Delete old backups
-			if ( ! empty ($job_object->job[self::MSAZUREMAXBACKUPS] ) && $job_object->job[self::MSAZUREMAXBACKUPS] > 0 ) {
-				if ( count( $backupfilelist ) > $job_object->job[self::MSAZUREMAXBACKUPS] ) {
-					ksort( $backupfilelist );
-					$numdeltefiles = 0;
-					while ( $file = array_shift( $backupfilelist ) ) {
-						if ( count( $backupfilelist ) < $job_object->job[self::MSAZUREMAXBACKUPS] )
-							break;
-						$blobRestProxy->deleteBlob( $job_object->job[ MsAzureDestinationConfiguration::MSAZURE_CONTAINER ], $job_object->job[self::MSAZUREDIR] . $file );
-						foreach ( $files as $key => $filedata ) {
-							if ( $filedata[ 'file' ] == $job_object->job[self::MSAZUREDIR] . $file )
-								unset( $files[ $key ] );
-						}
-						$numdeltefiles ++;
-					}
-					if ( $numdeltefiles > 0 )
-						$job_object->log( sprintf( _n( 'One file deleted on Microsoft Azure container.', '%d files deleted on Microsoft Azure container.', $numdeltefiles, 'backuppilot' ), $numdeltefiles ), E_USER_NOTICE );
+            if ( is_array( $blobs ) ) {
+                foreach ( $blobs as $blob ) {
+                    $file = basename( $blob->getName() );
+                    if ( $this->is_backup_archive( $file ) && $this->is_backup_owned_by_job( $file, $job_object->job['jobid'] ) == true )
+                        $backupfilelist[ $blob->getProperties()->getLastModified()->getTimestamp() ] = $file;
+                    $files[ $filecounter ][ 'folder' ]      = $job_object->steps_data[ $job_object->step_working ][ 'container_url' ] . "/" . dirname( $blob->getName() ) . "/";
+                    $files[ $filecounter ][ 'file' ]        = $blob->getName();
+                    $files[ $filecounter ][ 'filename' ]    = basename( $blob->getName() );
+                    $files[ $filecounter ][ 'downloadurl' ] = network_admin_url( 'admin.php' ) . '?page=backuppilotbackups&action=downloadmsazure&file=' . $blob->getName() . '&jobid=' . $job_object->job[ 'jobid' ];
+                    $files[ $filecounter ][ 'filesize' ]    = $blob->getProperties()->getContentLength();
+                    $files[ $filecounter ][ 'time' ]        = $blob->getProperties()->getLastModified()->getTimestamp()  + ( get_option( 'gmt_offset' ) * 3600 );
+                    $filecounter ++;
+                }
+            }
+            // Delete old backups
+            if ( ! empty ($job_object->job[self::MSAZUREMAXBACKUPS] ) && $job_object->job[self::MSAZUREMAXBACKUPS] > 0 ) {
+                if ( count( $backupfilelist ) > $job_object->job[self::MSAZUREMAXBACKUPS] ) {
+                    ksort( $backupfilelist );
+                    $numdeltefiles = 0;
+                    while ( $file = array_shift( $backupfilelist ) ) {
+                        if ( count( $backupfilelist ) < $job_object->job[self::MSAZUREMAXBACKUPS] )
+                            break;
+                        $blobRestProxy->deleteBlob( $job_object->job[ MsAzureDestinationConfiguration::MSAZURE_CONTAINER ], $job_object->job[self::MSAZUREDIR] . $file );
+                        foreach ( $files as $key => $filedata ) {
+                            if ( $filedata[ 'file' ] == $job_object->job[self::MSAZUREDIR] . $file )
+                                unset( $files[ $key ] );
+                        }
+                        $numdeltefiles ++;
+                    }
+                    if ( $numdeltefiles > 0 )
+                        $job_object->log( sprintf( _n( 'One file deleted on Microsoft Azure container.', '%d files deleted on Microsoft Azure container.', $numdeltefiles, 'backuppilot' ), $numdeltefiles ), E_USER_NOTICE );
 
-				}
-			}
-			set_site_transient( 'backuppilot_' . $job_object->job[ 'jobid' ] . '_msazure', $files, YEAR_IN_SECONDS );
-		}
-		catch ( Exception $e ) {
-			$job_object->log( E_USER_ERROR, sprintf( __( 'Microsoft Azure API: %s', 'backuppilot' ), $e->getMessage() ), $e->getFile(), $e->getLine() );
+                }
+            }
+            set_site_transient( 'backuppilot_' . $job_object->job[ 'jobid' ] . '_msazure', $files, YEAR_IN_SECONDS );
+        }
+        catch ( Exception $e ) {
+            $job_object->log( E_USER_ERROR, sprintf( __( 'Microsoft Azure API: %s', 'backuppilot' ), $e->getMessage() ), $e->getFile(), $e->getLine() );
 
-			return FALSE;
-		}
+            return FALSE;
+        }
 
-		$job_object->substeps_done = $job_object->backup_filesize + 2;
+        $job_object->substeps_done = $job_object->backup_filesize + 2;
 
-		return TRUE;
-	}
+        return TRUE;
+    }
 
-	/**
-	 * @param $job_settings array
-	 * @return bool
-	 */
-	public function can_run( array $job_settings ) {
+    /**
+     * @param $job_settings array
+     * @return bool
+     */
+    public function can_run( array $job_settings ) {
 
-		if ( empty( $job_settings[ MsAzureDestinationConfiguration::MSAZURE_ACCNAME ] ) )
-			return FALSE;
+        if ( empty( $job_settings[ MsAzureDestinationConfiguration::MSAZURE_ACCNAME ] ) )
+            return FALSE;
 
-		if ( empty( $job_settings[ MsAzureDestinationConfiguration::MSAZURE_KEY ]) )
-			return FALSE;
+        if ( empty( $job_settings[ MsAzureDestinationConfiguration::MSAZURE_KEY ]) )
+            return FALSE;
 
-		if ( empty( $job_settings[ MsAzureDestinationConfiguration::MSAZURE_CONTAINER ] ) )
-			return FALSE;
+        if ( empty( $job_settings[ MsAzureDestinationConfiguration::MSAZURE_CONTAINER ] ) )
+            return FALSE;
 
-		return TRUE;
-	}
+        return TRUE;
+    }
 
-	public function edit_inline_js() {
-		?>
-		<script type="text/javascript">
-			jQuery(document).ready(function ($) {
-				function msazuregetcontainer() {
-					var data = {
-						action: 'backuppilot_dest_msazure',
-						msazureaccname: $('#msazureaccname').val(),
-						msazurekey: $('#msazurekey').val(),
-						msazureselected: $('#msazurecontainerselected').val(),
-						_ajax_nonce: $('#backuppilotajaxnonce').val()
-					};
-					$.post(ajaxurl, data, function (response) {
-						$('#msazurecontainererror').remove();
-						$('#msazurecontainer').remove();
-						$('#msazurecontainerselected').after(response);
-					});
-				}
+    public function edit_inline_js() {
+        ?>
+        <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+                function msazuregetcontainer() {
+                    var data = {
+                        action: 'backuppilot_dest_msazure',
+                        msazureaccname: $('#msazureaccname').val(),
+                        msazurekey: $('#msazurekey').val(),
+                        msazureselected: $('#msazurecontainerselected').val(),
+                        _ajax_nonce: $('#backuppilotajaxnonce').val()
+                    };
+                    $.post(ajaxurl, data, function (response) {
+                        $('#msazurecontainererror').remove();
+                        $('#msazurecontainer').remove();
+                        $('#msazurecontainerselected').after(response);
+                    });
+                }
 
-				$('#msazureaccname').backuppilotDelayKeyup(function () {
-					msazuregetcontainer();
-				});
-				$('#msazurekey').backuppilotDelayKeyup(function () {
-					msazuregetcontainer();
-				});
-			});
-		</script>
-	<?php
-	}
+                $('#msazureaccname').backuppilotDelayKeyup(function () {
+                    msazuregetcontainer();
+                });
+                $('#msazurekey').backuppilotDelayKeyup(function () {
+                    msazuregetcontainer();
+                });
+            });
+        </script>
+    <?php
+    }
 
-	/**
-	 * @param array $args
-	 */
-	public function edit_ajax( $args = array() ) {
+    /**
+     * @param array $args
+     */
+    public function edit_ajax( $args = [] ) {
 
-		$error = '';
-		$ajax = FALSE;
+        $error = '';
+        $ajax = FALSE;
 
         $msazureName = isset($_POST[MsAzureDestinationConfiguration::MSAZURE_ACCNAME])
             ? sanitize_text_field(wp_unslash($_POST[MsAzureDestinationConfiguration::MSAZURE_ACCNAME]))
@@ -481,45 +485,45 @@ class BackupPilot_Destination_MSAzure extends BackupPilot_Destinations {
             $args[MsAzureDestinationConfiguration::MSAZURE_KEY] = $msazureKey;
             $args['msazureselected'] = $msazureSelected;
             $ajax = true;
-		}
-		echo '<span id="msazurecontainererror" class="bwu-message-error">';
+        }
+        echo '<span id="msazurecontainererror" class="bwu-message-error">';
 
-		if ( ! empty( $args[ MsAzureDestinationConfiguration::MSAZURE_ACCNAME ] ) && ! empty( $args[ MsAzureDestinationConfiguration::MSAZURE_KEY ] ) ) {
-			try {
+        if ( ! empty( $args[ MsAzureDestinationConfiguration::MSAZURE_ACCNAME ] ) && ! empty( $args[ MsAzureDestinationConfiguration::MSAZURE_KEY ] ) ) {
+            try {
                 $blobClient = $this->createBlobClient(
                     $args[MsAzureDestinationConfiguration::MSAZURE_ACCNAME],
                     BackupPilot_Encryption::decrypt($args[MsAzureDestinationConfiguration::MSAZURE_KEY])
                 );
 
                 $containers = $blobClient->listContainers()->getContainers();
-			}
-			catch ( Exception $e ) {
-				$error = $e->getMessage();
-			}
-		}
+            }
+            catch ( Exception $e ) {
+                $error = $e->getMessage();
+            }
+        }
 
-		if ( empty( $args[ MsAzureDestinationConfiguration::MSAZURE_ACCNAME ] ) )
-			_e( 'Missing account name!', 'backuppilot' );
-		elseif ( empty( $args[ MsAzureDestinationConfiguration::MSAZURE_KEY ] ) )
-			_e( 'Missing access key!', 'backuppilot' );
-		elseif ( ! empty( $error ) )
-			echo esc_html( $error );
-		elseif ( empty( $containers ) )
-			_e( 'No container found!', 'backuppilot' );
-		echo '</span>';
+        if ( empty( $args[ MsAzureDestinationConfiguration::MSAZURE_ACCNAME ] ) )
+            _e( 'Missing account name!', 'backuppilot' );
+        elseif ( empty( $args[ MsAzureDestinationConfiguration::MSAZURE_KEY ] ) )
+            _e( 'Missing access key!', 'backuppilot' );
+        elseif ( ! empty( $error ) )
+            echo esc_html( $error );
+        elseif ( empty( $containers ) )
+            _e( 'No container found!', 'backuppilot' );
+        echo '</span>';
 
-		if ( !empty( $containers ) ) {
-			echo '<select name="msazurecontainer" id="msazurecontainer">';
-			foreach ( $containers as $container ) {
-				echo "<option " . selected( strtolower( $args[ 'msazureselected' ] ), strtolower( $container->getName() ), FALSE ) . ">" . esc_html( $container->getName() ) . "</option>";
-			}
-			echo '</select>';
-		}
-		if ( $ajax )
-			die();
-		else
-			return;
-	}
+        if ( !empty( $containers ) ) {
+            echo '<select name="msazurecontainer" id="msazurecontainer">';
+            foreach ( $containers as $container ) {
+                echo "<option " . selected( strtolower( $args[ 'msazureselected' ] ), strtolower( $container->getName() ), FALSE ) . ">" . esc_html( $container->getName() ) . "</option>";
+            }
+            echo '</select>';
+        }
+        if ( $ajax )
+            die();
+        else
+            return;
+    }
 
     /**
      * Creates the service used to access the blob.

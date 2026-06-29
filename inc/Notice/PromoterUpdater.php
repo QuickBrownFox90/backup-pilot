@@ -4,5 +4,5 @@ namespace QBF\BackupPilot\Notice;
 
 class PromoterUpdater {
 
-	public function update() {}
+    public function update() {}
 }

@@ -1,11 +1,11 @@
-# Translation of Plugins - BackWPup – WordPress Backup &amp; Restore Plugin - Stable (latest release) in German
-# This file is distributed under the same license as the Plugins - BackWPup – WordPress Backup &amp; Restore Plugin - Stable (latest release) package.
+# Translation of BackupPilot – WordPress Backup Plugin in German
+# This file is distributed under the same license as the BackupPilot plugin package.
 msgid ""
 msgstr ""
 "Project-Id-Version: Plugins - BackupPilot – WordPress Backup &amp; Restore "
 "Plugin - Stable (latest release)\n"
-"POT-Creation-Date: 2026-06-25 09:20+0200\n"
-"PO-Revision-Date: 2026-06-25 09:23+0200\n"
+"POT-Creation-Date: 2026-06-29 11:24+0200\n"
+"PO-Revision-Date: 2026-06-29 11:25+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -14,76 +14,85 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Poedit 3.2.2\n"
-"X-Poedit-KeywordsList: __;_e;_x;esc_html__;esc_html_e;_nx;_ex;esc_attr__\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_nx:1,2,4c;_ex:1,2c;esc_attr__;esc_attr_x:1,2c\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: backuppilot.php:290 inc/class-page-backups.php:218
+#: backuppilot.php:313 inc/class-page-backups.php:218
 msgid "Folder"
 msgstr "Ordner"
 
-#: backuppilot.php:291
+#: backuppilot.php:314
 msgid "Backup to Folder"
 msgstr "Backup in Verzeichnis"
 
-#: backuppilot.php:321
+#: backuppilot.php:329
+msgid "Email"
+msgstr "E-Mail"
+
+#: backuppilot.php:330
+msgid "Backup sent via email"
+msgstr "Backup per E-Mail versenden"
+
+#: backuppilot.php:345
 msgid "FTP"
 msgstr "FTP"
 
-#: backuppilot.php:322
+#: backuppilot.php:346
 msgid "Backup to FTP"
 msgstr "Backup zu FTP"
 
-#: backuppilot.php:336 inc/class-destination-dropbox.php:485
+#: backuppilot.php:361 inc/class-destination-dropbox.php:485
 msgid "Dropbox"
 msgstr "Dropbox"
 
-#: backuppilot.php:337 inc/class-page-about.php:496
+#: backuppilot.php:362 inc/class-page-about.php:496
 msgid "Backup to Dropbox"
 msgstr "Backup in die Dropbox"
 
-#: backuppilot.php:351 inc/class-destination-s3.php:45
+#: backuppilot.php:377 inc/class-destination-s3.php:45
 msgid "S3 Service"
 msgstr "S3 Service"
 
-#: backuppilot.php:352
+#: backuppilot.php:378
 msgid "Backup to an S3 Service"
 msgstr "Backup zu einem S3 Service"
 
-#: backuppilot.php:366
+#: backuppilot.php:393
 msgid "MS Azure"
 msgstr "MS Azure"
 
-#: backuppilot.php:367
+#: backuppilot.php:394
 msgid "Backup to Microsoft Azure (Blob)"
 msgstr "Backup zu Microsoft Azure (Blob)"
 
-#: backuppilot.php:381
+#: backuppilot.php:409
 msgid "SugarSync"
 msgstr "SugarSync"
 
-#: backuppilot.php:382 inc/class-page-about.php:511
+#: backuppilot.php:410 inc/class-page-about.php:511
 msgid "Backup to SugarSync"
 msgstr "Backup zu SugarSync"
 
-#: backuppilot.php:410
+#: backuppilot.php:439
 #, php-format
 msgid "PHP Version %1$s is to low, you need Version %2$s or above."
 msgstr ""
 "Du nutzt die veraltete PHP-Version %1$s. Es wird aber mindestens die Version "
 "%2$s benötigt."
 
-#: backuppilot.php:422
+#: backuppilot.php:456
 #, php-format
 msgid "Missing function \"%s\"."
 msgstr "Fehlende Funktion „%s“."
 
-#: backuppilot.php:435
+#: backuppilot.php:472
 #, php-format
 msgid "Missing class \"%s\"."
 msgstr "Fehlende Klasse „%s“."
 
-#: backuppilot.php:517
+#: backuppilot.php:554
 #, php-format
 msgid ""
 "BackupPilot requires PHP version %1$s with spl extension or greater and "
@@ -97,7 +106,7 @@ msgid "Invalid notice type specified"
 msgstr "Ungültige Kündigungsart angegeben"
 
 #: inc/Notice/NoticeView.php:60
-#, fuzzy, php-format
+#, php-format
 msgid "Method %1$s::%2$s() requires at least 1 argument; %3$d given"
 msgstr ""
 "Die Methode %1$s::%2$s() benötigt mindestens 1 Argument; es wurde %3$d "
@@ -153,16 +162,16 @@ msgstr "Über"
 msgid "Cheating, huh?"
 msgstr "Mogeln, wie?"
 
-#: inc/class-admin.php:533
+#: inc/class-admin.php:534
 #, php-format
 msgid "version %s"
 msgstr "Version %s"
 
-#: inc/class-admin.php:580
+#: inc/class-admin.php:581
 msgid "Add BackupPilot Role"
 msgstr "BackupPilot-Rolle hinzufügen"
 
-#: inc/class-admin.php:585
+#: inc/class-admin.php:586
 msgid "&mdash; No additional role for BackupPilot &mdash;"
 msgstr "&mdash; Keine zusätzliche BackupPilot-Rolle &mdash;"
 
@@ -190,10 +199,28 @@ msgstr "Jetzt starten"
 msgid "The file name of an archive cannot be empty."
 msgstr "Der Dateiname eines Archivs kann nicht leer sein."
 
+#: inc/class-create-archive.php:89
+#, php-format
+msgctxt "%s = Folder name"
+msgid "Folder %s for archive not found"
+msgstr "Verzeichnis %s für Archiv nicht gefunden"
+
 #: inc/class-create-archive.php:104 inc/class-create-archive.php:131
 #: inc/class-create-archive.php:175 inc/class-mysqldump.php:103
 msgid "Functions for gz compression not available"
 msgstr "Die Funktionen für die Gzip-Kompression sind nicht verfügbar"
+
+#: inc/class-create-archive.php:145
+#, php-format
+msgctxt "ZipArchive open() result"
+msgid "Cannot create zip archive: %d"
+msgstr "Die ZIP-Datei %d kann nicht erstellt werden"
+
+#: inc/class-create-archive.php:188
+#, php-format
+msgctxt "%s = file name"
+msgid "Method to archive file %s not detected"
+msgstr "Methode zum Archivieren der Datei %s nicht gefunden"
 
 #: inc/class-create-archive.php:195
 msgid "Cannot open archive file"
@@ -207,6 +234,12 @@ msgstr "Fehler beim Hinzufügen zum PclZip-Archive: %s"
 #: inc/class-create-archive.php:291
 msgid "File name cannot be empty."
 msgstr "Der Dateiname kann nicht leer sein."
+
+#: inc/class-create-archive.php:304
+#, php-format
+msgctxt "File to add to archive"
+msgid "File %s does not exist or is not readable"
+msgstr "Datei %s existiert nicht oder ist nicht lesbar"
 
 #: inc/class-create-archive.php:325 inc/class-create-archive.php:528
 msgid "This archive method can only add one file"
@@ -225,6 +258,18 @@ msgstr "„%s“ kann nicht zum ZIP-Archiv hinzugefügt werden!"
 #: inc/class-create-archive.php:494
 msgid "Folder name cannot be empty"
 msgstr "Der Verzeichnis-Name darf nicht leer sein"
+
+#: inc/class-create-archive.php:506
+#, php-format
+msgctxt "Folder path to add to archive"
+msgid "Folder %s does not exist or is not readable"
+msgstr "Verzeichnis „%s“ existiert nicht oder ist nicht lesbar"
+
+#: inc/class-create-archive.php:579
+#, php-format
+msgctxt "Text of ZipArchive status Message"
+msgid "ZipArchive returns status: %s"
+msgstr "Das ZIP-Archiv liefert den Status %s"
 
 #: inc/class-create-archive.php:627
 #, php-format
@@ -284,14 +329,7 @@ msgstr "Die Quelldatei %s kann nicht geöffnet werden."
 msgid "Aborted, because no progress for one hour!"
 msgstr "Abgebrochen, da es eine Stunde lang kein Fortschritt gab!"
 
-#: inc/class-cron.php:105 inc/class-destination-folder.php:233
-#: inc/class-job.php:1031 inc/class-job.php:1199 inc/class-job.php:1976
-#: inc/class-jobtype-file.php:476
-#, php-format
-msgid "Could not open path: %s"
-msgstr "Pfad %s konnte nicht geöffnet werden"
-
-#: inc/class-destination-downloader.php:154
+#: inc/class-destination-downloader.php:162
 msgid "Your download is being generated &hellip;"
 msgstr "Dein Download wird generiert &hellip;"
 
@@ -384,7 +422,7 @@ msgid "Could not write data to file."
 msgstr "Es konnten keine Daten in die Datei geschrieben werden."
 
 #: inc/class-destination-dropbox-downloader.php:104
-#: inc/class-destination-folder-downloader.php:137
+#: inc/class-destination-folder-downloader.php:140
 #: inc/class-destination-ftp-downloader.php:126
 #: inc/class-destination-msazure-downloader.php:100
 #: inc/class-destination-s3-downloader.php:104
@@ -450,10 +488,8 @@ msgid "Full Access to Dropbox"
 msgstr "Uneingeschränkter Zugang zur Dropbox"
 
 #: inc/class-destination-dropbox.php:170
-#, fuzzy
-#| msgid "Get Dropbox App auth code"
 msgid "Get full Dropbox auth code "
-msgstr "Auth-Code für Apps-Ordner in Dropbox anfordern"
+msgstr "Vollständigen Dropbox-Auth-Code anfordern"
 
 #: inc/class-destination-dropbox.php:172
 msgid ""
@@ -467,7 +503,7 @@ msgstr ""
 "JEGLICHE Dateien oder Ordner in deiner Dropbox von BackupPilot überschrieben "
 "oder gelöscht werden können."
 
-#: inc/class-destination-dropbox.php:181 inc/class-destination-folder.php:29
+#: inc/class-destination-dropbox.php:181 inc/class-destination-folder.php:28
 #: inc/class-destination-ftp.php:79 inc/class-destination-msazure.php:73
 #: inc/class-destination-sugarsync.php:81
 msgid "Backup settings"
@@ -477,18 +513,18 @@ msgstr "Backup-Einstellungen"
 msgid "Destination Folder"
 msgstr "Zielverzeichnis"
 
-#: inc/class-destination-dropbox.php:202 inc/class-destination-folder.php:45
+#: inc/class-destination-dropbox.php:202 inc/class-destination-folder.php:44
 #: inc/class-destination-ftp.php:92 inc/class-destination-sugarsync.php:91
 msgid "File Deletion"
 msgstr "Dateilöschung"
 
-#: inc/class-destination-dropbox.php:211 inc/class-destination-folder.php:60
+#: inc/class-destination-dropbox.php:211 inc/class-destination-folder.php:59
 #: inc/class-destination-ftp.php:101 inc/class-destination-msazure.php:94
 #: inc/class-destination-s3.php:363 inc/class-destination-sugarsync.php:98
 msgid "Number of files to keep in folder."
 msgstr "Anzahl der Dateien, die im Ordner verbleiben sollen."
 
-#: inc/class-destination-dropbox.php:214 inc/class-destination-folder.php:65
+#: inc/class-destination-dropbox.php:214 inc/class-destination-folder.php:64
 #: inc/class-destination-ftp.php:104 inc/class-destination-msazure.php:96
 #: inc/class-destination-s3.php:367 inc/class-destination-sugarsync.php:100
 msgid ""
@@ -499,7 +535,7 @@ msgstr ""
 "nachverfolgt. Ältere Sicherungsarchive, die nicht nachverfolgt werden, "
 "werden nicht automatisch gelöscht."
 
-#: inc/class-destination-dropbox.php:224 inc/class-destination-folder.php:82
+#: inc/class-destination-dropbox.php:224 inc/class-destination-folder.php:81
 #: inc/class-destination-ftp.php:116 inc/class-destination-msazure.php:102
 #: inc/class-destination-s3.php:379 inc/class-destination-sugarsync.php:104
 msgid "Do not delete files while syncing to destination!"
@@ -529,7 +565,7 @@ msgstr "Nicht mit Dropbox authentifiziert!"
 msgid "Uploading to Dropbox&#160;&hellip;"
 msgstr "Hochladen zur Dropbox hat begonnen&#160;&hellip;"
 
-#: inc/class-destination-dropbox.php:472 inc/class-destination-msazure.php:333
+#: inc/class-destination-dropbox.php:472 inc/class-destination-msazure.php:331
 #: inc/class-destination-sugarsync.php:263
 #, php-format
 msgid "Backup transferred to %s"
@@ -544,45 +580,41 @@ msgstr "Größe der lokalen und der hochgeladenen Datei ist nicht identisch."
 msgid "Error transfering backup to %s."
 msgstr "Fehler beim Übertragen des Backups zu %s."
 
-#: inc/class-destination-email.php:57
+#: inc/class-destination-email.php:26
 msgid "Email address"
 msgstr "E-Mail-Adresse"
 
-#: inc/class-destination-email.php:61
+#: inc/class-destination-email.php:30
 msgid "To email address (separate with commas for multiple addresses)"
 msgstr "An E-Mail-Adresse (bei mehreren Adressen durch Kommas trennen)"
 
-#: inc/class-destination-email.php:70 inc/class-destination-email.php:74
-#, fuzzy
-#| msgid "Email"
+#: inc/class-destination-email.php:39 inc/class-destination-email.php:43
 msgid "Send test email"
-msgstr "E-Mail"
+msgstr "Sende eine Test-E-Mail"
 
-#: inc/class-destination-email.php:79
-#, fuzzy
-#| msgid "Save settings"
+#: inc/class-destination-email.php:48
 msgid "Send email settings"
-msgstr "Einstellungen speichern"
+msgstr "Einstellungen für den E-Mail-Versand"
 
-#: inc/class-destination-email.php:83
+#: inc/class-destination-email.php:52
 msgid "Maximum file size"
 msgstr "Maximale Dateigröße"
 
-#: inc/class-destination-email.php:87
+#: inc/class-destination-email.php:56
 msgid "MB"
 msgstr "MB"
 
-#: inc/class-destination-email.php:90
+#: inc/class-destination-email.php:59
 msgid "Maximum file size to be included in an email. 0 = unlimited"
 msgstr ""
 "Maximale Dateigröße, die in einer E-Mail angehängt werden darf. 0 = "
 "unbegrenzt"
 
-#: inc/class-destination-email.php:93
+#: inc/class-destination-email.php:62
 msgid "Note"
 msgstr "Notiz"
 
-#: inc/class-destination-email.php:94
+#: inc/class-destination-email.php:63
 msgid ""
 "Every email provider has different allowed attachment file sizes. If the "
 "backup archive exceeds this limit, the email will not be sent."
@@ -590,124 +622,96 @@ msgstr ""
 "Jeder E-Mail-Anbieter hat andere zulässige Dateigrößen für Anhänge. Wenn das "
 "Sicherungsarchiv diese Grenze überschreitet, wird die E-Mail nicht versendet."
 
-#: inc/class-destination-email.php:97
+#: inc/class-destination-email.php:66
 msgid "The recommended value is 20 MB."
 msgstr "Der empfohlene Wert beträgt 20 MB."
 
-#: inc/class-destination-email.php:103
+#: inc/class-destination-email.php:72
 msgid "From email address"
 msgstr "\"Von\" E-Mail-Adresse"
 
-#: inc/class-destination-email.php:111
+#: inc/class-destination-email.php:80
 msgid "From name"
+msgstr "Absendername"
+
+#: inc/class-destination-email.php:89
+msgid "Mail delivery"
+msgstr "Mail-Versand"
+
+#: inc/class-destination-email.php:92
+msgid ""
+"Emails are sent via the WordPress mail system (wp_mail). To configure the "
+"mail server, SMTP credentials, or delivery provider, use a dedicated mail "
+"plugin such as WP Mail SMTP, FluentSMTP, or Post SMTP."
 msgstr ""
+"E-Mails werden über das WordPress-Mailsystem (wp_mail) versendet. Um den "
+"Mailserver, SMTP-Zugangsdaten oder den Versanddienstleister zu konfigurieren, "
+"verwende ein dediziertes Mail-Plugin, z. B. WP Mail SMTP, FluentSMTP oder Post SMTP."
 
-#: inc/class-destination-email.php:120
-#, fuzzy
-#| msgid "Authentication method"
-msgid "Sending method"
-msgstr "Authentifizierungsmethode"
-
-#: inc/class-destination-email.php:125
-#, fuzzy
-#| msgid "WordPress version"
-msgid "Use WordPress settings"
-msgstr "WordPress-Version"
-
-#: inc/class-destination-email.php:126
-msgid "PHP: mail()"
-msgstr ""
-
-#: inc/class-destination-email.php:127
-#, fuzzy
-#| msgid "Email"
-msgid "Sendmail"
-msgstr "E-Mail"
-
-#: inc/class-destination-email.php:128
-msgid "SMTP"
-msgstr ""
-
-#: inc/class-destination-email.php:136
-#, fuzzy
-#| msgid "Email"
-msgid "Sendmail path"
-msgstr "E-Mail"
-
-#: inc/class-destination-email.php:147
-msgid "SMTP host name"
-msgstr "SMTP-Hostname"
-
-#: inc/class-destination-email.php:152 inc/class-destination-ftp.php:53
-#, fuzzy
-#| msgid "Port"
-msgid "Port:"
-msgstr "Port"
-
-#: inc/class-destination-email.php:164
-msgid "SMTP secure connection"
-msgstr "Sichere SMTP-Verbindung"
-
-#: inc/class-destination-email.php:169 inc/class-jobtype-dbdump.php:97
-#: inc/class-jobtype-wpexp.php:71 inc/class-jobtype-wpplugin.php:51
-#: inc/class-page-backwpup.php:244 inc/class-page-backwpup.php:319
-#: inc/class-page-settings.php:961
-msgid "none"
-msgstr "keine"
-
-#: inc/class-destination-email.php:171
-msgid "SSL"
-msgstr "SSL"
-
-#: inc/class-destination-email.php:173
-msgid "TLS"
-msgstr "TLS"
-
-#: inc/class-destination-email.php:180
-msgid "SMTP username"
-msgstr "SMTP-Nutzername"
-
-#: inc/class-destination-email.php:190
-msgid "SMTP password"
-msgstr "SMTP-Passwort"
-
-#: inc/class-destination-email.php:271
+#: inc/class-destination-email.php:144
 #, php-format
 msgid "%d. Try to send backup with email&#160;&hellip;"
 msgstr "%d. Versuche, Backup als E-Mail zu senden&#160;&hellip;"
 
-#: inc/class-destination-email.php:276
-msgid "Backup archive too big to be sent by email!"
-msgstr "Die Sicherungsdatei ist zu groß für den Versand per E-Mail!"
+#: inc/class-destination-email.php:151
+#, php-format
+msgid ""
+"Backup archive too big to be sent by email (file: %1$s, limit: %2$s). "
+"Increase the maximum file size in the Email destination settings or choose a "
+"different destination for large backups."
+msgstr ""
+"Backup-Archiv zu groß für den E-Mail-Versand (Datei: %1$s, Limit: %2$s). "
+"Erhöhe das maximale Dateigrößen-Limit in den E-Mail-Einstellungen oder "
+"wähle ein anderes Backup-Ziel für große Backups."
 
-#: inc/class-destination-email.php:283
+#: inc/class-destination-email.php:163
 #, php-format
 msgid "Sending email to %s&hellip;"
 msgstr "Sende E-Mail an %s&hellip;"
 
-#: inc/class-destination-email.php:356
+#: inc/class-destination-email.php:166
+#, php-format
+msgid "Attaching file: %s"
+msgstr "Datei anhängen: %s"
+
+#: inc/class-destination-email.php:170
+#, php-format
+msgid "Backup archive not found or not readable: %s"
+msgstr "Backup-Archiv nicht gefunden oder nicht lesbar: %s"
+
+#: inc/class-destination-email.php:182
 #, php-format
 msgid "BackupPilot archive from %1$s: %2$s"
 msgstr "BackupPilot-Archiv vom %1$s: %2$s"
 
-#: inc/class-destination-email.php:359
+#: inc/class-destination-email.php:183
 #, php-format
 msgid "Backup archive: %s"
 msgstr "Sicherungsdatei: %s"
 
-#: inc/class-destination-email.php:372 inc/class-destination-email.php:495
-msgid "Error while sending email!"
-msgstr "Fehler beim Senden der E-Mail!"
+#: inc/class-destination-email.php:199 inc/class-destination-email.php:262
+msgid "Unknown error"
+msgstr "Unbekannter Fehler"
 
-#: inc/class-destination-email.php:377 inc/class-destination-email.php:497
+#: inc/class-destination-email.php:202
+#, php-format
+msgid ""
+"Error while sending email: %1$s — If you are using PHP's mail() function, "
+"your mail server may be rejecting the message (e.g. attachment too large for "
+"the MTA)."
+msgstr ""
+"Fehler beim Senden der E-Mail: %1$s — Wenn du PHPs mail()-Funktion verwendest, "
+"könnte dein Mailserver die Nachricht ablehnen (z. B. Anhang zu groß für den MTA)."
+
+#: inc/class-destination-email.php:212 inc/class-destination-email.php:269
 msgid "Email sent."
 msgstr "E-Mail gesendet."
 
-#: inc/class-destination-email.php:480
+#: inc/class-destination-email.php:247
 msgid "BackupPilot archive sending TEST Message"
 msgstr "BackupPilot-Archiv TEST-Nachricht senden"
 
-#: inc/class-destination-email.php:483
+#: inc/class-destination-email.php:248
 msgid ""
 "If this message reaches your inbox, sending backup archives via email should "
 "work for you."
@@ -715,28 +719,36 @@ msgstr ""
 "Wenn dich diese Nachricht erreicht, funktioniert das Senden der "
 "Sicherungsarchive per E-Mail."
 
-#: inc/class-destination-folder-downloader.php:64
+#: inc/class-destination-email.php:264
+#, php-format
+msgid ""
+"Error while sending email: %1$s — If you are using PHP's mail() function, "
+"your mail server may be rejecting the message."
+msgstr ""
+"Fehler beim Senden der E-Mail: %1$s — Wenn du PHPs mail()-Funktion verwendest, "
+"könnte dein Mailserver die Nachricht ablehnen."
+
+#: inc/class-destination-folder-downloader.php:68
 msgid "Could not read data from source file."
 msgstr "Daten konnten nicht aus der Quelldatei gelesen werden."
 
-#: inc/class-destination-folder-downloader.php:69
+#: inc/class-destination-folder-downloader.php:73
 msgid "Could not write data into target file."
 msgstr "Daten konnten nicht in die Zieldatei geschrieben werden."
 
-#: inc/class-destination-folder-downloader.php:96
+#: inc/class-destination-folder-downloader.php:100
 msgid "File could not be opened for reading."
 msgstr "Die Datei konnte nicht zum Lesen geöffnet werden."
 
-#: inc/class-destination-folder-downloader.php:141
-#, php-format
-msgid "%s is a directory not a file."
-msgstr "%s ist ein Verzeichnis, keine Datei."
-
-#: inc/class-destination-folder.php:33
-#, fuzzy
-#| msgid "Folder to store files in"
+#: inc/class-destination-folder.php:32
 msgid "Folder to store backups in"
-msgstr "Ordner für Dateien"
+msgstr "Backup-Ordner"
+
+#: inc/class-destination-folder.php:232 inc/class-job.php:1031
+#: inc/class-job.php:1199 inc/class-job.php:1976 inc/class-jobtype-file.php:476
+#, php-format
+msgid "Could not open path: %s"
+msgstr "Pfad %s konnte nicht geöffnet werden"
 
 #: inc/class-destination-ftp-downloader.php:108
 msgid "Cannot open FTP file for download."
@@ -749,6 +761,10 @@ msgstr "FTP-Server und Anmeldung"
 #: inc/class-destination-ftp.php:47
 msgid "FTP server"
 msgstr "FTP-Server"
+
+#: inc/class-destination-ftp.php:53
+msgid "Port:"
+msgstr "Port:"
 
 #: inc/class-destination-ftp.php:60
 msgid "Username"
@@ -767,10 +783,8 @@ msgid "FTP specific settings"
 msgstr "FTP spezifische Einstellungen"
 
 #: inc/class-destination-ftp.php:130
-#, fuzzy
-#| msgid "Test Connection"
 msgid "Timeout for FTP connection"
-msgstr "Verbindung testen"
+msgstr "Timeout für FTP-Verbindung"
 
 #: inc/class-destination-ftp.php:134 inc/class-page-logs.php:285
 msgid "seconds"
@@ -833,7 +847,7 @@ msgid "Cannot connect to FTP server: %s"
 msgstr "Kann nicht mit dem FTP-Server verbinden: %s"
 
 #: inc/class-destination-ftp.php:500 inc/class-destination-ftp.php:520
-#: inc/class-destination-ftp.php:543 inc/class-destination-ftp.php:600
+#: inc/class-destination-ftp.php:543 inc/class-destination-ftp.php:607
 #, php-format
 msgid "FTP client command: %s"
 msgstr "FTP-Client-Befehl: %s"
@@ -845,9 +859,9 @@ msgstr "Antwort des FTP-Servers: %s"
 
 #: inc/class-destination-ftp.php:517 inc/class-destination-ftp.php:528
 #: inc/class-destination-ftp.php:531 inc/class-destination-ftp.php:546
-#: inc/class-destination-ftp.php:549 inc/class-destination-ftp.php:604
-#: inc/class-destination-ftp.php:609 inc/class-destination-ftp.php:616
-#: inc/class-destination-ftp.php:621
+#: inc/class-destination-ftp.php:549 inc/class-destination-ftp.php:613
+#: inc/class-destination-ftp.php:620 inc/class-destination-ftp.php:630
+#: inc/class-destination-ftp.php:637
 #, php-format
 msgid "FTP server reply: %s"
 msgstr "Antwort des FTP-Servers: %s"
@@ -856,46 +870,46 @@ msgstr "Antwort des FTP-Servers: %s"
 msgid "Error getting SYSTYPE"
 msgstr "SYSTYPE kann nicht abgefragt werden"
 
-#: inc/class-destination-ftp.php:587
+#: inc/class-destination-ftp.php:594
 #, php-format
 msgid "FTP current folder is: %s"
 msgstr "Aktueller FTP-Ordner ist: %s"
 
-#: inc/class-destination-ftp.php:604
+#: inc/class-destination-ftp.php:613
 msgid "Entering passive mode"
 msgstr "Passivmodus gestartet"
 
-#: inc/class-destination-ftp.php:609
+#: inc/class-destination-ftp.php:620
 msgid "Cannot enter passive mode"
 msgstr "Starten des passiven Modus’ nicht möglich"
 
-#: inc/class-destination-ftp.php:616
+#: inc/class-destination-ftp.php:630
 msgid "Entering normal mode"
 msgstr "Starte Normalmodus"
 
-#: inc/class-destination-ftp.php:621
+#: inc/class-destination-ftp.php:637
 msgid "Cannot enter normal mode"
 msgstr "Normalmodus kann nicht gestartet werden"
 
-#: inc/class-destination-ftp.php:628
+#: inc/class-destination-ftp.php:645
 msgid "Starting upload to FTP &#160;&hellip;"
 msgstr "Hochladen ins FTP-Verzeichnis hat begonnen&#160;&hellip;"
 
-#: inc/class-destination-ftp.php:646
+#: inc/class-destination-ftp.php:668
 msgid "Cannot transfer backup to FTP server!"
 msgstr "Backup kann nicht zum FTP-Server übertragen werden!"
 
-#: inc/class-destination-ftp.php:653
+#: inc/class-destination-ftp.php:677
 #, php-format
 msgid "Backup transferred to FTP server: %s"
 msgstr "Sicherungsdatei wurde zum FTP-Server übertragen: %s"
 
-#: inc/class-destination-ftp.php:669 inc/class-destination-msazure.php:318
+#: inc/class-destination-ftp.php:696 inc/class-destination-msazure.php:316
 #: inc/class-destination-s3.php:888 inc/class-destination-s3.php:1019
 msgid "Can not open source file for transfer."
 msgstr "Kann die Quelldatei nicht für die Übertragung öffnen."
 
-#: inc/class-destination-ftp.php:732
+#: inc/class-destination-ftp.php:759
 #, php-format
 msgid ""
 "FTP Folder \"%s\" cannot be created! Parent directory may be not writable."
@@ -903,12 +917,12 @@ msgstr ""
 "FTP-Ordner \"%s\" kann nicht erstellt werden! Das Eltern-Verzeichnis könnte "
 "schreibgeschützt sein."
 
-#: inc/class-destination-ftp.php:749
+#: inc/class-destination-ftp.php:776
 #, php-format
 msgid "FTP Folder \"%s\" cannot be created!"
 msgstr "FTP-Verzeichnis „%s“ kann nicht erstellt werden!"
 
-#: inc/class-destination-ftp.php:761
+#: inc/class-destination-ftp.php:788
 #, php-format
 msgid "FTP Folder \"%s\" created!"
 msgstr "FTP-Verzeichnis „%s“ erstellt!"
@@ -924,8 +938,6 @@ msgid "Could not write data to file %s."
 msgstr "Daten konnten nicht in Datei %s geschrieben werden."
 
 #: inc/class-destination-msazure.php:32
-#, fuzzy
-#| msgid "MS Azure Access Keys"
 msgid "MS Azure access keys"
 msgstr "MS Azure-Zugriffsschlüssel"
 
@@ -950,10 +962,8 @@ msgid "Create a new container"
 msgstr "Neuen Container erstellen"
 
 #: inc/class-destination-msazure.php:77
-#, fuzzy
-#| msgid "Create a new container"
 msgid "Folder in container"
-msgstr "Neuen Container erstellen"
+msgstr "Ordner im Container"
 
 #: inc/class-destination-msazure.php:85 inc/class-destination-s3.php:349
 msgid "File deletion"
@@ -963,61 +973,59 @@ msgstr "Dateilöschung"
 msgid "Microsoft Azure Configuration: "
 msgstr "Microsoft Azure Einstellungen: "
 
-#: inc/class-destination-msazure.php:171
+#: inc/class-destination-msazure.php:169
 #, php-format
 msgid "MS Azure container \"%s\" created."
 msgstr "MS-Azure-Container „%s“ erstellt."
 
-#: inc/class-destination-msazure.php:176
+#: inc/class-destination-msazure.php:174
 #, php-format
 msgid "MS Azure container create: %s"
 msgstr "MS-Azure-Container erstellen: %s"
 
-#: inc/class-destination-msazure.php:251
+#: inc/class-destination-msazure.php:249
 #, php-format
 msgid "%d. Try sending backup to a Microsoft Azure (Blob)&#160;&hellip;"
 msgstr ""
 "%d. Versuche, das Backup zu Microsoft Azure (Blob) zu senden&#160;&hellip;"
 
-#: inc/class-destination-msazure.php:273
+#: inc/class-destination-msazure.php:271
 #, php-format
 msgid "MS Azure container \"%s\" does not exist!"
 msgstr "MS-Azure-Container „%s“ existiert nicht!"
 
-#: inc/class-destination-msazure.php:277
+#: inc/class-destination-msazure.php:275
 #, php-format
 msgid "Connected to MS Azure container \"%s\"."
 msgstr "Verbunden mit MS-Azure-Container „%s“."
 
-#: inc/class-destination-msazure.php:280
+#: inc/class-destination-msazure.php:278
 msgid "Starting upload to MS Azure&#160;&hellip;"
 msgstr "Hochladen zu MS Azure hat begonnen&#160;&hellip;"
 
-#: inc/class-destination-msazure.php:339 inc/class-destination-msazure.php:401
+#: inc/class-destination-msazure.php:337 inc/class-destination-msazure.php:399
 #, php-format
 msgid "Microsoft Azure API: %s"
 msgstr "Microsoft Azure API: %s"
 
-#: inc/class-destination-msazure.php:510
+#: inc/class-destination-msazure.php:502
 msgid "Missing account name!"
 msgstr "Kontoname (Benutzername) nicht angegeben!"
 
-#: inc/class-destination-msazure.php:512 inc/class-destination-s3.php:514
+#: inc/class-destination-msazure.php:504 inc/class-destination-s3.php:514
 msgid "Missing access key!"
 msgstr "Der Zugangsschlüssel (Access Key) fehlt!"
 
-#: inc/class-destination-msazure.php:516
+#: inc/class-destination-msazure.php:508
 msgid "No container found!"
 msgstr "Kein Container gefunden!"
 
-#: inc/class-destination-msazure.php:692
+#: inc/class-destination-msazure.php:686
 #, php-format
 msgid "Could not extract job id from destination %s."
 msgstr "Job-ID konnte nicht aus Ziel %s extrahiert werden."
 
 #: inc/class-destination-s3.php:51
-#, fuzzy
-#| msgid "Select a S3 Service"
 msgid "Select a S3 service"
 msgstr "Wähle einen S3-Dienst aus"
 
@@ -1095,22 +1103,16 @@ msgid "Bucket selection"
 msgstr "Bucket-Auswahl"
 
 #: inc/class-destination-s3.php:313
-#, fuzzy
-#| msgid "Create a new Bucket"
 msgid "Create a new bucket"
 msgstr "Neuen Bucket erstellen"
 
 #: inc/class-destination-s3.php:330
-#, fuzzy
-#| msgid "S3 Backup Settings"
 msgid "S3 Backup settings"
 msgstr "S3-Backup-Einstellungen"
 
 #: inc/class-destination-s3.php:336
-#, fuzzy
-#| msgid "Folders to backup"
 msgid "Folder in bucket"
-msgstr "Zu sichernde Verzeichnisse"
+msgstr "Ordner im Bucket"
 
 #: inc/class-destination-s3.php:386
 msgid "Amazon specific settings"
@@ -1137,8 +1139,6 @@ msgid "Server side encryption"
 msgstr "Serverseitige Verschlüsselung"
 
 #: inc/class-destination-s3.php:431
-#, fuzzy
-#| msgid "Save files encrypted (AES256) on server"
 msgid "Save files encrypted (AES256) on server."
 msgstr "Dateien verschlüsselt (AES256) auf dem Server speichern"
 
@@ -1247,21 +1247,16 @@ msgid "SugarSync Root"
 msgstr "Sugar Sync-Stammverzeichnis"
 
 #: inc/class-destination-sugarsync.php:56
-#, fuzzy
 msgid "Sync folder selection"
-msgstr "Erstellen der Backup-Datei"
+msgstr "Sync-Ordner auswählen"
 
 #: inc/class-destination-sugarsync.php:64
-#, fuzzy
-#| msgid "No container found!"
 msgid "No Syncfolders found!"
-msgstr "Kein Container gefunden!"
+msgstr "Keine Sync-Ordner gefunden!"
 
 #: inc/class-destination-sugarsync.php:85
-#, fuzzy
-#| msgid "Others in root"
 msgid "Folder in root"
-msgstr "Sonstiges im Root-Verzeichnis"
+msgstr "Ordner im Stammverzeichnis"
 
 #: inc/class-destination-sugarsync.php:233
 #, php-format
@@ -1274,9 +1269,8 @@ msgid "Authenticated to SugarSync with nickname %s"
 msgstr "Authentifiziert bei SugarSync mit dem Namen %s"
 
 #: inc/class-destination-sugarsync.php:243
-#, fuzzy, php-format
-#| msgctxt "Available space on SugarSync"
-#| msgid "Not enough disk space available on SugarSync. Available: %s."
+#, php-format
+msgctxt "Available space on SugarSync"
 msgid "Not enough disk space available on SugarSync. Available: %s."
 msgstr "Nicht genug Speicherplatz verfügbar bei SugarSync. Verfügbar: %s."
 
@@ -1322,10 +1316,8 @@ msgid "Api key:"
 msgstr "API-Schlüssel:"
 
 #: inc/class-easycron.php:196
-#, fuzzy
-#| msgid "with WordPress cron"
 msgid "Trigger WordPress Cron:"
-msgstr "mit WordPress Cron"
+msgstr "WordPress-Cron aufrufen:"
 
 #: inc/class-easycron.php:199
 msgid ""
@@ -1366,13 +1358,12 @@ msgstr ""
 "darin enthalten ist."
 
 #: inc/class-help.php:9
-#, fuzzy
-#| msgid "Plugins"
 msgid "Plugin Info"
-msgstr "Plugins"
+msgstr "Plugin-Informationen"
 
 #: inc/class-help.php:11
 #, php-format
+msgctxt "Plugin name and link; Plugin Version"
 msgid "%1$s version %2$s. A project by Quick Brown Fox."
 msgstr "%1$s version %2$s. Ein Projekt von Quick Brown Fox."
 
@@ -1436,6 +1427,7 @@ msgstr "BackupPilot-Protokoll für %1$s von %2$s am %3$s"
 
 #: inc/class-job.php:413
 #, php-format
+msgctxt "Plugin name; Plugin Version; plugin url"
 msgid "[INFO] %1$s %2$s; A project of QuickBrownFox90"
 msgstr "[INFO] %1$s %2$s; Ein Projekt von QuickBrownFox90"
 
@@ -1443,10 +1435,11 @@ msgstr "[INFO] %1$s %2$s; Ein Projekt von QuickBrownFox90"
 #: inc/class-jobtype-dbdump.php:9 inc/class-jobtype-file.php:10
 #: inc/class-jobtype-wpexp.php:13 inc/class-jobtype-wpplugin.php:9
 msgid "http://backwpup.com"
-msgstr "http://backwpup.de"
+msgstr "http://dev.patrick-mauersberger.de"
 
 #: inc/class-job.php:419
 #, php-format
+msgctxt "WordPress Version; Blog url"
 msgid "[INFO] WordPress %1$s on %2$s"
 msgstr "[INFO] WordPress %1$s auf %2$s"
 
@@ -1477,7 +1470,7 @@ msgstr "[INFO] BackupPilot-Auftrag: %1$s"
 msgid "[INFO] Runs with user: %1$s (%2$d) "
 msgstr "[INFO] Läuft mit Benutzer: %1$s (%2$d) "
 
-#: inc/class-job.php:454 inc/class-page-backwpup.php:238
+#: inc/class-job.php:454 inc/class-page-backwpup.php:240
 #: inc/class-page-jobs.php:271 inc/class-page-jobs.php:280
 msgid "Not scheduled!"
 msgstr "Nicht geplant!"
@@ -1669,6 +1662,7 @@ msgstr "%d. Versuche, Backup-Archiv zu erstellen &hellip;"
 
 #: inc/class-job.php:1613
 #, php-format
+msgctxt "Archive compression method"
 msgid "Compressing files as %s. Please be patient, this may take a moment."
 msgstr "Komprimiere Dateien als %s. Bitte habe einen Moment Geduld."
 
@@ -1752,11 +1746,13 @@ msgstr "Archiv wurde erfolgreich verschlüsselt."
 
 #: inc/class-job.php:1924
 #, php-format
+msgctxt "Folder name"
 msgid "Folder %s does not exist"
 msgstr "Verzeichnis %s existiert nicht"
 
 #: inc/class-job.php:1931
 #, php-format
+msgctxt "Folder name"
 msgid "Folder %s is not readable"
 msgstr "Verzeichnis %s ist nicht lesbar"
 
@@ -1826,116 +1822,121 @@ msgid "mysqldump binary not found."
 msgstr "Die Binärdatei „mysqldump“ wurde nicht gefunden."
 
 #: inc/class-job.php:2383
-#, fuzzy
-#| msgctxt ""
-#| "SIGHUP: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
-#| "details"
-#| msgid ""
-#| "Hangup detected on controlling terminal or death of controlling process"
+msgctxt ""
+"SIGHUP: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Hangup detected on controlling terminal or death of controlling process"
 msgstr "Hangup detektiert auf Steueranschluss oder Tod des Controlling-Prozess"
 
 #: inc/class-job.php:2389
+msgctxt ""
+"SIGINT: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Interrupt from keyboard"
 msgstr "Interrupt von der Tastatur"
 
 #: inc/class-job.php:2395
-#, fuzzy
-#| msgctxt ""
-#| "SIGQUIT: Please see http://man7.org/linux/man-pages/man7/signal.7.html "
-#| "for details"
-#| msgid "Quit from keyboard"
+msgctxt ""
+"SIGQUIT: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Quit from keyboard"
 msgstr "Beendet von der Tastatur"
 
 #: inc/class-job.php:2401
+msgctxt ""
+"SIGILL: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Illegal Instruction"
 msgstr "Illegale Instruktion"
 
 #: inc/class-job.php:2407
+msgctxt ""
+"SIGABRT: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Abort signal from abort(3)"
 msgstr "Abbruchsignal von Abbruch(3)"
 
 #: inc/class-job.php:2413
+msgctxt ""
+"SIGBUS: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Bus error (bad memory access)"
 msgstr "Bus-Fehler (fehlerhafter Speicherzugriff)"
 
 #: inc/class-job.php:2419
-#, fuzzy
-#| msgctxt ""
-#| "SIGFPE: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
-#| "details"
-#| msgid "Floating point exception"
+msgctxt ""
+"SIGFPE: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Floating point exception"
-msgstr "Floating-Point exception"
+msgstr "Gleitkomma-Ausnahme"
 
 #: inc/class-job.php:2425
+msgctxt ""
+"SIGSEGV: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Invalid memory reference"
 msgstr "Ungültige Speicherreferenz"
 
 #: inc/class-job.php:2431
-#, fuzzy
-#| msgctxt ""
-#| "SIGTERM: Please see http://man7.org/linux/man-pages/man7/signal.7.html "
-#| "for details"
-#| msgid "Termination signal"
+msgctxt ""
+"SIGTERM: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Termination signal"
 msgstr "Abbruch-Signal"
 
 #: inc/class-job.php:2437
-#, fuzzy
-#| msgctxt ""
-#| "SIGSTKFLT: Please see http://man7.org/linux/man-pages/man7/signal.7.html "
-#| "for details"
-#| msgid "Stack fault on coprocessor"
+msgctxt ""
+"SIGSTKFLT: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Stack fault on coprocessor"
 msgstr "Stapelfehler auf Coprozessor"
 
 #: inc/class-job.php:2443
-#, fuzzy
-#| msgctxt ""
-#| "SIGUSR1: Please see http://man7.org/linux/man-pages/man7/signal.7.html "
-#| "for details"
-#| msgid "User-defined signal 1"
+msgctxt ""
+"SIGUSR1: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "User-defined signal 1"
 msgstr "Benutzerdefiniertes Signal 1"
 
 #: inc/class-job.php:2449
-#, fuzzy
-#| msgctxt ""
-#| "SIGUSR2: Please see http://man7.org/linux/man-pages/man7/signal.7.html "
-#| "for details"
-#| msgid "User-defined signal 2"
+msgctxt ""
+"SIGUSR2: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "User-defined signal 2"
 msgstr "Benutzerdefiniertes Signal 2"
 
 #: inc/class-job.php:2455
-#, fuzzy
-#| msgctxt ""
-#| "SIGURG: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
-#| "details"
-#| msgid "Urgent condition on socket"
+msgctxt ""
+"SIGURG: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Urgent condition on socket"
 msgstr "Dringend Zustand auf socket"
 
 #: inc/class-job.php:2461
+msgctxt ""
+"SIGXCPU: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "CPU time limit exceeded"
 msgstr "CPU-Zeitlimit überschritten"
 
 #: inc/class-job.php:2467
+msgctxt ""
+"SIGXFSZ: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "File size limit exceeded"
 msgstr "Dateigrößenlimit überschritten"
 
 #: inc/class-job.php:2473
-#, fuzzy
-#| msgctxt ""
-#| "SIGPWR: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
-#| "details"
-#| msgid "Power failure"
+msgctxt ""
+"SIGPWR: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Power failure"
 msgstr "Stromausfall"
 
 #: inc/class-job.php:2479
+msgctxt ""
+"SIGSYS: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
+"details"
 msgid "Bad argument to routine"
 msgstr "Falsches Argument für die Routine"
 
@@ -1965,10 +1966,8 @@ msgstr "Datenbank-Tabellen prüfen"
 #: inc/class-jobtype-dbcheck.php:11 inc/class-jobtype-dbdump.php:11
 #: inc/class-jobtype-file.php:12 inc/class-jobtype-wpexp.php:15
 #: inc/class-jobtype-wpplugin.php:11
-#, fuzzy
-#| msgid "http://backwpup.com"
 msgid "http://inpsyde.com"
-msgstr "http://backwpup.de"
+msgstr "http://dev.patrick-mauersberger.de"
 
 #: inc/class-jobtype-dbcheck.php:29
 msgid "Settings for database check"
@@ -2048,6 +2047,12 @@ msgstr "Backup-Dateiname"
 #: inc/class-jobtype-dbdump.php:93
 msgid "Backup file compression"
 msgstr "Backup-Dateikomprimierung"
+
+#: inc/class-jobtype-dbdump.php:97 inc/class-jobtype-wpexp.php:71
+#: inc/class-jobtype-wpplugin.php:51 inc/class-page-backwpup.php:246
+#: inc/class-page-backwpup.php:321 inc/class-page-settings.php:961
+msgid "none"
+msgstr "keine"
 
 #: inc/class-jobtype-dbdump.php:99 inc/class-jobtype-dbdump.php:101
 #: inc/class-jobtype-wpexp.php:73 inc/class-jobtype-wpexp.php:75
@@ -2278,10 +2283,9 @@ msgid "XML WARNING (%s): %s"
 msgstr ""
 
 #: inc/class-jobtype-wpexp.php:412
-#, fuzzy, php-format
-#| msgid "RECOVERABLE ERROR:"
+#, php-format
 msgid "XML RECOVERABLE (%s): %s"
-msgstr "BEHEBBARER FEHLER:"
+msgstr "XML WIEDERHERSTELLBAR (%s): %s"
 
 #: inc/class-jobtype-wpexp.php:415
 #, php-format
@@ -2417,17 +2421,10 @@ msgid "BackupPilot banner"
 msgstr "BackupPilot Banner"
 
 #: inc/class-page-about.php:365
-#, fuzzy
-#| msgid "Welcome to BackWPup Pro"
 msgid "Welcome to BackupPilot"
-msgstr "Willkommen zu BackWPup Pro"
+msgstr "Willkommen zu BackupPilot"
 
 #: inc/class-page-about.php:367
-#, fuzzy
-#| msgid ""
-#| "Use your backup archives to save your entire WordPress installation "
-#| "including <code>/wp-content/</code>. Push them to an external storage "
-#| "service if you don’t want to save the backups on the same server."
 msgid ""
 "Use your backup archives to save your entire WordPress installation "
 "including <code>/wp-content/</code>. Push them to an external storage "
@@ -2437,7 +2434,8 @@ msgstr ""
 "Benutze deine Backup-Archive, um deine gesamte WordPress-Installation zu "
 "sichern, einschließlich <code>/wp-content/</code>. Lade sie zu einem "
 "externen Dienst hoch, wenn du deine Backups nicht auf dem selben Server "
-"speichern möchtest."
+"speichern möchtest. Mit einem einzigen Sicherungsarchiv kannst du eine "
+"Installation wiederherstellen."
 
 #: inc/class-page-about.php:368
 msgid ""
@@ -2456,12 +2454,7 @@ msgid "Save your database regularly"
 msgstr "Sichere deine Datenbank regelmäßig"
 
 #: inc/class-page-about.php:381
-#, fuzzy, php-format
-#| msgid ""
-#| "With BackWPup you can schedule the database backup to run automatically. "
-#| "With a single backup file you can restore your database. You should <a "
-#| "href=\"%s\">set up a backup job</a>, so you will never forget it. There "
-#| "is also an option to repair and optimize the database after each backup."
+#, php-format
 msgid ""
 "With BackupPilot you can schedule the database backup to run automatically. "
 "With a single backup file you can restore your database. You should <a "
@@ -2664,14 +2657,12 @@ msgid "Wizard for system tests"
 msgstr "Assistent für Systemtests"
 
 #: inc/class-page-about.php:586
-#, fuzzy
 msgid "Wizard for scheduled backup jobs"
 msgstr "Assistenten zum Planen von Backup-Aufträgen."
 
 #: inc/class-page-about.php:591
-#, fuzzy
 msgid "Wizard to import settings and backup jobs"
-msgstr "Bereit, einen Backup-Auftrag zu erstellen?"
+msgstr "Assistent zum Importieren von Einstellungen und Sicherungsaufträgen"
 
 #: inc/class-page-about.php:596
 msgid "Differential backup of changed directories to Dropbox"
@@ -2741,8 +2732,8 @@ msgstr "Löschen"
 msgid "Change destination"
 msgstr "Ziel ändern"
 
-#: inc/class-page-backups.php:216 inc/class-page-backwpup.php:198
-#: inc/class-page-backwpup.php:262 inc/class-page-logs.php:160
+#: inc/class-page-backups.php:216 inc/class-page-backwpup.php:200
+#: inc/class-page-backwpup.php:264 inc/class-page-logs.php:160
 msgid "Time"
 msgstr "Zeit"
 
@@ -2767,8 +2758,8 @@ msgstr "Wiederherstellen"
 msgid "?"
 msgstr "?"
 
-#: inc/class-page-backups.php:327 inc/class-page-backwpup.php:236
-#: inc/class-page-backwpup.php:299 inc/class-page-jobs.php:307
+#: inc/class-page-backups.php:327 inc/class-page-backwpup.php:238
+#: inc/class-page-backwpup.php:301 inc/class-page-jobs.php:307
 #: inc/class-page-logs.php:187
 #, php-format
 msgid "%1$s at %2$s"
@@ -2823,9 +2814,7 @@ msgid "%s &rsaquo; Dashboard"
 msgstr "%s &rsaquo; Dashboard"
 
 #: inc/class-page-backwpup.php:74
-#, fuzzy
-#| msgctxt "Dashboard heading"
-#| msgid "Planning backups"
+msgctxt "Dashboard heading"
 msgid "Planning backups"
 msgstr "Backups planen"
 
@@ -2849,11 +2838,9 @@ msgstr ""
 "speichern möchtest."
 
 #: inc/class-page-backwpup.php:76
-#, fuzzy
-#| msgctxt "Dashboard heading"
-#| msgid "Restoring backups"
+msgctxt "Dashboard heading"
 msgid "Restoring backups"
-msgstr "Backupwiederherstellung"
+msgstr "Backups wiederherstellen"
 
 #: inc/class-page-backwpup.php:77
 msgid "With a single backup archive you are able to restore an installation."
@@ -2862,19 +2849,35 @@ msgstr ""
 "wiederherstellen."
 
 #: inc/class-page-backwpup.php:78
-#, fuzzy
-#| msgctxt "Dashboard heading"
-#| msgid "Ready to set up a backup job?"
+msgid ""
+"BackupPilot does not include an automated restore function — restores are "
+"done manually."
+msgstr ""
+"BackupPilot verfügt über keine automatische Wiederherstellungsfunktion – die "
+"Wiederherstellung muss manuell erfolgen."
+
+#: inc/class-page-backwpup.php:79
+msgid ""
+"Extract the downloaded archive, upload its contents back to your server, "
+"then import the included database dump with a tool like phpMyAdmin or WP-CLI "
+"(`wp db import dump.sql`)."
+msgstr ""
+"Entpacke das heruntergeladene Archiv, lade dessen Inhalt wieder auf Ihren "
+"Server hoch und importiere anschließend den enthaltenen Datenbank-Dump mit "
+"einem Tool wie phpMyAdmin oder WP-CLI (`wp db import dump.sql`)."
+
+#: inc/class-page-backwpup.php:80
+msgctxt "Dashboard heading"
 msgid "Ready to set up a backup job?"
 msgstr "Bereit, einen Backup-Auftrag zu erstellen?"
 
-#: inc/class-page-backwpup.php:79
+#: inc/class-page-backwpup.php:81
 #, php-format
 msgid "<a href=\"%s\">Add a new backup job</a> and plan what you want to save."
 msgstr ""
 "<a href=\"%s\">Erstelle einen Backup-Auftrag</a> und plane deine Sicherung."
 
-#: inc/class-page-backwpup.php:80
+#: inc/class-page-backwpup.php:82
 msgid ""
 "<strong>Please note: You are solely responsible for the security of your "
 "data; the authors of this plugin are not.</strong>"
@@ -2882,70 +2885,70 @@ msgstr ""
 "<strong>Bitte beachte: Für die Sicherheit deiner Daten bist du allein "
 "verantwortlich; die Autoren dieses Plugins sind es nicht.</strong>"
 
-#: inc/class-page-backwpup.php:87
+#: inc/class-page-backwpup.php:89
 msgid "First Steps"
 msgstr "Erste Schritte"
 
-#: inc/class-page-backwpup.php:90
+#: inc/class-page-backwpup.php:92
 msgid "Check the installation"
 msgstr "Die Installation überprüfen"
 
-#: inc/class-page-backwpup.php:91
+#: inc/class-page-backwpup.php:93
 msgid "Create a Job"
 msgstr "Auftrag erstellen"
 
-#: inc/class-page-backwpup.php:92
+#: inc/class-page-backwpup.php:94
 msgid "Run the created job"
 msgstr "Erstellten Auftrag starten"
 
-#: inc/class-page-backwpup.php:93
+#: inc/class-page-backwpup.php:95
 msgid "Check the job log"
 msgstr "Logs des Auftrages prüfen"
 
-#: inc/class-page-backwpup.php:101
+#: inc/class-page-backwpup.php:103
 msgid "One click backup"
 msgstr "Ein-Klick-Backup"
 
-#: inc/class-page-backwpup.php:103
+#: inc/class-page-backwpup.php:105
 msgid "Download database backup"
 msgstr "Datenbank-Backup herunterladen"
 
-#: inc/class-page-backwpup.php:195
+#: inc/class-page-backwpup.php:197
 msgid "Next scheduled jobs"
 msgstr "Nächste geplante Aufträge"
 
-#: inc/class-page-backwpup.php:199 inc/class-page-backwpup.php:262
+#: inc/class-page-backwpup.php:201 inc/class-page-backwpup.php:264
 #: inc/class-page-logs.php:161
 msgid "Job"
 msgstr "Auftrag"
 
-#: inc/class-page-backwpup.php:222
+#: inc/class-page-backwpup.php:224
 #, php-format
 msgid "working since %d seconds"
 msgstr "in Arbeit seit %d Sekunden"
 
-#: inc/class-page-backwpup.php:224 inc/class-page-jobs.php:584
+#: inc/class-page-backwpup.php:226 inc/class-page-jobs.php:584
 msgid "Abort"
 msgstr "Abbrechen"
 
-#: inc/class-page-backwpup.php:240
+#: inc/class-page-backwpup.php:242
 msgid "Edit Job"
 msgstr "Auftrag bearbeiten"
 
-#: inc/class-page-backwpup.php:260
+#: inc/class-page-backwpup.php:262
 msgid "Last logs"
 msgstr "Letzte Logs"
 
-#: inc/class-page-backwpup.php:262
+#: inc/class-page-backwpup.php:264
 msgid "Result"
 msgstr "Ergebnis"
 
-#: inc/class-page-backwpup.php:281
+#: inc/class-page-backwpup.php:283
 #, php-format
 msgid "Could not open log folder: %s"
 msgstr "Log-Ordner %s konnte nicht geöffnet werden"
 
-#: inc/class-page-backwpup.php:310
+#: inc/class-page-backwpup.php:312
 msgid "OK"
 msgstr "OK"
 
@@ -3460,8 +3463,7 @@ msgid "Copy of"
 msgstr "Kopie von"
 
 #: inc/class-page-jobs.php:416
-#, fuzzy, php-format
-#| msgid "The job \"%1$s\" destination \"%2$s\" is not configured properly"
+#, php-format
 msgid "The job \"%s\" destination \"%s\" is not configured properly"
 msgstr "Das Ziel „%2$s“ des Auftrags „%1$s“ ist nicht korrekt konfiguriert."
 
@@ -3887,20 +3889,16 @@ msgstr ""
 "verlängern.)"
 
 #: inc/class-page-settings.php:576
-#, fuzzy
-#| msgid "Security!"
 msgid "Security"
-msgstr "Sicherheit!"
+msgstr "Sicherheit"
 
 #: inc/class-page-settings.php:577
 msgid "Security option for BackupPilot"
 msgstr "Sicherheitsoption für BackupPilot"
 
 #: inc/class-page-settings.php:580 inc/class-page-settings.php:585
-#, fuzzy
-#| msgid "Log folder"
 msgid "Protect folders"
-msgstr "Protokoll-Verzeichnis"
+msgstr "Schütze Verzeichnisse"
 
 #: inc/class-page-settings.php:596
 msgid ""
@@ -4296,14 +4294,10 @@ msgid "Scaleway: AMS"
 msgstr "Scaleway: AMS"
 
 #: inc/class-system-tests-runner.php:68
-#, fuzzy, php-format
-#| msgid ""
-#| "We recommend to install the PHP FTP extension to use the FTP backup "
-#| "destination."
+#, php-format
+msgctxt "%1 = extension name, %2 = file suffix"
 msgid "We recommend to install the %1$s extension to generate %2$s archives."
-msgstr ""
-"Wir empfehlen die PHP-FTP-Erweiterung zu installieren, um FTP als Backup-"
-"Ziel nutzen zu können."
+msgstr "Wir empfehlen die %1$s Erweiterung, um %2$s Archive zu generieren."
 
 #: inc/class-system-tests-runner.php:78
 #, php-format
@@ -4340,7 +4334,8 @@ msgstr ""
 "Umfang zu nutzen."
 
 #: inc/class-system-tests-runner.php:131
-#, fuzzy, php-format
+#, php-format
+msgctxt "Link to PHP manual"
 msgid "Please disable the deprecated <a href=\"%s\">PHP safe mode</a>."
 msgstr "Bitte deaktiviere den veralteten <a href=\"%s\">PHP Safe-Mode</a>."
 
@@ -4381,16 +4376,12 @@ msgstr ""
 "planmäßig ausführen zu können."
 
 #: inc/class-system-tests-runner.php:234
-#, fuzzy
-#| msgid "There are errors. Please correct them, or BackWPup cannot work."
 msgid "There are errors. Please correct them, or BackupPilot cannot work."
 msgstr ""
 "Es sind Fehler aufgetreten. Bitte behebe sie, damit BackupPilot "
 "ordnungsgemäß funktioniert."
 
 #: inc/class-system-tests-runner.php:256
-#, fuzzy
-#| msgid "There are some warnings. BackWPup will work, but with limitations."
 msgid "There are some warnings. BackupPilot will work, but with limitations."
 msgstr ""
 "Es gibt keine Fehler, allerdings einige Warnungen. BackupPilot funktioniert "
@@ -4409,8 +4400,6 @@ msgid "Job ID does not exist!"
 msgstr "Auftrags-ID existiert nicht!"
 
 #: inc/class-wp-cli.php:54
-#, fuzzy
-#| msgid "Nothing to abort."
 msgid "Nothing to abort!"
 msgstr "Es gibt nichts abzubrechen."
 
@@ -4427,10 +4416,8 @@ msgid "The given URI is invalid."
 msgstr "Die angegebene URI ist ungültig."
 
 #: src/Http/Message/Decorator/JsonRequest.php:26
-#, fuzzy
-#| msgid "Data is not valid JSON. Error: %s"
 msgid "Request body is not valid JSON"
-msgstr "Daten sind kein gültiges JSON. Fehler: %s"
+msgstr "Der Request-Body ist kein gültiges JSON."
 
 #: src/Http/Message/Decorator/JsonRequest.php:43
 #, php-format
@@ -4508,6 +4495,54 @@ msgstr ""
 "BackupPilot stellt die Unterstützung für WordPress-Versionen unter 5.0 ein. "
 "Bitte WordPress auf die neueste Version aktualisieren. Ohne ein Update "
 "erfolgen keine neuen Funktionen."
+
+#, fuzzy
+#~| msgid "Authentication method"
+#~ msgid "Sending method"
+#~ msgstr "Authentifizierungsmethode"
+
+#, fuzzy
+#~| msgid "WordPress version"
+#~ msgid "Use WordPress settings"
+#~ msgstr "WordPress-Version"
+
+#, fuzzy
+#~| msgid "Email"
+#~ msgid "Sendmail"
+#~ msgstr "E-Mail"
+
+#, fuzzy
+#~| msgid "Email"
+#~ msgid "Sendmail path"
+#~ msgstr "E-Mail"
+
+#~ msgid "SMTP host name"
+#~ msgstr "SMTP-Hostname"
+
+#~ msgid "SMTP secure connection"
+#~ msgstr "Sichere SMTP-Verbindung"
+
+#~ msgid "SSL"
+#~ msgstr "SSL"
+
+#~ msgid "TLS"
+#~ msgstr "TLS"
+
+#~ msgid "SMTP username"
+#~ msgstr "SMTP-Nutzername"
+
+#~ msgid "SMTP password"
+#~ msgstr "SMTP-Passwort"
+
+#~ msgid "Backup archive too big to be sent by email!"
+#~ msgstr "Die Sicherungsdatei ist zu groß für den Versand per E-Mail!"
+
+#~ msgid "Error while sending email!"
+#~ msgstr "Fehler beim Senden der E-Mail!"
+
+#, php-format
+#~ msgid "%s is a directory not a file."
+#~ msgstr "%s ist ein Verzeichnis, keine Datei."
 
 #, fuzzy, php-format
 #~| msgctxt "Plugin name; Plugin Version; plugin url"
@@ -4599,9 +4634,6 @@ msgstr ""
 #~ "Daher kann die Website bei Verwendung veralteter und nicht unterstützter "
 #~ "PHP-Versionen Sicherheitslücken ausgesetzt sein. Bitte PHP auf die "
 #~ "neueste Version aktualisieren. Bei Fragen an den Hoster wenden."
-
-#~ msgid "Unknown job"
-#~ msgstr "Unbekannter Auftrag"
 
 #~ msgid "Job #%d"
 #~ msgstr "Auftrag #%d"
@@ -6085,32 +6117,5 @@ msgstr ""
 #~ "wird es im Hauptverzeichnis deiner Dropbox angelegt. Bereits bestehende "
 #~ "Verzeichnisse mit dem gleichen Namen werden nicht überschrieben."
 
-#~ msgctxt "Text of ZipArchive status Message"
-#~ msgid "ZipArchive returns status: %s"
-#~ msgstr "Das ZIP-Archiv liefert den Status %s"
-
-#~ msgctxt "Folder path to add to archive"
-#~ msgid "Folder %s does not exist or is not readable"
-#~ msgstr "Verzeichnis „%s“ existiert nicht oder ist nicht lesbar"
-
-#~ msgctxt "File to add to archive"
-#~ msgid "File %s does not exist or is not readable"
-#~ msgstr "Datei %s existiert nicht oder ist nicht lesbar"
-
-#~ msgctxt "%s = file name"
-#~ msgid "Method to archive file %s not detected"
-#~ msgstr "Methode zum Archivieren der Datei %s nicht gefunden"
-
-#~ msgctxt "ZipArchive open() result"
-#~ msgid "Cannot create zip archive: %d"
-#~ msgstr "Die ZIP-Datei %d kann nicht erstellt werden"
-
-#~ msgctxt "%s = Folder name"
-#~ msgid "Folder %s for archive not found"
-#~ msgstr "Verzeichnis %s für Archiv nicht gefunden"
-
 #~ msgid "RSC"
 #~ msgstr "RSC"
-
-#~ msgid "Backup sent via email"
-#~ msgstr "Backup per E-Mail versenden"

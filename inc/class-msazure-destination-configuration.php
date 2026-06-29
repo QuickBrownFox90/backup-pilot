@@ -19,7 +19,7 @@ class MsAzureDestinationConfiguration {
 
     public function __construct($msazureaccname, $msazurekey, $msazurecontainer)
     {
-        $items = array($msazureaccname, $msazurekey, $msazurecontainer);
+        $items = [$msazureaccname, $msazurekey, $msazurecontainer];
         $areConfigPartsValid = array_filter($items);
         if (count($areConfigPartsValid) !== count($items)) {
             throw new \UnexpectedValueException(

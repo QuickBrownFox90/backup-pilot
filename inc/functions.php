@@ -9,30 +9,30 @@
  */
 function backuppilot_template( $bind, $file_path ) {
 
-	$file_path = \BackupPilot_Sanitize_Path::sanitize_path_regexp( $file_path );
+    $file_path = \BackupPilot_Sanitize_Path::sanitize_path_regexp( $file_path );
 
-	if ( ! $file_path ) {
-		throw new \InvalidArgumentException(
-			sprintf(
-				'Invalid or malformed file path %s: for template function.',
-				$file_path
-			)
-		);
-	}
+    if ( ! $file_path ) {
+        throw new \InvalidArgumentException(
+            sprintf(
+                'Invalid or malformed file path %s: for template function.',
+                $file_path
+            )
+        );
+    }
 
-	// Build the path.
-	$path = untrailingslashit( BackupPilot::get_plugin_data( 'plugindir' ) ) . '/views/' . ltrim( $file_path, '\\/' );
+    // Build the path.
+    $path = untrailingslashit( BackupPilot::get_plugin_data( 'plugindir' ) ) . '/views/' . ltrim( $file_path, '\\/' );
 
-	if ( ! file_exists( $path ) ) {
-		throw new \InvalidArgumentException(
-			sprintf(
-				'Cannot locate the template %s in template function.',
-				$path
-			)
-		);
-	}
+    if ( ! file_exists( $path ) ) {
+        throw new \InvalidArgumentException(
+            sprintf(
+                'Cannot locate the template %s in template function.',
+                $path
+            )
+        );
+    }
 
-	include $path;
+    include $path;
 }
 
 /**
@@ -46,9 +46,9 @@ function backuppilot_template( $bind, $file_path ) {
  */
 function backuppilot_string_to_bool( $value ) {
 
-	return is_bool( $value )
-		? $value
-		: ( 'yes' === $value || 1 === $value || 'true' === $value || '1' === $value || 'on' === $value );
+    return is_bool( $value )
+        ? $value
+        : ( 'yes' === $value || 1 === $value || 'true' === $value || '1' === $value || 'on' === $value );
 }
 
 /**
@@ -62,11 +62,11 @@ function backuppilot_string_to_bool( $value ) {
  */
 function backuppilot_bool_to_string( $bool ) {
 
-	if ( ! is_bool( $bool ) ) {
-		$bool = backuppilot_string_to_bool( $bool );
-	}
+    if ( ! is_bool( $bool ) ) {
+        $bool = backuppilot_string_to_bool( $bool );
+    }
 
-	return true === $bool ? 'yes' : 'no';
+    return true === $bool ? 'yes' : 'no';
 }
 
 /**
@@ -78,18 +78,18 @@ function backuppilot_bool_to_string( $bool ) {
  */
 function backuppilot_wpfilesystem() {
 
-	global $wp_filesystem;
+    global $wp_filesystem;
 
-	if ( ! $wp_filesystem ) {
-		// Make sure the WP_Filesystem function exists.
-		if ( ! function_exists( 'WP_Filesystem' ) ) {
-			require_once untrailingslashit( ABSPATH ) . '/wp-admin/includes/file.php';
-		}
+    if ( ! $wp_filesystem ) {
+        // Make sure the WP_Filesystem function exists.
+        if ( ! function_exists( 'WP_Filesystem' ) ) {
+            require_once untrailingslashit( ABSPATH ) . '/wp-admin/includes/file.php';
+        }
 
-		WP_Filesystem();
-	}
+        WP_Filesystem();
+    }
 
-	return $wp_filesystem;
+    return $wp_filesystem;
 }
 
 /**
@@ -103,9 +103,9 @@ function backuppilot_wpfilesystem() {
  */
 function backuppilot_wpdb() {
 
-	global $wpdb;
+    global $wpdb;
 
-	return $wpdb;
+    return $wpdb;
 }
 
 /**
@@ -119,37 +119,37 @@ function backuppilot_wpdb() {
  */
 function remove_invalid_characters_from_directory_name( $directory ) {
 
-	return str_replace(
-		array(
-			"?",
-			"[",
-			"]",
-			"\\",
-			"=",
-			"<",
-			">",
-			":",
-			";",
-			",",
-			"'",
-			"\"",
-			"&",
-			"$",
-			"#",
-			"*",
-			"(",
-			")",
-			"|",
-			"~",
-			"`",
-			"!",
-			"{",
-			"}",
-			chr( 0 ),
-		),
-		'',
-		$directory
-	);
+    return str_replace(
+        [
+            "?",
+            "[",
+            "]",
+            "\\",
+            "=",
+            "<",
+            ">",
+            ":",
+            ";",
+            ",",
+            "'",
+            "\"",
+            "&",
+            "$",
+            "#",
+            "*",
+            "(",
+            ")",
+            "|",
+            "~",
+            "`",
+            "!",
+            "{",
+            "}",
+            chr( 0 ),
+        ],
+        '',
+        $directory
+    );
 }
 
 /**
@@ -161,24 +161,24 @@ function remove_invalid_characters_from_directory_name( $directory ) {
  */
 function backuppilot_esc_url_default_secure( $url, $protocols = null )
 {
-	// Add https to protocols if not present
-	if ( is_array( $protocols ) && ! in_array( 'https', $protocols ) ) {
-		$protocols[] = 'https';
-	}
+    // Add https to protocols if not present
+    if ( is_array( $protocols ) && ! in_array( 'https', $protocols ) ) {
+        $protocols[] = 'https';
+    }
 
-	$escaped_url = esc_url_raw( $url, $protocols );
-	if ( empty( $escaped_url ) ) {
-		return $escaped_url;
-	}
+    $escaped_url = esc_url_raw( $url, $protocols );
+    if ( empty( $escaped_url ) ) {
+        return $escaped_url;
+    }
 
-	// We must check for both http: and http;
-	// because esc_url_raw() corrects http; to http: automatically.
-	// so if we do not check for it in the original, we could have invalid results.
-	if ( ! preg_match( '/http[:;]/', $url ) && strpos( $escaped_url, 'http://' ) === 0 ) {
-		$escaped_url = preg_replace( '/^http:/', 'https:', $escaped_url );
-	}
+    // We must check for both http: and http;
+    // because esc_url_raw() corrects http; to http: automatically.
+    // so if we do not check for it in the original, we could have invalid results.
+    if ( ! preg_match( '/http[:;]/', $url ) && strpos( $escaped_url, 'http://' ) === 0 ) {
+        $escaped_url = preg_replace( '/^http:/', 'https:', $escaped_url );
+    }
 
-	return $escaped_url;
+    return $escaped_url;
 }
 
 /**
@@ -195,24 +195,26 @@ function backuppilot_esc_url_default_secure( $url, $protocols = null )
  */
 function backuppilot_normalize_path( $path ) {
 
-	$path = str_replace( '\\', '/', $path );
-	$is_absolute = ( substr( $path, 0, 1 ) === '/' );
+    $path = str_replace( '\\', '/', $path );
+    $is_absolute = ( substr( $path, 0, 1 ) === '/' );
 
-	$stack = array();
-	foreach ( explode( '/', $path ) as $part ) {
-		if ( $part === '' || $part === '.' ) {
-			continue;
-		}
-		if ( $part === '..' ) {
-			if ( ! empty( $stack ) && end( $stack ) !== '..' ) {
-				array_pop( $stack );
-			} elseif ( ! $is_absolute ) {
-				$stack[] = '..';
-			}
-			continue;
-		}
-		$stack[] = $part;
-	}
+    $stack = [];
+    foreach ( explode( '/', $path ) as $part ) {
+        if ( $part === '' || $part === '.' ) {
+            continue;
+        }
+        if ( $part === '..' ) {
+            if ( ! empty( $stack ) && end( $stack ) !== '..' ) {
+                array_pop( $stack );
+            }
 
-	return ( $is_absolute ? '/' : '' ) . implode( '/', $stack );
+            elseif ( ! $is_absolute ) {
+                $stack[] = '..';
+            }
+            continue;
+        }
+        $stack[] = $part;
+    }
+
+    return ( $is_absolute ? '/' : '' ) . implode( '/', $stack );
 }

@@ -63,7 +63,9 @@ class NoticeView
                     count($args)
                 )
             );
-        } elseif (count($args) > 2) {
+        }
+
+        elseif (count($args) > 2) {
             throw new \BadMethodCallException(
                 sprintf(
                     __('Method %1$s::%2$s() takes at most 2 arguments; %3$d given', 'backuppilot'),

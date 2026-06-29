@@ -4,5 +4,5 @@ namespace QBF\BackupPilot\Notice;
 
 class Promoter {
 
-	const OPTION_NAME = 'backuppilot_notice_promoter';
+    const OPTION_NAME = 'backuppilot_notice_promoter';
 }

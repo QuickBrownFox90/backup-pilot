@@ -15,10 +15,10 @@ if ( ! class_exists( 'BackupPilot' ) ) {
     }
 
     //delete plugin options
-    if (is_multisite()) {
-        $wpdb->query("DELETE FROM " . $wpdb->sitemeta . " WHERE meta_key LIKE '%backuppilot_%' ");
+    if ( is_multisite() ) {
+        $wpdb->query( "DELETE FROM " . $wpdb->sitemeta . " WHERE meta_key LIKE '%backuppilot_%' " );
     } else {
-        $wpdb->query("DELETE FROM " . $wpdb->options . " WHERE option_name LIKE '%backuppilot_%' ");
+        $wpdb->query( "DELETE FROM " . $wpdb->options . " WHERE option_name LIKE '%backuppilot_%' " );
     }
 
 	//delete BackupPilot user roles

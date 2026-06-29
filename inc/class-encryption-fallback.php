@@ -13,81 +13,81 @@
  */
 class BackupPilot_Encryption_Fallback {
 
-	const PREFIX = 'ENC1$';
+    const PREFIX = 'ENC1$';
 
-	/**
-	 * @return bool
-	 */
-	public static function supported() {
+    /**
+     * @return bool
+     */
+    public static function supported() {
 
-		/** @TODO: Should we inform the user about the security risk? and how? */
-		return true;
-	}
+        /** @TODO: Should we inform the user about the security risk? and how? */
+        return true;
+    }
 
-	/**
-	 * @param string $enc_key
-	 * @param string $key_type
-	 */
-	public function __construct( $enc_key, $key_type ) {
-		$this->key      = md5( (string) $enc_key );
-		$this->key_type = (string) $key_type;
-	}
+    /**
+     * @param string $enc_key
+     * @param string $key_type
+     */
+    public function __construct( $enc_key, $key_type ) {
+        $this->key      = md5( (string) $enc_key );
+        $this->key_type = (string) $key_type;
+    }
 
-	/**
-	 *
-	 * Encrypt a string (Passwords)
-	 *
-	 * @param string $string value to encrypt
-	 *
-	 * @return string encrypted string
-	 */
-	public function encrypt( $string ) {
+    /**
+     *
+     * Encrypt a string (Passwords)
+     *
+     * @param string $string value to encrypt
+     *
+     * @return string encrypted string
+     */
+    public function encrypt( $string ) {
 
-		$result = '';
-		for ( $i = 0; $i < strlen( $string ); $i ++ ) {
-			$char     = substr( $string, $i, 1 );
-			$key_char = substr( $this->key, ( $i % strlen( $this->key ) ) - 1, 1 );
-			$char     = chr( ord( $char ) + ord( $key_char ) );
-			$result .= $char;
-		}
+        $result = '';
+        for ( $i = 0; $i < strlen( $string ); $i ++ ) {
+            $char     = substr( $string, $i, 1 );
+            $key_char = substr( $this->key, ( $i % strlen( $this->key ) ) - 1, 1 );
+            $char     = chr( ord( $char ) + ord( $key_char ) );
+            $result .= $char;
+        }
 
-		return BackupPilot_Encryption::PREFIX . self::PREFIX . $this->key_type . base64_encode( $result );
+        return BackupPilot_Encryption::PREFIX . self::PREFIX . $this->key_type . base64_encode( $result );
 
-	}
+    }
 
-	/**
-	 *
-	 * Decrypt a string (Passwords)
-	 *
-	 * @param string $string value to decrypt
-	 *
-	 * @return string decrypted string
-	 */
-	public function decrypt( $string ) {
+    /**
+     *
+     * Decrypt a string (Passwords)
+     *
+     * @param string $string value to decrypt
+     *
+     * @return string decrypted string
+     */
+    public function decrypt( $string ) {
 
-		if (
-			! is_string( $string )
-			|| ! $string
-			|| strpos( $string, BackupPilot_Encryption::PREFIX . self::PREFIX . $this->key_type ) !== 0
-		) {
-			return '';
-		}
+        if (
+            ! is_string( $string )
+            || ! $string
+            || strpos( $string, BackupPilot_Encryption::PREFIX . self::PREFIX . $this->key_type ) !== 0
+        ) {
+            return '';
+        }
 
-		$no_prefix = substr( $string, strlen( BackupPilot_Encryption::PREFIX . self::PREFIX . $this->key_type ) );
+        $no_prefix = substr( $string, strlen( BackupPilot_Encryption::PREFIX . self::PREFIX . $this->key_type ) );
 
-		$encrypted = base64_decode( $no_prefix, true );
-		if ( $encrypted === false ) {
-			return '';
-		}
+        $encrypted = base64_decode( $no_prefix, true );
+        if ( $encrypted === false ) {
+            return '';
+        }
 
-		$result = '';
-		for ( $i = 0; $i < strlen( $encrypted ); $i ++ ) {
-			$char     = substr( $encrypted, $i, 1 );
-			$key_char = substr( $this->key, ( $i % strlen( $this->key ) ) - 1, 1 );
-			$char     = chr( ord( $char ) - ord( $key_char ) );
-			$result .= $char;
-		}
+        $result = '';
+        for ( $i = 0; $i < strlen( $encrypted ); $i ++ ) {
+            $char     = substr( $encrypted, $i, 1 );
+            $key_char = substr( $this->key, ( $i % strlen( $this->key ) ) - 1, 1 );
+            $char     = chr( ord( $char ) - ord( $key_char ) );
+            $result .= $char;
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 }

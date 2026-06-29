@@ -2,11 +2,13 @@
 
 = Version 1.0.2 =
 
+* Removed: de_DE_formal — the formal German translation doesn't fit the tone of a plugin built for people who know their way around WordPress.
 * Removed: swiftmailer/swiftmailer — SwiftMailer was officially abandoned in November 2021 and receives no further security patches. Email delivery is now handled entirely by WordPress's native wp_mail() function, delegating transport to whatever mail configuration the site already has in place (WP Mail SMTP, FluentSMTP, Post SMTP, or WordPress's built-in PHP mail). The per-job "Sending method" configuration (SMTP host/port/credentials, Sendmail path) has been removed from the Email destination settings accordingly, giving site owners a single place to manage all outgoing mail rather than duplicating transport settings inside BackupPilot.
 * Improved: The Email destination now verifies that the backup archive is readable before attempting to send, logging a clear error with the full file path if not found.
 * Improved: PHP memory headroom is requested before attaching large archives to an email, matching the safety margin the former SwiftMailer code applied.
 * Improved: The file-size limit error now includes the actual archive size and the configured limit (e.g. "file: 87.3 MB, limit: 20 MB") instead of a generic message.
 * Improved: Mail send failures are now captured via the wp_mail_failed action and logged with the error detail returned by WordPress/PHPMailer, making it easier to diagnose MTA-level rejections (e.g. Postfix message size limit) or misconfigured mail transport.
+* Code quality: Started cleaning up the inherited code style across inc/ — tabs converted to 4-space indentation, missing semicolons before ?> in inline PHP added, array() converted to short syntax [] throughout, and } else { / } elseif blocks split onto separate lines. The original codebase was a collage of several different coding styles; this is an ongoing effort.
 
 = Version 1.0.1 =
 

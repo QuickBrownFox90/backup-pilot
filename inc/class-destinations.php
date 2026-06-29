@@ -8,210 +8,210 @@
  */
 abstract class BackupPilot_Destinations {
 
-	/**
-	 * @return array
-	 */
-	abstract public function option_defaults();
+    /**
+     * @return array
+     */
+    abstract public function option_defaults();
 
-	/**
-	 * @param $jobid int
-	 */
-	abstract public function edit_tab( $jobid );
+    /**
+     * @param $jobid int
+     */
+    abstract public function edit_tab( $jobid );
 
-	/**
-	 * @param $jobid int
-	 */
-	public function edit_auth( $jobid ) {
+    /**
+     * @param $jobid int
+     */
+    public function edit_auth( $jobid ) {
 
-	}
+    }
 
-	/**
-	 * @param $jobid int
-	 */
-	abstract public function edit_form_post_save( $jobid );
+    /**
+     * @param $jobid int
+     */
+    abstract public function edit_form_post_save( $jobid );
 
-	/**
-	 * use wp_enqueue_script() here to load js for tab
-	 */
-	public function admin_print_scripts() {
+    /**
+     * use wp_enqueue_script() here to load js for tab
+     */
+    public function admin_print_scripts() {
 
-	}
+    }
 
-	public function edit_inline_js() {
+    public function edit_inline_js() {
 
-	}
+    }
 
-	public function edit_ajax() {
+    public function edit_ajax() {
 
-	}
+    }
 
-	public function wizard_admin_print_styles() {
+    public function wizard_admin_print_styles() {
 
-	}
+    }
 
-	public function wizard_admin_print_scripts() {
+    public function wizard_admin_print_scripts() {
 
-	}
+    }
 
-	public function wizard_inline_js() {
+    public function wizard_inline_js() {
 
-	}
+    }
 
-	/**
-	 * @param $job_settings array
-	 */
-	public function wizard_page( array $job_settings ) {
+    /**
+     * @param $job_settings array
+     */
+    public function wizard_page( array $job_settings ) {
 
-		echo '<br /><pre>';
-		print_r( $job_settings );
-		echo '</pre>';
-	}
+        echo '<br /><pre>';
+        print_r( $job_settings );
+        echo '</pre>';
+    }
 
-	/**
-	 * @param $job_settings array
-	 *
-	 * @return array
-	 */
-	public function wizard_save( array $job_settings ) {
+    /**
+     * @param $job_settings array
+     *
+     * @return array
+     */
+    public function wizard_save( array $job_settings ) {
 
-		return $job_settings;
-	}
+        return $job_settings;
+    }
 
-	public function admin_print_styles() {
+    public function admin_print_styles() {
 
-	}
+    }
 
-	/**
-	 * @param $jobdest string
-	 * @param $backupfile
-	 */
-	public function file_delete( $jobdest, $backupfile ) {
+    /**
+     * @param $jobdest string
+     * @param $backupfile
+     */
+    public function file_delete( $jobdest, $backupfile ) {
 
-	}
+    }
 
-	/**
-	 * @param $jobid int
-	 * @param $file_path
-	 * @param $local_file_path
-	 */
-	public function file_download( $jobid, $file_path, $local_file_path = null ) {
+    /**
+     * @param $jobid int
+     * @param $file_path
+     * @param $local_file_path
+     */
+    public function file_download( $jobid, $file_path, $local_file_path = null ) {
 
-		$capability = 'backuppilot_backups_download';
-		$filename = untrailingslashit( BackupPilot::get_plugin_data( 'temp' ) ) . '/' . basename( $local_file_path ?: $file_path );
-		$job_id = (int) $jobid;
+        $capability = 'backuppilot_backups_download';
+        $filename = untrailingslashit( BackupPilot::get_plugin_data( 'temp' ) ) . '/' . basename( $local_file_path ?: $file_path );
+        $job_id = (int) $jobid;
 
-		// Dynamically get downloader class
-		$class_name = get_class( $this );
-		$parts = explode( '_', $class_name );
-		$destination = array_pop( $parts );
+        // Dynamically get downloader class
+        $class_name = get_class( $this );
+        $parts = explode( '_', $class_name );
+        $destination = array_pop( $parts );
 
-		$downloader = new BackupPilot_Download_Handler(
-			new BackupPilot_Download_File(
-				$filename,
-				function ( \BackupPilot_Download_File_Interface $obj ) use (
-					$filename,
-					$file_path,
-					$job_id,
-					$destination
-				) {
+        $downloader = new BackupPilot_Download_Handler(
+            new BackupPilot_Download_File(
+                $filename,
+                function ( \BackupPilot_Download_File_Interface $obj ) use (
+                    $filename,
+                    $file_path,
+                    $job_id,
+                    $destination
+                ) {
 
-					// Setup Destination service and download file.
-					$factory = new BackupPilot_Destination_Downloader_Factory();
-					$downloader = $factory->create(
-						$destination,
-						$job_id,
-						$file_path,
-						$filename
-					);
-					$downloader->download_by_chunks();
-					die();
-				},
-				$capability
-			),
-			'backuppilot_action_nonce',
-			$capability,
-			'download_backup_file'
-		);
+                    // Setup Destination service and download file.
+                    $factory = new BackupPilot_Destination_Downloader_Factory();
+                    $downloader = $factory->create(
+                        $destination,
+                        $job_id,
+                        $file_path,
+                        $filename
+                    );
+                    $downloader->download_by_chunks();
+                    die();
+                },
+                $capability
+            ),
+            'backuppilot_action_nonce',
+            $capability,
+            'download_backup_file'
+        );
 
-		// Download the file.
-		$downloader->handle();
-	}
+        // Download the file.
+        $downloader->handle();
+    }
 
-	/**
-	 * @param $jobdest string
-	 *
-	 * @return array
-	 */
-	public function file_get_list( $jobdest ) {
+    /**
+     * @param $jobdest string
+     *
+     * @return array
+     */
+    public function file_get_list( $jobdest ) {
 
-		return array();
-	}
+        return [];
+    }
 
-	/**
-	 * @param $job_object BackupPilot_Job
-	 */
-	abstract public function job_run_archive( BackupPilot_Job $job_object );
+    /**
+     * @param $job_object BackupPilot_Job
+     */
+    abstract public function job_run_archive( BackupPilot_Job $job_object );
 
-	/**
-	 * @param $job_object BackupPilot_Job
-	 */
-	public function job_run_sync( BackupPilot_Job $job_object ) {
+    /**
+     * @param $job_object BackupPilot_Job
+     */
+    public function job_run_sync( BackupPilot_Job $job_object ) {
 
-	}
+    }
 
-	/**
-	 * Prepare Restore
-	 *
-	 * Method for preparing the restore process.
-	 *
-	 * @param $job_id    int    Number of job.
-	 * @param $file_name string Name of backup.
-	 *
-	 * @return string The file path, empty string if file cannot be found.
-	 */
-	public function prepare_restore( $job_id, $file_name ) {
+    /**
+     * Prepare Restore
+     *
+     * Method for preparing the restore process.
+     *
+     * @param $job_id    int    Number of job.
+     * @param $file_name string Name of backup.
+     *
+     * @return string The file path, empty string if file cannot be found.
+     */
+    public function prepare_restore( $job_id, $file_name ) {
 
-	}
+    }
 
-	/**
-	 * @param $job_settings array
-	 *
-	 * @return bool
-	 */
-	abstract public function can_run( array $job_settings );
+    /**
+     * @param $job_settings array
+     *
+     * @return bool
+     */
+    abstract public function can_run( array $job_settings );
 
-	/**
-	 * Is Backup Archive
-	 *
-	 * Checks if given file is a backup archive.
-	 *
-	 * @param $file
-	 *
-	 * @return bool
-	 */
-	public function is_backup_archive( $file ) {
+    /**
+     * Is Backup Archive
+     *
+     * Checks if given file is a backup archive.
+     *
+     * @param $file
+     *
+     * @return bool
+     */
+    public function is_backup_archive( $file ) {
 
-		$extensions = array(
-			'.tar.gz',
-			'.tar',
-			'.zip',
-		);
+        $extensions = [
+            '.tar.gz',
+            '.tar',
+            '.zip',
+        ];
 
-		$file = trim( basename( $file ) );
-		$filename = '';
+        $file = trim( basename( $file ) );
+        $filename = '';
 
-		foreach ( $extensions as $extension ) {
-			if ( substr( $file, ( strlen( $extension ) * - 1 ) ) === $extension ) {
-				$filename = substr( $file, 0, ( strlen( $extension ) * - 1 ) );
-			}
-		}
+        foreach ( $extensions as $extension ) {
+            if ( substr( $file, ( strlen( $extension ) * - 1 ) ) === $extension ) {
+                $filename = substr( $file, 0, ( strlen( $extension ) * - 1 ) );
+            }
+        }
 
-		if ( ! $filename ) {
-			return false;
-		}
+        if ( ! $filename ) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
     /**
      * Checks if the given archive belongs to the given job.
@@ -251,7 +251,7 @@ abstract class BackupPilot_Destinations {
     protected function getDecodedHashAndJobId($file, $numberOfCharacters)
     {
 
-        $data = array();
+        $data = [];
 
         for ($i = strlen($file) - $numberOfCharacters; $i >= 0; $i--) {
             $data = BackupPilot_Option::decode_hash(substr($file, $i, $numberOfCharacters));

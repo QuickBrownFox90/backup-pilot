@@ -1,1 +1,1 @@
-<p><?php _e('BackupPilot is dropping support for WordPress versions less than 5.0. Please update WordPress to the latest version. Without an update, you will not receive any new features.', 'backuppilot') ?></p>
+<p><?php _e( 'BackupPilot is dropping support for WordPress versions less than 5.0. Please update WordPress to the latest version. Without an update, you will not receive any new features.', 'backuppilot' ) ?></p>

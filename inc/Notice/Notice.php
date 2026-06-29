@@ -65,9 +65,13 @@ abstract class Notice
 
         if ($type === static::TYPE_BACKUPPILOT) {
             add_action('backuppilot_admin_messages', [ $this, 'notice' ], 20);
-        } elseif ($type === static::TYPE_ADMIN) {
+        }
+
+        elseif ($type === static::TYPE_ADMIN) {
             add_action('admin_notices', [ $this, 'notice' ], 20);
-        } else {
+        }
+
+        else {
             throw new \InvalidArgumentException(
                 __('Invalid notice type specified', 'backuppilot')
             );

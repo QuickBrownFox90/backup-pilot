@@ -12,35 +12,35 @@
  */
 class BackupPilot_Encryption_OpenSSL {
 
-	/**
-	 * Prefix
-	 *
-	 * @var string
-	 */
-	const PREFIX = 'OSSL$';
+    /**
+     * Prefix
+     *
+     * @var string
+     */
+    const PREFIX = 'OSSL$';
 
-	/**
-	 * Cipher Method
-	 *
-	 * @var string
-	 */
-	private static $cipher_method;
+    /**
+     * Cipher Method
+     *
+     * @var string
+     */
+    private static $cipher_method;
 
-	private $key;
+    private $key;
 
-	private $key_type;
+    private $key_type;
 
-	/**
-	 * Supported
-	 *
-	 * @return bool
-	 */
-	public static function supported() {
+    /**
+     * Supported
+     *
+     * @return bool
+     */
+    public static function supported() {
 
-		return
-			function_exists( 'openssl_get_cipher_methods' )
-			&& self::cipher_method();
-	}
+        return
+            function_exists( 'openssl_get_cipher_methods' )
+            && self::cipher_method();
+    }
 
     /**
      * BackupPilot_Encryption_OpenSSL constructor
@@ -121,35 +121,35 @@ class BackupPilot_Encryption_OpenSSL {
         return $decrypted;
     }
 
-	/**
-	 * Cipher Method
-	 *
-	 * @return string
-	 */
-	private static function cipher_method() {
+    /**
+     * Cipher Method
+     *
+     * @return string
+     */
+    private static function cipher_method() {
 
-		if ( is_string( self::$cipher_method ) ) {
-			return self::$cipher_method;
-		}
+        if ( is_string( self::$cipher_method ) ) {
+            return self::$cipher_method;
+        }
 
-		$all_methods = openssl_get_cipher_methods();
-		if ( ! $all_methods ) {
-			self::$cipher_method = '';
+        $all_methods = openssl_get_cipher_methods();
+        if ( ! $all_methods ) {
+            self::$cipher_method = '';
 
-			return '';
-		}
+            return '';
+        }
 
-		$preferred = array( 'AES-256-CTR', 'AES-128-CTR', 'AES-192-CTR' );
-		foreach ( $preferred as $method ) {
-			if ( in_array( $method, $all_methods, true ) ) {
-				self::$cipher_method = $method;
+        $preferred = [ 'AES-256-CTR', 'AES-128-CTR', 'AES-192-CTR' ];
+        foreach ( $preferred as $method ) {
+            if ( in_array( $method, $all_methods, true ) ) {
+                self::$cipher_method = $method;
 
-				return $method;
-			}
-		}
+                return $method;
+            }
+        }
 
-		self::$cipher_method = reset( $all_methods );
+        self::$cipher_method = reset( $all_methods );
 
-		return self::$cipher_method;
-	}
+        return self::$cipher_method;
+    }
 }

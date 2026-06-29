@@ -6,6 +6,16 @@ Schedule complete automatic backups of your WordPress installation and push them
 
 ---
 
+## About
+
+BackupPilot is aimed at experienced WordPress administrators who want a reliable, no-nonsense backup tool — without upsells, cloud-account lockout, or UI bloat that comes from a freemium model.
+
+The fork base is BackWPup **3.10.0** — a deliberate choice. BackWPup was an outstanding plugin for years, but went through a series of ownership changes that gradually stripped out the free version, added friction to basic features, and steered users toward paid tiers. Version 3.x represented the last point where the plugin was still clean, complete, and community-oriented.
+
+BackupPilot picks up from there: updated dependencies, security fixes, and an opinionated focus on the features that actually matter for a professional backup workflow.
+
+---
+
 ## Features
 
 - Database backup *(requires mysqli)*
@@ -20,7 +30,7 @@ Schedule complete automatic backups of your WordPress installation and push them
 - Store backups to S3-compatible services *(requires curl)*
 - Store backups to Microsoft Azure Blob *(requires curl)*
 - Store backups to SugarSync *(requires curl)*
-- Send backups to an email adress *(not recommended, but maybe useful for some edge cases)*
+- Send backups to an email address *(not recommended, but maybe useful for some edge cases)*
 - Send logs by email
 - Multisite support (network admin only)
 
@@ -42,7 +52,9 @@ Upload and activate the plugin like any other WordPress plugin, then go to **Bac
 
 ### How do I restore a backup?
 
-Extract the downloaded `.zip` archive, upload its contents back to your server, then import the included database dump.
+BackupPilot does not include an automated restore function — restores are done manually. Extract the downloaded archive, upload its contents back to your server, then import the included database dump with a tool like phpMyAdmin or WP-CLI (`wp db import dump.sql`).
+
+For a restore to work, the archive needs to contain a complete WordPress installation — both the files and the database dump.
 
 ### My backup jobs don't run as scheduled.
 
@@ -131,6 +143,9 @@ This approach gives you a single place to manage all outgoing email from your Wo
 
 ### 1.0.2
 
+**Translations**
+- Removed: `de_DE_formal` — the formal German translation doesn't fit the tone of a plugin built for people who know their way around WordPress.
+
 **Dependencies**
 - Removed: `swiftmailer/swiftmailer` — SwiftMailer was officially abandoned in November 2021 and receives no further security patches. Email delivery is now handled entirely by WordPress's native `wp_mail()` function, delegating transport to whatever mail configuration the site already has in place (WP Mail SMTP, FluentSMTP, Post SMTP, or WordPress's built-in PHP mail). The per-job "Sending method" configuration (SMTP host/port/credentials, Sendmail path) has been removed from the Email destination settings accordingly, giving site owners a single place to manage all outgoing mail rather than duplicating transport settings inside BackupPilot.
 
@@ -139,6 +154,9 @@ This approach gives you a single place to manage all outgoing email from your Wo
 - PHP memory headroom is requested upfront before attaching large archives, matching the safety margin the former SwiftMailer code applied
 - The file-size limit error now includes the actual archive size and the configured limit
 - Mail send failures are captured via `wp_mail_failed` and logged with the PHPMailer error detail, making MTA-level rejections (e.g. Postfix message size limit) diagnosable from the job log
+
+**Code quality**
+- Started cleaning up the inherited code style across `inc/`: tabs converted to 4-space indentation, missing semicolons before `?>` in inline PHP added, `array()` converted to short syntax `[]` throughout, and `} else {` / `} elseif` blocks split onto separate lines — the original codebase was a collage of several different coding styles and this is an ongoing effort
 
 ---
 

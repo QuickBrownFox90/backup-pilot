@@ -7,5 +7,5 @@ namespace QBF\BackupPilot\Settings;
  */
 interface SettingTab {
 
-	public function tab();
+    public function tab();
 }

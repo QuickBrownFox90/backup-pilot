@@ -15,107 +15,107 @@
  */
 class BackupPilot_Encryption_Mcrypt {
 
-	const PREFIX = 'RIJNDAEL$';
+    const PREFIX = 'RIJNDAEL$';
 
-	/**
-	 * @var bool
-	 */
-	private $deprecated = false;
+    /**
+     * @var bool
+     */
+    private $deprecated = false;
 
-	/**
-	 * @return bool
-	 */
-	public static function supported() {
-		return function_exists( 'mcrypt_encrypt' );
-	}
+    /**
+     * @return bool
+     */
+    public static function supported() {
+        return function_exists( 'mcrypt_encrypt' );
+    }
 
-	/**
-	 * @param string $enc_key
-	 * @param string $key_type
-	 */
-	public function __construct( $enc_key, $key_type ) {
-		$this->key        = md5( (string) $enc_key );
-		$this->key_type   = (string) $key_type;
-		$this->deprecated = (bool) version_compare( PHP_VERSION, '7.1', '>=' );
+    /**
+     * @param string $enc_key
+     * @param string $key_type
+     */
+    public function __construct( $enc_key, $key_type ) {
+        $this->key        = md5( (string) $enc_key );
+        $this->key_type   = (string) $key_type;
+        $this->deprecated = (bool) version_compare( PHP_VERSION, '7.1', '>=' );
 
-		/** @TODO: Should we do something here to inform user about deprecation? */
-	}
+        /** @TODO: Should we do something here to inform user about deprecation? */
+    }
 
-	/**
-	 *
-	 * Encrypt a string (Passwords)
-	 *
-	 * @param string $string value to encrypt
-	 *
-	 * @return string encrypted string
-	 */
-	public function encrypt( $string ) {
+    /**
+     *
+     * Encrypt a string (Passwords)
+     *
+     * @param string $string value to encrypt
+     *
+     * @return string encrypted string
+     */
+    public function encrypt( $string ) {
 
-		if ( ! is_string( $string ) || ! $string ) {
-			return '';
-		}
+        if ( ! is_string( $string ) || ! $string ) {
+            return '';
+        }
 
-		$encrypted = $this->deprecated
-			? @mcrypt_encrypt( MCRYPT_RIJNDAEL_256, $this->key, $string, MCRYPT_MODE_CBC, md5( $this->key ) )
-			: mcrypt_encrypt( MCRYPT_RIJNDAEL_256, $this->key, $string, MCRYPT_MODE_CBC, md5( $this->key ) );
+        $encrypted = $this->deprecated
+            ? @mcrypt_encrypt( MCRYPT_RIJNDAEL_256, $this->key, $string, MCRYPT_MODE_CBC, md5( $this->key ) )
+            : mcrypt_encrypt( MCRYPT_RIJNDAEL_256, $this->key, $string, MCRYPT_MODE_CBC, md5( $this->key ) );
 
-		return BackupPilot_Encryption::PREFIX . self::PREFIX . $this->key_type . base64_encode( $encrypted );
+        return BackupPilot_Encryption::PREFIX . self::PREFIX . $this->key_type . base64_encode( $encrypted );
 
-	}
+    }
 
-	/**
-	 *
-	 * Decrypt a string (Passwords)
-	 *
-	 * @param string $string value to decrypt
-	 *
-	 * @return string decrypted string
-	 */
-	public function decrypt( $string ) {
+    /**
+     *
+     * Decrypt a string (Passwords)
+     *
+     * @param string $string value to decrypt
+     *
+     * @return string decrypted string
+     */
+    public function decrypt( $string ) {
 
-		if (
-			! is_string( $string )
-			|| ! $string
-			|| strpos( $string, BackupPilot_Encryption::PREFIX . self::PREFIX . $this->key_type ) !== 0
-		) {
-			return '';
-		}
+        if (
+            ! is_string( $string )
+            || ! $string
+            || strpos( $string, BackupPilot_Encryption::PREFIX . self::PREFIX . $this->key_type ) !== 0
+        ) {
+            return '';
+        }
 
-		$no_prefix = substr( $string, strlen( BackupPilot_Encryption::PREFIX . self::PREFIX . $this->key_type ) );
+        $no_prefix = substr( $string, strlen( BackupPilot_Encryption::PREFIX . self::PREFIX . $this->key_type ) );
 
-		$encrypted = base64_decode( $no_prefix, true );
-		if ( $encrypted === false ) {
-			return '';
-		}
+        $encrypted = base64_decode( $no_prefix, true );
+        if ( $encrypted === false ) {
+            return '';
+        }
 
-		if ( defined( 'BACKWPUP_MCRYPT_KEY_MODE' ) && BACKWPUP_MCRYPT_KEY_MODE === 1 ) {
-			return $this->decrypt_deprecated( $encrypted );
-		}
+        if ( defined( 'BACKWPUP_MCRYPT_KEY_MODE' ) && BACKWPUP_MCRYPT_KEY_MODE === 1 ) {
+            return $this->decrypt_deprecated( $encrypted );
+        }
 
-		$decrypted = $this->deprecated
-			? @mcrypt_decrypt( MCRYPT_RIJNDAEL_256, $this->key, $encrypted, MCRYPT_MODE_CBC, md5( $this->key ) )
-			: mcrypt_decrypt( MCRYPT_RIJNDAEL_256, $this->key, $encrypted, MCRYPT_MODE_CBC, md5( $this->key ) );
+        $decrypted = $this->deprecated
+            ? @mcrypt_decrypt( MCRYPT_RIJNDAEL_256, $this->key, $encrypted, MCRYPT_MODE_CBC, md5( $this->key ) )
+            : mcrypt_decrypt( MCRYPT_RIJNDAEL_256, $this->key, $encrypted, MCRYPT_MODE_CBC, md5( $this->key ) );
 
-		$skip_deprecated = defined( 'BACKWPUP_MCRYPT_KEY_MODE' ) && BACKWPUP_MCRYPT_KEY_MODE === 2;
+        $skip_deprecated = defined( 'BACKWPUP_MCRYPT_KEY_MODE' ) && BACKWPUP_MCRYPT_KEY_MODE === 2;
 
-		if ( ! $skip_deprecated && ! @wp_check_invalid_utf8( $decrypted ) ) {
-			$decrypted = $this->decrypt_deprecated( $encrypted );
-		}
+        if ( ! $skip_deprecated && ! @wp_check_invalid_utf8( $decrypted ) ) {
+            $decrypted = $this->decrypt_deprecated( $encrypted );
+        }
 
-		return $decrypted;
-	}
+        return $decrypted;
+    }
 
-	/**
-	 * @param string $encrypted
-	 *
-	 * @return string
-	 */
-	private function decrypt_deprecated( $encrypted ) {
+    /**
+     * @param string $encrypted
+     *
+     * @return string
+     */
+    private function decrypt_deprecated( $encrypted ) {
 
-		$key = md5( $this->key );
+        $key = md5( $this->key );
 
-		return $this->deprecated
-			? @mcrypt_decrypt( MCRYPT_RIJNDAEL_256, $key, $encrypted, MCRYPT_MODE_CBC, md5( $key ) )
-			: mcrypt_decrypt( MCRYPT_RIJNDAEL_256, $key, $encrypted, MCRYPT_MODE_CBC, md5( $key ) );
-	}
+        return $this->deprecated
+            ? @mcrypt_decrypt( MCRYPT_RIJNDAEL_256, $key, $encrypted, MCRYPT_MODE_CBC, md5( $key ) )
+            : mcrypt_decrypt( MCRYPT_RIJNDAEL_256, $key, $encrypted, MCRYPT_MODE_CBC, md5( $key ) );
+    }
 }

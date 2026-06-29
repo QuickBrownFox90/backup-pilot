@@ -4,16 +4,16 @@
  */
 class BackupPilot_Destination_Dropbox_API_Request_Exception extends BackupPilot_Destination_Dropbox_API_Exception {
 
-	protected $error;
+    protected $error;
 
-	public function __construct( $message, $code = 0, $previous = null, $error = null ) {
+    public function __construct( $message, $code = 0, $previous = null, $error = null ) {
 
-		$this->error = $error;
-		parent::__construct( $message, $code, $previous );
-	}
+        $this->error = $error;
+        parent::__construct( $message, $code, $previous );
+    }
 
-	public function getError() {
+    public function getError() {
 
-		return $this->error;
-	}
+        return $this->error;
+    }
 }

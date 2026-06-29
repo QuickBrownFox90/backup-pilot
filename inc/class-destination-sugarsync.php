@@ -4,49 +4,49 @@ use \Inpsyde\BackWPupShared\File\MimeTypeExtractor;
 
 class BackupPilot_Destination_SugarSync extends BackupPilot_Destinations {
 
-	public static $backuppilot_job_object = NULL;
+    public static $backuppilot_job_object = NULL;
 
-	/**
-	 * @return array
-	 */
-	public function option_defaults() {
-		return array( 'sugarrefreshtoken' => '', 'sugarroot' => '', 'sugardir' => trailingslashit( sanitize_file_name( get_bloginfo( 'name' ) ) ), 'sugarmaxbackups' => 15 );
-	}
+    /**
+     * @return array
+     */
+    public function option_defaults() {
+        return [ 'sugarrefreshtoken' => '', 'sugarroot' => '', 'sugardir' => trailingslashit( sanitize_file_name( get_bloginfo( 'name' ) ) ), 'sugarmaxbackups' => 15 ];
+    }
 
 
-	/**
-	 * @param $jobid
-	 */
-	public function edit_tab( $jobid ) {
-		?>
-		<h3 class="title"><?php esc_html_e( 'Sugarsync Login', 'backuppilot' ); ?></h3>
+    /**
+     * @param $jobid
+     */
+    public function edit_tab( $jobid ) {
+        ?>
+        <h3 class="title"><?php esc_html_e( 'Sugarsync Login', 'backuppilot' ); ?></h3>
         <p></p>
         <table class="form-table">
 
-		<?php if ( ! BackupPilot_Option::get( $jobid, 'sugarrefreshtoken' ) ) { ?>
-			<tr>
-				<th scope="row"><?php esc_html_e( 'Authentication', 'backuppilot' ); ?></th>
+        <?php if ( ! BackupPilot_Option::get( $jobid, 'sugarrefreshtoken' ) ) { ?>
+            <tr>
+                <th scope="row"><?php esc_html_e( 'Authentication', 'backuppilot' ); ?></th>
                 <td>
                     <label for="sugaremail"><?php esc_html_e( 'Email address:', 'backuppilot' ); ?><br/>
                     <input id="sugaremail" name="sugaremail" type="text" value="" class="large-text" autocomplete="off" /></label>
-					<br/>
+                    <br/>
                     <label for="sugarpass"><?php esc_html_e( 'Password:', 'backuppilot' ); ?><br/>
-					<input id="sugarpass" name="sugarpass" type="password" value="" class="large-text" autocomplete="off" /></label>
-					<br/>
-					<br/>
-					<input type="submit" id="idauthbutton" name="authbutton" class="button-primary" value="<?php esc_html_e( 'Authenticate with Sugarsync!', 'backuppilot' ); ?>"/>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="authbutton" class="button" value="<?php esc_html_e( 'Create Sugarsync account', 'backuppilot' ); ?>"/>
+                    <input id="sugarpass" name="sugarpass" type="password" value="" class="large-text" autocomplete="off" /></label>
+                    <br/>
+                    <br/>
+                    <input type="submit" id="idauthbutton" name="authbutton" class="button-primary" value="<?php esc_html_e( 'Authenticate with Sugarsync!', 'backuppilot' ); ?>"/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="authbutton" class="button" value="<?php esc_html_e( 'Create Sugarsync account', 'backuppilot' ); ?>"/>
                 </td>
             </tr>
-		<?php } else { ?>
+        <?php } else { ?>
             <tr>
                 <th scope="row"><label for="idauthbutton"><?php esc_html_e( 'Authentication', 'backuppilot' ); ?></label></th>
                 <td>
-					<span class="bwu-message-success"><?php esc_html_e( 'Authenticated!', 'backuppilot' ); ?></span>
-					<input type="submit" id="idauthbutton" name="authbutton" class="button-primary" value="<?php esc_html_e( 'Delete Sugarsync authentication!', 'backuppilot' ); ?>" />
+                    <span class="bwu-message-success"><?php esc_html_e( 'Authenticated!', 'backuppilot' ); ?></span>
+                    <input type="submit" id="idauthbutton" name="authbutton" class="button-primary" value="<?php esc_html_e( 'Delete Sugarsync authentication!', 'backuppilot' ); ?>" />
                 </td>
             </tr>
-		<?php } ?>
+        <?php } ?>
         </table>
 
         <h3 class="title"><?php esc_html_e( 'SugarSync Root', 'backuppilot' ); ?></h3>
@@ -55,25 +55,25 @@ class BackupPilot_Destination_SugarSync extends BackupPilot_Destinations {
             <tr>
                 <th scope="row"><label for="sugarroot"><?php esc_html_e( 'Sync folder selection', 'backuppilot' ); ?></label></th>
                 <td>
-				<?php
-				try {
-					$sugarsync   = new BackupPilot_Destination_SugarSync_API( BackupPilot_Option::get( $jobid, 'sugarrefreshtoken' ) );
-					$user        = $sugarsync->user();
-					$syncfolders = $sugarsync->get( $user->syncfolders );
-					if ( ! is_object( $syncfolders ) )
-						echo '<span class="bwu-message-error">' . __( 'No Syncfolders found!', 'backuppilot' ) . '</span>';
-				}
-				catch ( Exception $e ) {
-					echo '<span class="bwu-message-error">' . $e->getMessage() . '</span>';
-				}
-				if ( isset( $syncfolders ) && is_object( $syncfolders ) ) {
-					echo '<select name="sugarroot" id="sugarroot">';
-					foreach ( $syncfolders->collection as $roots ) {
-						echo "<option " . selected( strtolower( BackupPilot_Option::get( $jobid, 'sugarroot' ) ), strtolower( $roots->ref ), FALSE ) . " value=\"" . $roots->ref . "\">" . $roots->displayName . "</option>";
-					}
-					echo '</select>';
-				}
-				?>
+                <?php
+                try {
+                    $sugarsync   = new BackupPilot_Destination_SugarSync_API( BackupPilot_Option::get( $jobid, 'sugarrefreshtoken' ) );
+                    $user        = $sugarsync->user();
+                    $syncfolders = $sugarsync->get( $user->syncfolders );
+                    if ( ! is_object( $syncfolders ) )
+                        echo '<span class="bwu-message-error">' . __( 'No Syncfolders found!', 'backuppilot' ) . '</span>';
+                }
+                catch ( Exception $e ) {
+                    echo '<span class="bwu-message-error">' . $e->getMessage() . '</span>';
+                }
+                if ( isset( $syncfolders ) && is_object( $syncfolders ) ) {
+                    echo '<select name="sugarroot" id="sugarroot">';
+                    foreach ( $syncfolders->collection as $roots ) {
+                        echo "<option " . selected( strtolower( BackupPilot_Option::get( $jobid, 'sugarroot' ) ), strtolower( $roots->ref ), FALSE ) . " value=\"" . $roots->ref . "\">" . $roots->displayName . "</option>";
+                    }
+                    echo '</select>';
+                }
+                ?>
                 </td>
             </tr>
         </table>
@@ -90,783 +90,791 @@ class BackupPilot_Destination_SugarSync extends BackupPilot_Destinations {
         <tr>
             <th scope="row"><?php esc_html_e( 'File Deletion', 'backuppilot' ); ?></th>
             <td>
-	            <?php
-	            if ( BackupPilot_Option::get( $jobid, 'backuptype' ) === 'archive' ) {
-		            ?>
-		            <label for="idsugarmaxbackups">
-			            <input id="idsugarmaxbackups" name="sugarmaxbackups" type="number" min="0" step="1" value="<?php echo esc_attr( BackupPilot_Option::get( $jobid, 'sugarmaxbackups' ) ); ?>" class="small-text" />
-			            &nbsp;<?php esc_html_e( 'Number of files to keep in folder.', 'backuppilot' ); ?>
-		            </label>
-		            <p><?php _e( '<strong>Warning</strong>: Files belonging to this job are now tracked. Old backup archives which are untracked will not be automatically deleted.', 'backuppilot' ) ?></p>
-	            <?php } else { ?>
-		            <label for="idsugarsyncnodelete">
-			            <input class="checkbox" value="1" type="checkbox" <?php checked( BackupPilot_Option::get( $jobid, 'sugarsyncnodelete' ), true ); ?> name="sugarsyncnodelete" id="idsugarsyncnodelete" />
-			            &nbsp;<?php esc_html_e( 'Do not delete files while syncing to destination!', 'backuppilot' ); ?>
-		            </label>
-	            <?php } ?>
+                <?php
+                if ( BackupPilot_Option::get( $jobid, 'backuptype' ) === 'archive' ) {
+                    ?>
+                    <label for="idsugarmaxbackups">
+                        <input id="idsugarmaxbackups" name="sugarmaxbackups" type="number" min="0" step="1" value="<?php echo esc_attr( BackupPilot_Option::get( $jobid, 'sugarmaxbackups' ) ); ?>" class="small-text" />
+                        &nbsp;<?php esc_html_e( 'Number of files to keep in folder.', 'backuppilot' ); ?>
+                    </label>
+                    <p><?php _e( '<strong>Warning</strong>: Files belonging to this job are now tracked. Old backup archives which are untracked will not be automatically deleted.', 'backuppilot' ); ?></p>
+                <?php } else { ?>
+                    <label for="idsugarsyncnodelete">
+                        <input class="checkbox" value="1" type="checkbox" <?php checked( BackupPilot_Option::get( $jobid, 'sugarsyncnodelete' ), true ); ?> name="sugarsyncnodelete" id="idsugarsyncnodelete" />
+                        &nbsp;<?php esc_html_e( 'Do not delete files while syncing to destination!', 'backuppilot' ); ?>
+                    </label>
+                <?php } ?>
             </td>
         </tr>
     </table>
-	<?php
-	}
+    <?php
+    }
 
 
-	/**
-	 * @param $jobid
-	 */
-	public function edit_form_post_save( $jobid ) {
+    /**
+     * @param $jobid
+     */
+    public function edit_form_post_save( $jobid ) {
 
 
-		if ( ! empty( $_POST[ 'sugaremail' ] ) && ! empty( $_POST[ 'sugarpass' ] ) && $_POST[ 'authbutton' ] === __( 'Authenticate with Sugarsync!', 'backuppilot' ) ) {
-			try {
-				$sugarsync     = new BackupPilot_Destination_SugarSync_API();
-				$refresh_token = $sugarsync->get_Refresh_Token( sanitize_email( $_POST[ 'sugaremail' ] ), $_POST[ 'sugarpass' ] );
-				if ( ! empty( $refresh_token ) )
-					BackupPilot_Option::update( $jobid, 'sugarrefreshtoken', $refresh_token );
-			}
-			catch ( Exception $e ) {
-				BackupPilot_Admin::message( 'SUGARSYNC: ' . $e->getMessage(), TRUE );
-			}
-		}
+        if ( ! empty( $_POST[ 'sugaremail' ] ) && ! empty( $_POST[ 'sugarpass' ] ) && $_POST[ 'authbutton' ] === __( 'Authenticate with Sugarsync!', 'backuppilot' ) ) {
+            try {
+                $sugarsync     = new BackupPilot_Destination_SugarSync_API();
+                $refresh_token = $sugarsync->get_Refresh_Token( sanitize_email( $_POST[ 'sugaremail' ] ), $_POST[ 'sugarpass' ] );
+                if ( ! empty( $refresh_token ) )
+                    BackupPilot_Option::update( $jobid, 'sugarrefreshtoken', $refresh_token );
+            }
+            catch ( Exception $e ) {
+                BackupPilot_Admin::message( 'SUGARSYNC: ' . $e->getMessage(), TRUE );
+            }
+        }
 
-		if ( isset( $_POST[ 'authbutton' ] ) && $_POST[ 'authbutton' ] === __( 'Delete Sugarsync authentication!', 'backuppilot' ) ) {
-			BackupPilot_Option::delete( $jobid, 'sugarrefreshtoken' );
-		}
+        if ( isset( $_POST[ 'authbutton' ] ) && $_POST[ 'authbutton' ] === __( 'Delete Sugarsync authentication!', 'backuppilot' ) ) {
+            BackupPilot_Option::delete( $jobid, 'sugarrefreshtoken' );
+        }
 
-		if ( isset( $_POST[ 'authbutton' ] ) && $_POST[ 'authbutton' ] === __( 'Create Sugarsync account', 'backuppilot' ) ) {
-			try {
-				$sugarsync = new BackupPilot_Destination_SugarSync_API();
-				$sugarsync->create_account( sanitize_email( $_POST[ 'sugaremail' ] ), $_POST[ 'sugarpass' ] );
-			}
-			catch ( Exception $e ) {
-				BackupPilot_Admin::message( 'SUGARSYNC: ' . $e->getMessage(), TRUE );
-			}
-		}
+        if ( isset( $_POST[ 'authbutton' ] ) && $_POST[ 'authbutton' ] === __( 'Create Sugarsync account', 'backuppilot' ) ) {
+            try {
+                $sugarsync = new BackupPilot_Destination_SugarSync_API();
+                $sugarsync->create_account( sanitize_email( $_POST[ 'sugaremail' ] ), $_POST[ 'sugarpass' ] );
+            }
+            catch ( Exception $e ) {
+                BackupPilot_Admin::message( 'SUGARSYNC: ' . $e->getMessage(), TRUE );
+            }
+        }
 
-		$_POST[ 'sugardir' ] = trailingslashit( str_replace( '//', '/', str_replace( '\\', '/', trim( sanitize_text_field( $_POST[ 'sugardir' ] ) ) ) ) );
-		if ( substr( $_POST[ 'sugardir' ], 0, 1 ) == '/' )
-			$_POST[ 'sugardir' ] = substr( $_POST[ 'sugardir' ], 1 );
-		if ( $_POST[ 'sugardir' ] == '/' )
-			$_POST[ 'sugardir' ] = '';
-		BackupPilot_Option::update( $jobid, 'sugardir', $_POST[ 'sugardir' ] );
+        $_POST[ 'sugardir' ] = trailingslashit( str_replace( '//', '/', str_replace( '\\', '/', trim( sanitize_text_field( $_POST[ 'sugardir' ] ) ) ) ) );
+        if ( substr( $_POST[ 'sugardir' ], 0, 1 ) == '/' )
+            $_POST[ 'sugardir' ] = substr( $_POST[ 'sugardir' ], 1 );
+        if ( $_POST[ 'sugardir' ] == '/' )
+            $_POST[ 'sugardir' ] = '';
+        BackupPilot_Option::update( $jobid, 'sugardir', $_POST[ 'sugardir' ] );
 
-		BackupPilot_Option::update( $jobid, 'sugarroot', isset( $_POST[ 'sugarroot' ] ) ? sanitize_text_field( $_POST[ 'sugarroot' ] ) : '' );
-		BackupPilot_Option::update( $jobid, 'sugarmaxbackups', isset( $_POST[ 'sugarmaxbackups' ] ) ? absint( $_POST[ 'sugarmaxbackups' ] ) : 0 );
-	}
+        BackupPilot_Option::update( $jobid, 'sugarroot', isset( $_POST[ 'sugarroot' ] ) ? sanitize_text_field( $_POST[ 'sugarroot' ] ) : '' );
+        BackupPilot_Option::update( $jobid, 'sugarmaxbackups', isset( $_POST[ 'sugarmaxbackups' ] ) ? absint( $_POST[ 'sugarmaxbackups' ] ) : 0 );
+    }
 
-	/**
-	 * @param $jobdest
-	 * @param $backupfile
-	 */
-	public function file_delete( $jobdest, $backupfile ) {
+    /**
+     * @param $jobdest
+     * @param $backupfile
+     */
+    public function file_delete( $jobdest, $backupfile ) {
 
-		$files = get_site_transient( 'backuppilot_' . strtolower( $jobdest ) );
-		list( $jobid, $dest ) = explode( '_', $jobdest );
+        $files = get_site_transient( 'backuppilot_' . strtolower( $jobdest ) );
+        list( $jobid, $dest ) = explode( '_', $jobdest );
 
-		if ( BackupPilot_Option::get( $jobid, 'sugarrefreshtoken' ) ) {
-			try {
-				$sugarsync = new BackupPilot_Destination_SugarSync_API( BackupPilot_Option::get( $jobid, 'sugarrefreshtoken' ) );
-				$sugarsync->delete( urldecode( $backupfile ) );
-				//update file list
-				foreach ( $files as $key => $file ) {
-					if ( is_array( $file ) && $file[ 'file' ] == $backupfile )
-						unset( $files[ $key ] );
-				}
-				unset( $sugarsync );
-			}
-			catch ( Exception $e ) {
-				BackupPilot_Admin::message( 'SUGARSYNC: ' . $e->getMessage(), TRUE );
-			}
-		}
+        if ( BackupPilot_Option::get( $jobid, 'sugarrefreshtoken' ) ) {
+            try {
+                $sugarsync = new BackupPilot_Destination_SugarSync_API( BackupPilot_Option::get( $jobid, 'sugarrefreshtoken' ) );
+                $sugarsync->delete( urldecode( $backupfile ) );
+                //update file list
+                foreach ( $files as $key => $file ) {
+                    if ( is_array( $file ) && $file[ 'file' ] == $backupfile )
+                        unset( $files[ $key ] );
+                }
+                unset( $sugarsync );
+            }
+            catch ( Exception $e ) {
+                BackupPilot_Admin::message( 'SUGARSYNC: ' . $e->getMessage(), TRUE );
+            }
+        }
 
-		set_site_transient( 'backuppilot_' . strtolower( $jobdest ), $files, YEAR_IN_SECONDS );
-	}
+        set_site_transient( 'backuppilot_' . strtolower( $jobdest ), $files, YEAR_IN_SECONDS );
+    }
 
-	/**
-	 * @param $jobid
-	 * @param $get_file
-	 * @param $local_file_path
-	 */
-	public function file_download( $jobid, $get_file, $local_file_path = null ) {
+    /**
+     * @param $jobid
+     * @param $get_file
+     * @param $local_file_path
+     */
+    public function file_download( $jobid, $get_file, $local_file_path = null ) {
 
-		try {
-			$sugarsync = new BackupPilot_Destination_SugarSync_API( BackupPilot_Option::get( $jobid, 'sugarrefreshtoken' ) );
-			$response  = $sugarsync->get( urldecode( $get_file ) );
-			if ( $level = ob_get_level() ) {
-				for ( $i = 0; $i < $level; $i ++ ) {
-					ob_end_clean();
-				}
-			}
-			@set_time_limit( 300 );
-			nocache_headers();
-			header( 'Content-Description: File Transfer' );
-			header( 'Content-Type: ' . MimeTypeExtractor::fromFilePath( (string) $response->displayName ) );
-			header( 'Content-Disposition: attachment; filename="' . (string) $response->displayName . '"' );
-			header( 'Content-Transfer-Encoding: binary' );
-			header( 'Content-Length: ' . (int) $response->size );
-			echo $sugarsync->download( urldecode( $get_file ) );
-			die();
-		}
-		catch ( Exception $e ) {
-			die( $e->getMessage() );
-		}
-	}
+        try {
+            $sugarsync = new BackupPilot_Destination_SugarSync_API( BackupPilot_Option::get( $jobid, 'sugarrefreshtoken' ) );
+            $response  = $sugarsync->get( urldecode( $get_file ) );
+            if ( $level = ob_get_level() ) {
+                for ( $i = 0; $i < $level; $i ++ ) {
+                    ob_end_clean();
+                }
+            }
+            @set_time_limit( 300 );
+            nocache_headers();
+            header( 'Content-Description: File Transfer' );
+            header( 'Content-Type: ' . MimeTypeExtractor::fromFilePath( (string) $response->displayName ) );
+            header( 'Content-Disposition: attachment; filename="' . (string) $response->displayName . '"' );
+            header( 'Content-Transfer-Encoding: binary' );
+            header( 'Content-Length: ' . (int) $response->size );
+            echo $sugarsync->download( urldecode( $get_file ) );
+            die();
+        }
+        catch ( Exception $e ) {
+            die( $e->getMessage() );
+        }
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function file_get_list( $jobdest ) {
+    /**
+     * @inheritdoc
+     */
+    public function file_get_list( $jobdest ) {
 
-		$list = (array) get_site_transient( 'backuppilot_' . strtolower( $jobdest ) );
-		$list = array_filter( $list );
+        $list = (array) get_site_transient( 'backuppilot_' . strtolower( $jobdest ) );
+        $list = array_filter( $list );
 
-		return $list;
-	}
+        return $list;
+    }
 
-	/**
-	 * @param $job_object BackupPilot_Job
-	 * @return bool
-	 */
-	public function job_run_archive( BackupPilot_Job $job_object ) {
+    /**
+     * @param $job_object BackupPilot_Job
+     * @return bool
+     */
+    public function job_run_archive( BackupPilot_Job $job_object ) {
 
-		$job_object->substeps_todo = 2 + $job_object->backup_filesize;
-		$job_object->log( sprintf( __( '%d. Try to send backup to SugarSync&#160;&hellip;', 'backuppilot' ), $job_object->steps_data[ $job_object->step_working ][ 'STEP_TRY' ] ), E_USER_NOTICE );
+        $job_object->substeps_todo = 2 + $job_object->backup_filesize;
+        $job_object->log( sprintf( __( '%d. Try to send backup to SugarSync&#160;&hellip;', 'backuppilot' ), $job_object->steps_data[ $job_object->step_working ][ 'STEP_TRY' ] ), E_USER_NOTICE );
 
-		try {
-			$sugarsync = new BackupPilot_Destination_SugarSync_API( $job_object->job[ 'sugarrefreshtoken' ] );
-			//Check Quota
-			$user = $sugarsync->user();
-			if ( ! empty( $user->nickname ) )
-				$job_object->log( sprintf( __( 'Authenticated to SugarSync with nickname %s', 'backuppilot' ), $user->nickname ), E_USER_NOTICE );
-			$sugarsyncfreespase = (float)$user->quota->limit - (float)$user->quota->usage; //float fixes bug for display of no free space
-			if ( $job_object->backup_filesize > $sugarsyncfreespase ) {
-				$job_object->log( sprintf( _x( 'Not enough disk space available on SugarSync. Available: %s.','Available space on SugarSync', 'backuppilot' ), size_format( $sugarsyncfreespase, 2 ) ), E_USER_ERROR );
-				$job_object->substeps_todo = 1 + $job_object->backup_filesize;
+        try {
+            $sugarsync = new BackupPilot_Destination_SugarSync_API( $job_object->job[ 'sugarrefreshtoken' ] );
+            //Check Quota
+            $user = $sugarsync->user();
+            if ( ! empty( $user->nickname ) )
+                $job_object->log( sprintf( __( 'Authenticated to SugarSync with nickname %s', 'backuppilot' ), $user->nickname ), E_USER_NOTICE );
+            $sugarsyncfreespase = (float)$user->quota->limit - (float)$user->quota->usage; //float fixes bug for display of no free space
+            if ( $job_object->backup_filesize > $sugarsyncfreespase ) {
+                $job_object->log( sprintf( _x( 'Not enough disk space available on SugarSync. Available: %s.','Available space on SugarSync', 'backuppilot' ), size_format( $sugarsyncfreespase, 2 ) ), E_USER_ERROR );
+                $job_object->substeps_todo = 1 + $job_object->backup_filesize;
 
-				return TRUE;
-			}
-			else {
-				$job_object->log( sprintf( __( '%s available at SugarSync', 'backuppilot' ), size_format( $sugarsyncfreespase, 2 ) ), E_USER_NOTICE );
-			}
-			//Create and change folder
-			$sugarsync->mkdir( $job_object->job[ 'sugardir' ], $job_object->job[ 'sugarroot' ] );
-			$dirid = $sugarsync->chdir( $job_object->job[ 'sugardir' ], $job_object->job[ 'sugarroot' ] );
-			//Upload to SugarSync
-			$job_object->substeps_done = 0;
-			$job_object->log( __( 'Starting upload to SugarSync&#160;&hellip;', 'backuppilot' ), E_USER_NOTICE );
-			self::$backuppilot_job_object = &$job_object;
-			$reponse = $sugarsync->upload( $job_object->backup_folder . $job_object->backup_file );
-			if ( is_object( $reponse ) ) {
-				if ( ! empty( $job_object->job[ 'jobid' ] ) )
-					BackupPilot_Option::update( $job_object->job[ 'jobid' ], 'lastbackupdownloadurl', network_admin_url( 'admin.php' ) . '?page=backuppilotbackups&action=downloadsugarsync&file=' . (string)$reponse . '&jobid=' . $job_object->job[ 'jobid' ] );
-				$job_object->substeps_done ++;
-				$job_object->log( sprintf( __( 'Backup transferred to %s', 'backuppilot' ), 'https://' . $user->nickname . '.sugarsync.com/' . $sugarsync->showdir( $dirid ) . $job_object->backup_file ), E_USER_NOTICE );
-			}
-			else {
-				$job_object->log( __( 'Cannot transfer backup to SugarSync!', 'backuppilot' ), E_USER_ERROR );
+                return TRUE;
+            }
+            else {
+                $job_object->log( sprintf( __( '%s available at SugarSync', 'backuppilot' ), size_format( $sugarsyncfreespase, 2 ) ), E_USER_NOTICE );
+            }
+            //Create and change folder
+            $sugarsync->mkdir( $job_object->job[ 'sugardir' ], $job_object->job[ 'sugarroot' ] );
+            $dirid = $sugarsync->chdir( $job_object->job[ 'sugardir' ], $job_object->job[ 'sugarroot' ] );
+            //Upload to SugarSync
+            $job_object->substeps_done = 0;
+            $job_object->log( __( 'Starting upload to SugarSync&#160;&hellip;', 'backuppilot' ), E_USER_NOTICE );
+            self::$backuppilot_job_object = &$job_object;
+            $reponse = $sugarsync->upload( $job_object->backup_folder . $job_object->backup_file );
+            if ( is_object( $reponse ) ) {
+                if ( ! empty( $job_object->job[ 'jobid' ] ) )
+                    BackupPilot_Option::update( $job_object->job[ 'jobid' ], 'lastbackupdownloadurl', network_admin_url( 'admin.php' ) . '?page=backuppilotbackups&action=downloadsugarsync&file=' . (string)$reponse . '&jobid=' . $job_object->job[ 'jobid' ] );
+                $job_object->substeps_done ++;
+                $job_object->log( sprintf( __( 'Backup transferred to %s', 'backuppilot' ), 'https://' . $user->nickname . '.sugarsync.com/' . $sugarsync->showdir( $dirid ) . $job_object->backup_file ), E_USER_NOTICE );
+            }
+            else {
+                $job_object->log( __( 'Cannot transfer backup to SugarSync!', 'backuppilot' ), E_USER_ERROR );
 
-				return FALSE;
-			}
+                return FALSE;
+            }
 
-			$backupfilelist = array();
-			$files          = array();
-			$filecounter    = 0;
-			$dir            = $sugarsync->showdir( $dirid );
-			$getfiles       = $sugarsync->getcontents( 'file' );
-			if ( is_object( $getfiles ) ) {
-				foreach ( $getfiles->file as $getfile ) {
-					$getfile->displayName = utf8_decode( (string)$getfile->displayName );
-					if ( $this->is_backup_archive( $getfile->displayName ) && $this->is_backup_owned_by_job( $getfile->displayName, $job_object->job['jobid'] ) == true )
-						$backupfilelist[ strtotime( (string)$getfile->lastModified ) ] = (string)$getfile->ref;
-					$files[ $filecounter ][ 'folder' ]      = 'https://' . (string)$user->nickname . '.sugarsync.com/' . $dir;
-					$files[ $filecounter ][ 'file' ]        = (string)$getfile->ref;
-					$files[ $filecounter ][ 'filename' ]    = (string)$getfile->displayName;
-					$files[ $filecounter ][ 'downloadurl' ] = network_admin_url( 'admin.php' ) . '?page=backuppilotbackups&action=downloadsugarsync&file=' . (string)$getfile->ref . '&jobid=' . $job_object->job[ 'jobid' ];
-					$files[ $filecounter ][ 'filesize' ]    = (int)$getfile->size;
-					$files[ $filecounter ][ 'time' ]        = strtotime( (string)$getfile->lastModified ) + ( get_option( 'gmt_offset' ) * 3600 );
-					$filecounter ++;
-				}
-			}
-			if ( ! empty( $job_object->job[ 'sugarmaxbackups' ] ) && $job_object->job[ 'sugarmaxbackups' ] > 0 ) { //Delete old backups
-				if ( count( $backupfilelist ) >  $job_object->job[ 'sugarmaxbackups' ] ) {
-					ksort( $backupfilelist );
-					$numdeltefiles = 0;
-					while ( $file = array_shift( $backupfilelist ) ) {
-						if ( count( $backupfilelist ) <  $job_object->job[ 'sugarmaxbackups' ] )
-							break;
-						$sugarsync->delete( $file ); //delete files on Cloud
-						foreach ( $files as $key => $filedata ) {
-							if ( $filedata[ 'file' ] == $file )
-								unset( $files[ $key ] );
-						}
-						$numdeltefiles ++;
-					}
-					if ( $numdeltefiles > 0 )
-						$job_object->log( sprintf( _n( 'One file deleted on SugarSync folder', '%d files deleted on SugarSync folder', $numdeltefiles, 'backuppilot' ), $numdeltefiles ), E_USER_NOTICE );
-				}
-			}
-			set_site_transient( 'BackupPilot_' .  $job_object->job[ 'jobid' ] . '_SUGARSYNC', $files, YEAR_IN_SECONDS );
-		}
-		catch ( Exception $e ) {
-			$job_object->log( E_USER_ERROR, sprintf( __( 'SugarSync API: %s', 'backuppilot' ), $e->getMessage() ), $e->getFile(), $e->getLine() );
+            $backupfilelist = [];
+            $files          = [];
+            $filecounter    = 0;
+            $dir            = $sugarsync->showdir( $dirid );
+            $getfiles       = $sugarsync->getcontents( 'file' );
+            if ( is_object( $getfiles ) ) {
+                foreach ( $getfiles->file as $getfile ) {
+                    $getfile->displayName = utf8_decode( (string)$getfile->displayName );
+                    if ( $this->is_backup_archive( $getfile->displayName ) && $this->is_backup_owned_by_job( $getfile->displayName, $job_object->job['jobid'] ) == true )
+                        $backupfilelist[ strtotime( (string)$getfile->lastModified ) ] = (string)$getfile->ref;
+                    $files[ $filecounter ][ 'folder' ]      = 'https://' . (string)$user->nickname . '.sugarsync.com/' . $dir;
+                    $files[ $filecounter ][ 'file' ]        = (string)$getfile->ref;
+                    $files[ $filecounter ][ 'filename' ]    = (string)$getfile->displayName;
+                    $files[ $filecounter ][ 'downloadurl' ] = network_admin_url( 'admin.php' ) . '?page=backuppilotbackups&action=downloadsugarsync&file=' . (string)$getfile->ref . '&jobid=' . $job_object->job[ 'jobid' ];
+                    $files[ $filecounter ][ 'filesize' ]    = (int)$getfile->size;
+                    $files[ $filecounter ][ 'time' ]        = strtotime( (string)$getfile->lastModified ) + ( get_option( 'gmt_offset' ) * 3600 );
+                    $filecounter ++;
+                }
+            }
+            if ( ! empty( $job_object->job[ 'sugarmaxbackups' ] ) && $job_object->job[ 'sugarmaxbackups' ] > 0 ) { //Delete old backups
+                if ( count( $backupfilelist ) >  $job_object->job[ 'sugarmaxbackups' ] ) {
+                    ksort( $backupfilelist );
+                    $numdeltefiles = 0;
+                    while ( $file = array_shift( $backupfilelist ) ) {
+                        if ( count( $backupfilelist ) <  $job_object->job[ 'sugarmaxbackups' ] )
+                            break;
+                        $sugarsync->delete( $file ); //delete files on Cloud
+                        foreach ( $files as $key => $filedata ) {
+                            if ( $filedata[ 'file' ] == $file )
+                                unset( $files[ $key ] );
+                        }
+                        $numdeltefiles ++;
+                    }
+                    if ( $numdeltefiles > 0 )
+                        $job_object->log( sprintf( _n( 'One file deleted on SugarSync folder', '%d files deleted on SugarSync folder', $numdeltefiles, 'backuppilot' ), $numdeltefiles ), E_USER_NOTICE );
+                }
+            }
+            set_site_transient( 'BackupPilot_' .  $job_object->job[ 'jobid' ] . '_SUGARSYNC', $files, YEAR_IN_SECONDS );
+        }
+        catch ( Exception $e ) {
+            $job_object->log( E_USER_ERROR, sprintf( __( 'SugarSync API: %s', 'backuppilot' ), $e->getMessage() ), $e->getFile(), $e->getLine() );
 
-			return FALSE;
-		}
-		$job_object->substeps_done ++;
+            return FALSE;
+        }
+        $job_object->substeps_done ++;
 
-		return TRUE;
-	}
+        return TRUE;
+    }
 
-	/**
-	 * @param $job_settings array
-	 * @return bool
-	 */
-	public function can_run( array $job_settings ) {
+    /**
+     * @param $job_settings array
+     * @return bool
+     */
+    public function can_run( array $job_settings ) {
 
-		if ( empty( $job_settings[ 'sugarrefreshtoken' ] ) )
-			return FALSE;
+        if ( empty( $job_settings[ 'sugarrefreshtoken' ] ) )
+            return FALSE;
 
-		if ( empty( $job_settings[ 'sugarroot' ] ) )
-			return FALSE;
+        if ( empty( $job_settings[ 'sugarroot' ] ) )
+            return FALSE;
 
-		return TRUE;
-	}
+        return TRUE;
+    }
 }
 
 class BackupPilot_Destination_SugarSync_API {
 
-	/**
-	 * url for the sugarsync-api
-	 */
-	const API_URL  = 'https://api.sugarsync.com';
+    /**
+     * url for the sugarsync-api
+     */
+    const API_URL  = 'https://api.sugarsync.com';
 
-	/**
-	 *
-	 * @var    string
-	 */
-	protected $folder = '';
+    /**
+     *
+     * @var    string
+     */
+    protected $folder = '';
 
-	/**
-	 * @var mixed|string
-	 */
-	protected $encoding = 'UTF-8';
+    /**
+     * @var mixed|string
+     */
+    protected $encoding = 'UTF-8';
 
-	/**
-	 * @var null|string
-	 */
-	protected $refresh_token = '';
+    /**
+     * @var null|string
+     */
+    protected $refresh_token = '';
 
-	/**
-	 * The Auth-token
-	 *
-	 * @var string
-	 */
-	protected $access_token = '';
+    /**
+     * The Auth-token
+     *
+     * @var string
+     */
+    protected $access_token = '';
 
-	// class methods
-	/**
-	 * Default constructor/Auth
-	 */
-	public function __construct( $refresh_token = NULL ) {
+    // class methods
+    /**
+     * Default constructor/Auth
+     */
+    public function __construct( $refresh_token = NULL ) {
 
-		//auth xml
-		$this->encoding = mb_internal_encoding();
+        //auth xml
+        $this->encoding = mb_internal_encoding();
 
-		//get access token
-		if ( isset( $refresh_token ) and ! empty( $refresh_token ) ) {
-			$this->refresh_token = $refresh_token;
-			$this->get_Access_Token();
-		}
-	}
+        //get access token
+        if ( isset( $refresh_token ) and ! empty( $refresh_token ) ) {
+            $this->refresh_token = $refresh_token;
+            $this->get_Access_Token();
+        }
+    }
 
-	/**
-	 * Make the call
-	 *
-	 * @return    string
-	 *
-	 * @param    string $url                        The url to call.
-	 * @param string    $data
-	 * @param string    $method
-	 * @throws BackupPilot_Destination_SugarSync_API_Exception
-	 * @internal param $string [optiona] $data            File on put, xml on post.
-	 * @internal param $string [optional] $method        The method to use. Possible values are GET, POST, PUT, DELETE.
-	 */
-	private function doCall( $url, $data = '', $method = 'GET' ) {
+    /**
+     * Make the call
+     *
+     * @return    string
+     *
+     * @param    string $url                        The url to call.
+     * @param string    $data
+     * @param string    $method
+     * @throws BackupPilot_Destination_SugarSync_API_Exception
+     * @internal param $string [optiona] $data            File on put, xml on post.
+     * @internal param $string [optional] $method        The method to use. Possible values are GET, POST, PUT, DELETE.
+     */
+    private function doCall( $url, $data = '', $method = 'GET' ) {
 
-		// allowed methods
-		$allowedMethods = array( 'GET', 'POST', 'PUT', 'DELETE' );
+        // allowed methods
+        $allowedMethods = [ 'GET', 'POST', 'PUT', 'DELETE' ];
 
-		// redefine
-		$url    = (string)$url;
-		$method = (string)$method;
+        // redefine
+        $url    = (string)$url;
+        $method = (string)$method;
 
-		// validate method
-		if ( ! in_array( $method, $allowedMethods, true ) )
-			throw new BackupPilot_Destination_SugarSync_API_Exception( 'Unknown method (' . $method . '). Allowed methods are: ' . implode( ', ', $allowedMethods ) );
+        // validate method
+        if ( ! in_array( $method, $allowedMethods, true ) )
+            throw new BackupPilot_Destination_SugarSync_API_Exception( 'Unknown method (' . $method . '). Allowed methods are: ' . implode( ', ', $allowedMethods ) );
 
-		// check auth token
-		if ( empty( $this->access_token ) )
-			throw new BackupPilot_Destination_SugarSync_API_Exception( 'Auth Token not set correctly!' );
-		else
-			$headers[ ] = 'Authorization: ' . $this->access_token;
-		$headers[ ] = 'Expect:';
+        // check auth token
+        if ( empty( $this->access_token ) )
+            throw new BackupPilot_Destination_SugarSync_API_Exception( 'Auth Token not set correctly!' );
+        else
+            $headers[ ] = 'Authorization: ' . $this->access_token;
+        $headers[ ] = 'Expect:';
 
-		// init
-		$curl = curl_init();
-		//set options
-		curl_setopt( $curl, CURLOPT_URL, $url );
-		curl_setopt( $curl, CURLOPT_USERAGENT, BackupPilot::get_plugin_data( 'User-Agent' )  );
-		if ( ini_get( 'open_basedir' ) == '' ) curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, TRUE );
-		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, TRUE );
-		if ( BackupPilot::get_plugin_data( 'cacert' ) ) {
-			curl_setopt( $curl, CURLOPT_SSLVERSION, 1 );
-			curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, TRUE );
-			curl_setopt( $curl, CURLOPT_CAINFO, BackupPilot::get_plugin_data( 'cacert' ) );
-			curl_setopt( $curl, CURLOPT_CAPATH, dirname( BackupPilot::get_plugin_data( 'cacert' ) ) );
-		} else {
-			curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, FALSE );
-		}
+        // init
+        $curl = curl_init();
+        //set options
+        curl_setopt( $curl, CURLOPT_URL, $url );
+        curl_setopt( $curl, CURLOPT_USERAGENT, BackupPilot::get_plugin_data( 'User-Agent' )  );
+        if ( ini_get( 'open_basedir' ) == '' ) curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, TRUE );
+        curl_setopt( $curl, CURLOPT_RETURNTRANSFER, TRUE );
+        if ( BackupPilot::get_plugin_data( 'cacert' ) ) {
+            curl_setopt( $curl, CURLOPT_SSLVERSION, 1 );
+            curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, TRUE );
+            curl_setopt( $curl, CURLOPT_CAINFO, BackupPilot::get_plugin_data( 'cacert' ) );
+            curl_setopt( $curl, CURLOPT_CAPATH, dirname( BackupPilot::get_plugin_data( 'cacert' ) ) );
+        }
 
-		if ( $method == 'POST' ) {
-			$headers[ ] = 'Content-Type: application/xml; charset=UTF-8';
-			curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
-			curl_setopt( $curl, CURLOPT_POST, TRUE );
-			$headers[ ] = 'Content-Length: ' . strlen( $data );
-		}
-		elseif ( $method == 'PUT' ) {
-			if ( is_readable( $data ) ) {
-				$headers[ ] = 'Content-Length: ' . filesize( $data );
-				$datafilefd = fopen( $data, 'rb' );
-				curl_setopt( $curl, CURLOPT_PUT, TRUE );
-				curl_setopt( $curl, CURLOPT_INFILE, $datafilefd );
-				curl_setopt( $curl, CURLOPT_INFILESIZE, filesize( $data ) );
-				curl_setopt( $curl, CURLOPT_READFUNCTION,  array( BackupPilot_Destination_SugarSync::$backuppilot_job_object, 'curl_read_callback' ) );
-			}
-			else {
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Is not a readable file:' . $data );
-			}
-		}
-		elseif ( $method == 'DELETE' ) {
-			curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, 'DELETE' );
-		}
-		else {
-			curl_setopt( $curl, CURLOPT_POST, FALSE );
-		}
+        else {
+            curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, FALSE );
+        }
 
-		// set headers
-		curl_setopt( $curl, CURLOPT_HTTPHEADER, $headers );
-		curl_setopt( $curl, CURLINFO_HEADER_OUT, TRUE );
-		// execute
-		$response    = curl_exec( $curl );
-		$curlgetinfo = curl_getinfo( $curl );
+        if ( $method == 'POST' ) {
+            $headers[ ] = 'Content-Type: application/xml; charset=UTF-8';
+            curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+            curl_setopt( $curl, CURLOPT_POST, TRUE );
+            $headers[ ] = 'Content-Length: ' . strlen( $data );
+        }
+        elseif ( $method == 'PUT' ) {
+            if ( is_readable( $data ) ) {
+                $headers[ ] = 'Content-Length: ' . filesize( $data );
+                $datafilefd = fopen( $data, 'rb' );
+                curl_setopt( $curl, CURLOPT_PUT, TRUE );
+                curl_setopt( $curl, CURLOPT_INFILE, $datafilefd );
+                curl_setopt( $curl, CURLOPT_INFILESIZE, filesize( $data ) );
+                curl_setopt( $curl, CURLOPT_READFUNCTION,  [ BackupPilot_Destination_SugarSync::$backuppilot_job_object, 'curl_read_callback' ] );
+            }
+            else {
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Is not a readable file:' . $data );
+            }
+        }
+        elseif ( $method == 'DELETE' ) {
+            curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, 'DELETE' );
+        }
+        else {
+            curl_setopt( $curl, CURLOPT_POST, FALSE );
+        }
 
-		// fetch curl errors
-		if ( curl_errno( $curl ) != 0 )
-			throw new BackupPilot_Destination_SugarSync_API_Exception( 'cUrl Error: ' . curl_error( $curl ) );
-		curl_close( $curl );
-		if ( ! empty( $datafilefd ) && is_resource( $datafilefd ) )
-			fclose( $datafilefd );
+        // set headers
+        curl_setopt( $curl, CURLOPT_HTTPHEADER, $headers );
+        curl_setopt( $curl, CURLINFO_HEADER_OUT, TRUE );
+        // execute
+        $response    = curl_exec( $curl );
+        $curlgetinfo = curl_getinfo( $curl );
 
-		if ( $curlgetinfo[ 'http_code' ] >= 200 && $curlgetinfo[ 'http_code' ] < 300 ) {
-			if ( FALSE !== stripos( $curlgetinfo[ 'content_type' ], 'xml' ) && ! empty( $response ) )
-				return simplexml_load_string( $response );
-			else
-				return $response;
-		}
-		else {
-			if ( $curlgetinfo[ 'http_code' ] == 401 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Authorization required.' );
-			elseif ( $curlgetinfo[ 'http_code' ] == 403 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' (Forbidden)  Authentication failed.' );
-			elseif ( $curlgetinfo[ 'http_code' ] == 404 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Not found' );
-			else
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] );
-		}
-	}
+        // fetch curl errors
+        if ( curl_errno( $curl ) != 0 )
+            throw new BackupPilot_Destination_SugarSync_API_Exception( 'cUrl Error: ' . curl_error( $curl ) );
+        curl_close( $curl );
+        if ( ! empty( $datafilefd ) && is_resource( $datafilefd ) )
+            fclose( $datafilefd );
 
-
-	/**
-	 * @return string
-	 * @throws BackupPilot_Destination_SugarSync_API_Exception
-	 */
-	private function get_Access_Token() {
-
-		$auth = '<?xml version="1.0" encoding="UTF-8" ?>';
-		$auth .= '<tokenAuthRequest>';
-		$auth .= '<accessKeyId>' . get_site_option( 'backuppilot_cfg_sugarsynckey', base64_decode( "TlRBek1EY3lOakV6TkRrMk1URXhNemM0TWpJ" ) ) . '</accessKeyId>';
-		$auth .= '<privateAccessKey>' . BackupPilot_Encryption::decrypt( get_site_option( 'backuppilot_cfg_sugarsyncsecret', base64_decode( "TkRFd01UazRNVEpqTW1Ga05EaG1NR0k1TVRFNFpqa3lPR1V6WlRVMk1tTQ==" ) ) ) . '</privateAccessKey>';
-		$auth .= '<refreshToken>' . trim( $this->refresh_token ) . '</refreshToken>';
-		$auth .= '</tokenAuthRequest>';
-		// init
-		$curl = curl_init();
-		//set options
-		curl_setopt( $curl, CURLOPT_URL, self::API_URL . '/authorization' );
-		curl_setopt( $curl, CURLOPT_USERAGENT, BackupPilot::get_plugin_data( 'User-Agent' )  );
-		if ( ini_get( 'open_basedir' ) == ''  ) curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, TRUE );
-		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, TRUE );
-		if ( BackupPilot::get_plugin_data( 'cacert' ) ) {
-			curl_setopt( $curl, CURLOPT_SSLVERSION, 1 );
-			curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, TRUE );
-			curl_setopt( $curl, CURLOPT_CAINFO, BackupPilot::get_plugin_data( 'cacert' ) );
-			curl_setopt( $curl, CURLOPT_CAPATH, dirname( BackupPilot::get_plugin_data( 'cacert' ) ) );
-		} else {
-			curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, FALSE );
-		}
-		curl_setopt( $curl, CURLOPT_HEADER, TRUE );
-		curl_setopt( $curl, CURLOPT_HTTPHEADER, array( 'Content-Type: application/xml; charset=UTF-8', 'Content-Length: ' . strlen( $auth ) ) );
-		curl_setopt( $curl, CURLOPT_POSTFIELDS, $auth );
-		curl_setopt( $curl, CURLOPT_POST, TRUE );
-		// execute
-		$response    = curl_exec( $curl );
-		$curlgetinfo = curl_getinfo( $curl );
-		// fetch curl errors
-		if ( curl_errno( $curl ) != 0 )
-			throw new BackupPilot_Destination_SugarSync_API_Exception( 'cUrl Error: ' . curl_error( $curl ) );
-
-		curl_close( $curl );
-
-		if ( $curlgetinfo[ 'http_code' ] >= 200 && $curlgetinfo[ 'http_code' ] < 300 ) {
-			if ( preg_match( '/Location:(.*?)\r/i', $response, $matches ) )
-				$this->access_token = trim( $matches[ 1 ] );
-
-			return $this->access_token;
-		}
-		else {
-			if ( $curlgetinfo[ 'http_code' ] == 401 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Authorization required.' );
-			elseif ( $curlgetinfo[ 'http_code' ] == 403 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' (Forbidden)  Authentication failed.' );
-			elseif ( $curlgetinfo[ 'http_code' ] == 404 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Not found' );
-			else
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] );
-		}
-	}
-
-	/**
-	 * @param $email
-	 * @param $password
-	 * @return null|string
-	 * @throws BackupPilot_Destination_SugarSync_API_Exception
-	 */
-	public function get_Refresh_Token( $email, $password ) {
-
-		$auth = '<?xml version="1.0" encoding="UTF-8" ?>';
-		$auth .= '<appAuthorization>';
-		$auth .= '<username>' . mb_convert_encoding( $email, 'UTF-8', $this->encoding ) . '</username>';
-		$auth .= '<password>' . mb_convert_encoding( $password, 'UTF-8', $this->encoding ) . '</password>';
-		$auth .= '<application>' . get_site_option( 'backuppilot_cfg_sugarsyncappid', "/sc/5030726/449_18207099" ) . '</application>';
-		$auth .= '<accessKeyId>' . get_site_option( 'backuppilot_cfg_sugarsynckey',base64_decode( "TlRBek1EY3lOakV6TkRrMk1URXhNemM0TWpJ" ) ) . '</accessKeyId>';
-		$auth .= '<privateAccessKey>' . BackupPilot_Encryption::decrypt( get_site_option( 'backuppilot_cfg_sugarsyncsecret', base64_decode( "TkRFd01UazRNVEpqTW1Ga05EaG1NR0k1TVRFNFpqa3lPR1V6WlRVMk1tTQ==" ) ) ) . '</privateAccessKey>';
-		$auth .= '</appAuthorization>';
-		// init
-		$curl = curl_init();
-		//set options
-		curl_setopt( $curl, CURLOPT_URL, self::API_URL . '/app-authorization' );
-		curl_setopt( $curl, CURLOPT_USERAGENT, BackupPilot::get_plugin_data( 'User-Agent' )  );
-		if ( ini_get( 'open_basedir' ) == '' ) curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, TRUE );
-		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, TRUE );
-		if ( BackupPilot::get_plugin_data( 'cacert' ) ) {
-			curl_setopt( $curl, CURLOPT_SSLVERSION, 1 );
-			curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, TRUE );
-			curl_setopt( $curl, CURLOPT_CAINFO, BackupPilot::get_plugin_data( 'cacert' ) );
-			curl_setopt( $curl, CURLOPT_CAPATH, dirname( BackupPilot::get_plugin_data( 'cacert' ) ) );
-		} else {
-			curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, FALSE );
-		}
-		curl_setopt( $curl, CURLOPT_HEADER, TRUE );
-		curl_setopt( $curl, CURLOPT_POSTFIELDS, $auth );
-		curl_setopt( $curl, CURLOPT_POST, TRUE );
-		curl_setopt( $curl, CURLOPT_HTTPHEADER, array( 'Content-Type: application/xml; charset=UTF-8', 'Content-Length: ' . strlen( $auth ) ) );
-		// execute
-		$response    = curl_exec( $curl );
-		$curlgetinfo = curl_getinfo( $curl );
-		// fetch curl errors
-		if ( curl_errno( $curl ) != 0 )
-			throw new BackupPilot_Destination_SugarSync_API_Exception( 'cUrl Error: ' . curl_error( $curl ) );
-
-		curl_close( $curl );
-
-		if ( $curlgetinfo[ 'http_code' ] >= 200 && $curlgetinfo[ 'http_code' ] < 300 ) {
-			if ( preg_match( '/Location:(.*?)\r/i', $response, $matches ) )
-				$this->refresh_token = trim( $matches[ 1 ] );
-
-			return $this->refresh_token;
-		}
-		else {
-			if ( $curlgetinfo[ 'http_code' ] == 401 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Authorization required.' );
-			elseif ( $curlgetinfo[ 'http_code' ] == 403 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' (Forbidden)  Authentication failed.' );
-			elseif ( $curlgetinfo[ 'http_code' ] == 404 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Not found' );
-			else
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] );
-		}
-	}
-
-	/**
-	 * @param $email
-	 * @param $password
-	 * @throws BackupPilot_Destination_SugarSync_API_Exception
-	 */
-	public function create_account( $email, $password ) {
-
-		$auth = '<?xml version="1.0" encoding="UTF-8" ?>';
-		$auth .= '<user>';
-		$auth .= '<email>' . mb_convert_encoding( $email, 'UTF-8', $this->encoding ) . '</email>';
-		$auth .= '<password>' . mb_convert_encoding( $password, 'UTF-8', $this->encoding ) . '</password>';
-		$auth .= '<accessKeyId>' . get_site_option( 'backuppilot_cfg_sugarsynckey', base64_decode( "TlRBek1EY3lOakV6TkRrMk1URXhNemM0TWpJ" ) ) . '</accessKeyId>';
-		$auth .= '<privateAccessKey>' . BackupPilot_Encryption::decrypt( get_site_option( 'backuppilot_cfg_sugarsyncsecret', base64_decode( "TkRFd01UazRNVEpqTW1Ga05EaG1NR0k1TVRFNFpqa3lPR1V6WlRVMk1tTQ==" ) ) ) . '</privateAccessKey>';
-		$auth .= '</user>';
-		// init
-		$curl = curl_init();
-		//set options
-		curl_setopt( $curl, CURLOPT_URL, 'https://provisioning-api.sugarsync.com/users' );
-		curl_setopt( $curl, CURLOPT_USERAGENT, BackupPilot::get_plugin_data( 'User-Agent' )  );
-		if ( ini_get( 'open_basedir' ) == '' ) curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, TRUE );
-		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, TRUE );
-		if ( BackupPilot::get_plugin_data( 'cacert' ) ) {
-			curl_setopt( $curl, CURLOPT_SSLVERSION, 1 );
-			curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, TRUE );
-			curl_setopt( $curl, CURLOPT_CAINFO, BackupPilot::get_plugin_data( 'cacert' ) );
-			curl_setopt( $curl, CURLOPT_CAPATH, dirname( BackupPilot::get_plugin_data( 'cacert' ) ) );
-		} else {
-			curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, FALSE );
-		}
-		curl_setopt( $curl, CURLOPT_HEADER, TRUE );
-		curl_setopt( $curl, CURLOPT_HTTPHEADER, array( 'Content-Type: application/xml; charset=UTF-8', 'Content-Length: ' . strlen( $auth ) ) );
-		curl_setopt( $curl, CURLOPT_POSTFIELDS, $auth );
-		curl_setopt( $curl, CURLOPT_POST, TRUE );
-		// execute
-		$response    = curl_exec( $curl );
-		$curlgetinfo = curl_getinfo( $curl );
-		// fetch curl errors
-		if ( curl_errno( $curl ) != 0 )
-			throw new BackupPilot_Destination_SugarSync_API_Exception( 'cUrl Error: ' . curl_error( $curl ) );
-
-		curl_close( $curl );
-
-		if ( $curlgetinfo[ 'http_code' ] == 201 ) {
-			throw new BackupPilot_Destination_SugarSync_API_Exception( 'Account created.' );
-		}
-		else {
-			if ( $curlgetinfo[ 'http_code' ] == 400 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' ' . substr( $response, $curlgetinfo[ 'header_size' ] ) );
-			elseif ( $curlgetinfo[ 'http_code' ] == 401 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Developer credentials cannot be verified. Either a developer with the specified accessKeyId does not exist or the privateKeyID does not match an assigned accessKeyId.' );
-			elseif ( $curlgetinfo[ 'http_code' ] == 403 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' ' . substr( $response, $curlgetinfo[ 'header_size' ] ) );
-			elseif ( $curlgetinfo[ 'http_code' ] == 503 )
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' ' . substr( $response, $curlgetinfo[ 'header_size' ] ) );
-			else
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] );
-		}
-	}
-
-	/**
-	 * @param        $folder
-	 * @param string $root
-	 * @return string
-	 * @throws BackupPilot_Destination_SugarSync_API_Exception
-	 */
-	public function chdir( $folder, $root = '' ) {
-
-		$folder = rtrim( $folder, '/' );
-		if ( substr( $folder, 0, 1 ) == '/' || empty( $this->folder ) ) {
-			if ( ! empty( $root ) )
-				$this->folder = $root;
-			else
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'chdir: root folder must set!' );
-		}
-		$folders = explode( '/', $folder );
-		foreach ( $folders as $dir ) {
-			if ( $dir == '..' ) {
-				$contents = $this->doCall( $this->folder );
-				if ( ! empty( $contents->parent ) )
-					$this->folder = $contents->parent;
-			}
-			elseif ( ! empty( $dir ) && $dir != '.' ) {
-				$isdir    = FALSE;
-				$contents = $this->getcontents( 'folder' );
-				foreach ( $contents->collection as $collection ) {
-					if ( strtolower( $collection->displayName ) == strtolower( $dir ) ) {
-						$isdir        = TRUE;
-						$this->folder = $collection->ref;
-						break;
-					}
-				}
-				if ( ! $isdir )
-					throw new BackupPilot_Destination_SugarSync_API_Exception( 'chdir: Folder ' . $folder . ' not exitst' );
-			}
-		}
-
-		return $this->folder;
-	}
-
-	/**
-	 * @param $folderid
-	 * @return string
-	 */
-	public function showdir( $folderid ) {
-
-		$showfolder = '';
-		while ( $folderid ) {
-			$contents   = $this->doCall( $folderid );
-			$showfolder = $contents->displayName . '/' . $showfolder;
-			if ( isset( $contents->parent ) )
-				$folderid = $contents->parent;
-			else
-				break;
-		}
-
-		return $showfolder;
-	}
-
-	/**
-	 * @param        $folder
-	 * @param string $root
-	 * @return bool
-	 * @throws BackupPilot_Destination_SugarSync_API_Exception
-	 */
-	public function mkdir( $folder, $root = '' ) {
-
-		$savefolder = $this->folder;
-		$folder     = rtrim( $folder, '/' );
-		if ( substr( $folder, 0, 1 ) == '/' || empty( $this->folder ) ) {
-			if ( ! empty( $root ) )
-				$this->folder = $root;
-			else
-				throw new BackupPilot_Destination_SugarSync_API_Exception( 'mkdir: root folder must set!' );
-		}
-		$folders = explode( '/', $folder );
-		foreach ( $folders as $dir ) {
-			if ( $dir == '..' ) {
-				$contents = $this->doCall( $this->folder );
-				if ( ! empty( $contents->parent ) )
-					$this->folder = $contents->parent;
-			}
-			elseif ( ! empty( $dir ) && $dir != '.' ) {
-				$isdir    = FALSE;
-				$contents = $this->getcontents( 'folder' );
-				foreach ( $contents->collection as $collection ) {
-					if ( strtolower( $collection->displayName ) == strtolower( $dir ) ) {
-						$isdir        = TRUE;
-						$this->folder = $collection->ref;
-						break;
-					}
-				}
-				if ( ! $isdir ) {
-					$this->doCall( $this->folder, '<?xml version="1.0" encoding="UTF-8"?><folder><displayName>' . mb_convert_encoding( $dir, 'UTF-8', $this->encoding ) . '</displayName></folder>', 'POST' );
-					$contents = $this->getcontents( 'folder' );
-					foreach ( $contents->collection as $collection ) {
-						if ( strtolower( $collection->displayName ) == strtolower( $dir ) ) {
-							$isdir        = TRUE;
-							$this->folder = $collection->ref;
-							break;
-						}
-					}
-				}
-			}
-		}
-		$this->folder = $savefolder;
-
-		return TRUE;
-	}
+        if ( $curlgetinfo[ 'http_code' ] >= 200 && $curlgetinfo[ 'http_code' ] < 300 ) {
+            if ( FALSE !== stripos( $curlgetinfo[ 'content_type' ], 'xml' ) && ! empty( $response ) )
+                return simplexml_load_string( $response );
+            else
+                return $response;
+        }
+        else {
+            if ( $curlgetinfo[ 'http_code' ] == 401 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Authorization required.' );
+            elseif ( $curlgetinfo[ 'http_code' ] == 403 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' (Forbidden)  Authentication failed.' );
+            elseif ( $curlgetinfo[ 'http_code' ] == 404 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Not found' );
+            else
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] );
+        }
+    }
 
 
-	/**
-	 * @return string
-	 */
-	public function user() {
-		return $this->doCall( self::API_URL . '/user' );
-	}
+    /**
+     * @return string
+     * @throws BackupPilot_Destination_SugarSync_API_Exception
+     */
+    private function get_Access_Token() {
+
+        $auth = '<?xml version="1.0" encoding="UTF-8" ?>';
+        $auth .= '<tokenAuthRequest>';
+        $auth .= '<accessKeyId>' . get_site_option( 'backuppilot_cfg_sugarsynckey', base64_decode( "TlRBek1EY3lOakV6TkRrMk1URXhNemM0TWpJ" ) ) . '</accessKeyId>';
+        $auth .= '<privateAccessKey>' . BackupPilot_Encryption::decrypt( get_site_option( 'backuppilot_cfg_sugarsyncsecret', base64_decode( "TkRFd01UazRNVEpqTW1Ga05EaG1NR0k1TVRFNFpqa3lPR1V6WlRVMk1tTQ==" ) ) ) . '</privateAccessKey>';
+        $auth .= '<refreshToken>' . trim( $this->refresh_token ) . '</refreshToken>';
+        $auth .= '</tokenAuthRequest>';
+        // init
+        $curl = curl_init();
+        //set options
+        curl_setopt( $curl, CURLOPT_URL, self::API_URL . '/authorization' );
+        curl_setopt( $curl, CURLOPT_USERAGENT, BackupPilot::get_plugin_data( 'User-Agent' )  );
+        if ( ini_get( 'open_basedir' ) == ''  ) curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, TRUE );
+        curl_setopt( $curl, CURLOPT_RETURNTRANSFER, TRUE );
+        if ( BackupPilot::get_plugin_data( 'cacert' ) ) {
+            curl_setopt( $curl, CURLOPT_SSLVERSION, 1 );
+            curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, TRUE );
+            curl_setopt( $curl, CURLOPT_CAINFO, BackupPilot::get_plugin_data( 'cacert' ) );
+            curl_setopt( $curl, CURLOPT_CAPATH, dirname( BackupPilot::get_plugin_data( 'cacert' ) ) );
+        }
+
+        else {
+            curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, FALSE );
+        }
+        curl_setopt( $curl, CURLOPT_HEADER, TRUE );
+        curl_setopt( $curl, CURLOPT_HTTPHEADER, [ 'Content-Type: application/xml; charset=UTF-8', 'Content-Length: ' . strlen( $auth ) ] );
+        curl_setopt( $curl, CURLOPT_POSTFIELDS, $auth );
+        curl_setopt( $curl, CURLOPT_POST, TRUE );
+        // execute
+        $response    = curl_exec( $curl );
+        $curlgetinfo = curl_getinfo( $curl );
+        // fetch curl errors
+        if ( curl_errno( $curl ) != 0 )
+            throw new BackupPilot_Destination_SugarSync_API_Exception( 'cUrl Error: ' . curl_error( $curl ) );
+
+        curl_close( $curl );
+
+        if ( $curlgetinfo[ 'http_code' ] >= 200 && $curlgetinfo[ 'http_code' ] < 300 ) {
+            if ( preg_match( '/Location:(.*?)\r/i', $response, $matches ) )
+                $this->access_token = trim( $matches[ 1 ] );
+
+            return $this->access_token;
+        }
+        else {
+            if ( $curlgetinfo[ 'http_code' ] == 401 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Authorization required.' );
+            elseif ( $curlgetinfo[ 'http_code' ] == 403 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' (Forbidden)  Authentication failed.' );
+            elseif ( $curlgetinfo[ 'http_code' ] == 404 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Not found' );
+            else
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] );
+        }
+    }
+
+    /**
+     * @param $email
+     * @param $password
+     * @return null|string
+     * @throws BackupPilot_Destination_SugarSync_API_Exception
+     */
+    public function get_Refresh_Token( $email, $password ) {
+
+        $auth = '<?xml version="1.0" encoding="UTF-8" ?>';
+        $auth .= '<appAuthorization>';
+        $auth .= '<username>' . mb_convert_encoding( $email, 'UTF-8', $this->encoding ) . '</username>';
+        $auth .= '<password>' . mb_convert_encoding( $password, 'UTF-8', $this->encoding ) . '</password>';
+        $auth .= '<application>' . get_site_option( 'backuppilot_cfg_sugarsyncappid', "/sc/5030726/449_18207099" ) . '</application>';
+        $auth .= '<accessKeyId>' . get_site_option( 'backuppilot_cfg_sugarsynckey',base64_decode( "TlRBek1EY3lOakV6TkRrMk1URXhNemM0TWpJ" ) ) . '</accessKeyId>';
+        $auth .= '<privateAccessKey>' . BackupPilot_Encryption::decrypt( get_site_option( 'backuppilot_cfg_sugarsyncsecret', base64_decode( "TkRFd01UazRNVEpqTW1Ga05EaG1NR0k1TVRFNFpqa3lPR1V6WlRVMk1tTQ==" ) ) ) . '</privateAccessKey>';
+        $auth .= '</appAuthorization>';
+        // init
+        $curl = curl_init();
+        //set options
+        curl_setopt( $curl, CURLOPT_URL, self::API_URL . '/app-authorization' );
+        curl_setopt( $curl, CURLOPT_USERAGENT, BackupPilot::get_plugin_data( 'User-Agent' )  );
+        if ( ini_get( 'open_basedir' ) == '' ) curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, TRUE );
+        curl_setopt( $curl, CURLOPT_RETURNTRANSFER, TRUE );
+        if ( BackupPilot::get_plugin_data( 'cacert' ) ) {
+            curl_setopt( $curl, CURLOPT_SSLVERSION, 1 );
+            curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, TRUE );
+            curl_setopt( $curl, CURLOPT_CAINFO, BackupPilot::get_plugin_data( 'cacert' ) );
+            curl_setopt( $curl, CURLOPT_CAPATH, dirname( BackupPilot::get_plugin_data( 'cacert' ) ) );
+        }
+
+        else {
+            curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, FALSE );
+        }
+        curl_setopt( $curl, CURLOPT_HEADER, TRUE );
+        curl_setopt( $curl, CURLOPT_POSTFIELDS, $auth );
+        curl_setopt( $curl, CURLOPT_POST, TRUE );
+        curl_setopt( $curl, CURLOPT_HTTPHEADER, [ 'Content-Type: application/xml; charset=UTF-8', 'Content-Length: ' . strlen( $auth ) ] );
+        // execute
+        $response    = curl_exec( $curl );
+        $curlgetinfo = curl_getinfo( $curl );
+        // fetch curl errors
+        if ( curl_errno( $curl ) != 0 )
+            throw new BackupPilot_Destination_SugarSync_API_Exception( 'cUrl Error: ' . curl_error( $curl ) );
+
+        curl_close( $curl );
+
+        if ( $curlgetinfo[ 'http_code' ] >= 200 && $curlgetinfo[ 'http_code' ] < 300 ) {
+            if ( preg_match( '/Location:(.*?)\r/i', $response, $matches ) )
+                $this->refresh_token = trim( $matches[ 1 ] );
+
+            return $this->refresh_token;
+        }
+        else {
+            if ( $curlgetinfo[ 'http_code' ] == 401 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Authorization required.' );
+            elseif ( $curlgetinfo[ 'http_code' ] == 403 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' (Forbidden)  Authentication failed.' );
+            elseif ( $curlgetinfo[ 'http_code' ] == 404 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Not found' );
+            else
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] );
+        }
+    }
+
+    /**
+     * @param $email
+     * @param $password
+     * @throws BackupPilot_Destination_SugarSync_API_Exception
+     */
+    public function create_account( $email, $password ) {
+
+        $auth = '<?xml version="1.0" encoding="UTF-8" ?>';
+        $auth .= '<user>';
+        $auth .= '<email>' . mb_convert_encoding( $email, 'UTF-8', $this->encoding ) . '</email>';
+        $auth .= '<password>' . mb_convert_encoding( $password, 'UTF-8', $this->encoding ) . '</password>';
+        $auth .= '<accessKeyId>' . get_site_option( 'backuppilot_cfg_sugarsynckey', base64_decode( "TlRBek1EY3lOakV6TkRrMk1URXhNemM0TWpJ" ) ) . '</accessKeyId>';
+        $auth .= '<privateAccessKey>' . BackupPilot_Encryption::decrypt( get_site_option( 'backuppilot_cfg_sugarsyncsecret', base64_decode( "TkRFd01UazRNVEpqTW1Ga05EaG1NR0k1TVRFNFpqa3lPR1V6WlRVMk1tTQ==" ) ) ) . '</privateAccessKey>';
+        $auth .= '</user>';
+        // init
+        $curl = curl_init();
+        //set options
+        curl_setopt( $curl, CURLOPT_URL, 'https://provisioning-api.sugarsync.com/users' );
+        curl_setopt( $curl, CURLOPT_USERAGENT, BackupPilot::get_plugin_data( 'User-Agent' )  );
+        if ( ini_get( 'open_basedir' ) == '' ) curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, TRUE );
+        curl_setopt( $curl, CURLOPT_RETURNTRANSFER, TRUE );
+        if ( BackupPilot::get_plugin_data( 'cacert' ) ) {
+            curl_setopt( $curl, CURLOPT_SSLVERSION, 1 );
+            curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, TRUE );
+            curl_setopt( $curl, CURLOPT_CAINFO, BackupPilot::get_plugin_data( 'cacert' ) );
+            curl_setopt( $curl, CURLOPT_CAPATH, dirname( BackupPilot::get_plugin_data( 'cacert' ) ) );
+        }
+
+        else {
+            curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, FALSE );
+        }
+        curl_setopt( $curl, CURLOPT_HEADER, TRUE );
+        curl_setopt( $curl, CURLOPT_HTTPHEADER, [ 'Content-Type: application/xml; charset=UTF-8', 'Content-Length: ' . strlen( $auth ) ] );
+        curl_setopt( $curl, CURLOPT_POSTFIELDS, $auth );
+        curl_setopt( $curl, CURLOPT_POST, TRUE );
+        // execute
+        $response    = curl_exec( $curl );
+        $curlgetinfo = curl_getinfo( $curl );
+        // fetch curl errors
+        if ( curl_errno( $curl ) != 0 )
+            throw new BackupPilot_Destination_SugarSync_API_Exception( 'cUrl Error: ' . curl_error( $curl ) );
+
+        curl_close( $curl );
+
+        if ( $curlgetinfo[ 'http_code' ] == 201 ) {
+            throw new BackupPilot_Destination_SugarSync_API_Exception( 'Account created.' );
+        }
+        else {
+            if ( $curlgetinfo[ 'http_code' ] == 400 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' ' . substr( $response, $curlgetinfo[ 'header_size' ] ) );
+            elseif ( $curlgetinfo[ 'http_code' ] == 401 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' Developer credentials cannot be verified. Either a developer with the specified accessKeyId does not exist or the privateKeyID does not match an assigned accessKeyId.' );
+            elseif ( $curlgetinfo[ 'http_code' ] == 403 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' ' . substr( $response, $curlgetinfo[ 'header_size' ] ) );
+            elseif ( $curlgetinfo[ 'http_code' ] == 503 )
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] . ' ' . substr( $response, $curlgetinfo[ 'header_size' ] ) );
+            else
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'Http Error: ' . $curlgetinfo[ 'http_code' ] );
+        }
+    }
+
+    /**
+     * @param        $folder
+     * @param string $root
+     * @return string
+     * @throws BackupPilot_Destination_SugarSync_API_Exception
+     */
+    public function chdir( $folder, $root = '' ) {
+
+        $folder = rtrim( $folder, '/' );
+        if ( substr( $folder, 0, 1 ) == '/' || empty( $this->folder ) ) {
+            if ( ! empty( $root ) )
+                $this->folder = $root;
+            else
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'chdir: root folder must set!' );
+        }
+        $folders = explode( '/', $folder );
+        foreach ( $folders as $dir ) {
+            if ( $dir == '..' ) {
+                $contents = $this->doCall( $this->folder );
+                if ( ! empty( $contents->parent ) )
+                    $this->folder = $contents->parent;
+            }
+            elseif ( ! empty( $dir ) && $dir != '.' ) {
+                $isdir    = FALSE;
+                $contents = $this->getcontents( 'folder' );
+                foreach ( $contents->collection as $collection ) {
+                    if ( strtolower( $collection->displayName ) == strtolower( $dir ) ) {
+                        $isdir        = TRUE;
+                        $this->folder = $collection->ref;
+                        break;
+                    }
+                }
+                if ( ! $isdir )
+                    throw new BackupPilot_Destination_SugarSync_API_Exception( 'chdir: Folder ' . $folder . ' not exitst' );
+            }
+        }
+
+        return $this->folder;
+    }
+
+    /**
+     * @param $folderid
+     * @return string
+     */
+    public function showdir( $folderid ) {
+
+        $showfolder = '';
+        while ( $folderid ) {
+            $contents   = $this->doCall( $folderid );
+            $showfolder = $contents->displayName . '/' . $showfolder;
+            if ( isset( $contents->parent ) )
+                $folderid = $contents->parent;
+            else
+                break;
+        }
+
+        return $showfolder;
+    }
+
+    /**
+     * @param        $folder
+     * @param string $root
+     * @return bool
+     * @throws BackupPilot_Destination_SugarSync_API_Exception
+     */
+    public function mkdir( $folder, $root = '' ) {
+
+        $savefolder = $this->folder;
+        $folder     = rtrim( $folder, '/' );
+        if ( substr( $folder, 0, 1 ) == '/' || empty( $this->folder ) ) {
+            if ( ! empty( $root ) )
+                $this->folder = $root;
+            else
+                throw new BackupPilot_Destination_SugarSync_API_Exception( 'mkdir: root folder must set!' );
+        }
+        $folders = explode( '/', $folder );
+        foreach ( $folders as $dir ) {
+            if ( $dir == '..' ) {
+                $contents = $this->doCall( $this->folder );
+                if ( ! empty( $contents->parent ) )
+                    $this->folder = $contents->parent;
+            }
+            elseif ( ! empty( $dir ) && $dir != '.' ) {
+                $isdir    = FALSE;
+                $contents = $this->getcontents( 'folder' );
+                foreach ( $contents->collection as $collection ) {
+                    if ( strtolower( $collection->displayName ) == strtolower( $dir ) ) {
+                        $isdir        = TRUE;
+                        $this->folder = $collection->ref;
+                        break;
+                    }
+                }
+                if ( ! $isdir ) {
+                    $this->doCall( $this->folder, '<?xml version="1.0" encoding="UTF-8"?><folder><displayName>' . mb_convert_encoding( $dir, 'UTF-8', $this->encoding ) . '</displayName></folder>', 'POST' );
+                    $contents = $this->getcontents( 'folder' );
+                    foreach ( $contents->collection as $collection ) {
+                        if ( strtolower( $collection->displayName ) == strtolower( $dir ) ) {
+                            $isdir        = TRUE;
+                            $this->folder = $collection->ref;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        $this->folder = $savefolder;
+
+        return TRUE;
+    }
 
 
-	/**
-	 * @param $url
-	 * @return string
-	 */
-	public function get( $url ) {
-		return $this->doCall( $url, '', 'GET' );
-	}
-
-	/**
-	 * @param $url
-	 * @return string
-	 */
-	public function download( $url ) {
-		return $this->doCall( $url . '/data' );
-	}
-
-	/**
-	 * @param $url
-	 * @return string
-	 */
-	public function delete( $url ) {
-		return $this->doCall( $url, '', 'DELETE' );
-	}
+    /**
+     * @return string
+     */
+    public function user() {
+        return $this->doCall( self::API_URL . '/user' );
+    }
 
 
-	/**
-	 * @param string $type
-	 * @param int    $start
-	 * @param int    $max
-	 * @return string
-	 */
-	public function getcontents( $type = '', $start = 0, $max = 500 ) {
+    /**
+     * @param $url
+     * @return string
+     */
+    public function get( $url ) {
+        return $this->doCall( $url, '', 'GET' );
+    }
 
-		$parameters = '';
+    /**
+     * @param $url
+     * @return string
+     */
+    public function download( $url ) {
+        return $this->doCall( $url . '/data' );
+    }
 
-		if ( strtolower( $type ) == 'folder' || strtolower( $type ) == 'file' )
-			$parameters .= 'type=' . strtolower( $type );
-		if ( ! empty( $start ) && is_integer( $start ) ) {
-			if ( ! empty( $parameters ) )
-				$parameters .= '&';
-			$parameters .= 'start=' . $start;
+    /**
+     * @param $url
+     * @return string
+     */
+    public function delete( $url ) {
+        return $this->doCall( $url, '', 'DELETE' );
+    }
 
-		}
-		if ( ! empty( $max ) && is_integer( $max ) ) {
-			if ( ! empty( $parameters ) )
-				$parameters .= '&';
-			$parameters .= 'max=' . $max;
-		}
 
-		$request = $this->doCall( $this->folder . '/contents?' . $parameters );
+    /**
+     * @param string $type
+     * @param int    $start
+     * @param int    $max
+     * @return string
+     */
+    public function getcontents( $type = '', $start = 0, $max = 500 ) {
 
-		return $request;
-	}
+        $parameters = '';
 
-	/**
-	 * @param        $file
-	 * @param string $name
-	 * @return mixed
-	 */
-	public function upload( $file, $name = '' ) {
+        if ( strtolower( $type ) == 'folder' || strtolower( $type ) == 'file' )
+            $parameters .= 'type=' . strtolower( $type );
+        if ( ! empty( $start ) && is_integer( $start ) ) {
+            if ( ! empty( $parameters ) )
+                $parameters .= '&';
+            $parameters .= 'start=' . $start;
 
-		if ( empty( $name ) ) {
-			$name = basename( $file );
-		}
+        }
+        if ( ! empty( $max ) && is_integer( $max ) ) {
+            if ( ! empty( $parameters ) )
+                $parameters .= '&';
+            $parameters .= 'max=' . $max;
+        }
 
-		$content_type = MimeTypeExtractor::fromFilePath( $file );
+        $request = $this->doCall( $this->folder . '/contents?' . $parameters );
 
-		$xmlrequest = '<?xml version="1.0" encoding="UTF-8"?>';
-		$xmlrequest .= '<file>';
-		$xmlrequest .= '<displayName>' . mb_convert_encoding( $name, 'UTF-8', $this->encoding ) . '</displayName>';
-		$xmlrequest .= '<mediaType>' . $content_type . '</mediaType>';
-		$xmlrequest .= '</file>';
+        return $request;
+    }
 
-		$this->doCall( $this->folder, $xmlrequest, 'POST' );
-		$getfiles = $this->getcontents( 'file' );
-		foreach ( $getfiles->file as $getfile ) {
-			if ( $getfile->displayName == $name ) {
-				$this->doCall( $getfile->ref . '/data', $file, 'PUT' );
+    /**
+     * @param        $file
+     * @param string $name
+     * @return mixed
+     */
+    public function upload( $file, $name = '' ) {
 
-				return $getfile->ref;
-			}
-		}
-	}
+        if ( empty( $name ) ) {
+            $name = basename( $file );
+        }
+
+        $content_type = MimeTypeExtractor::fromFilePath( $file );
+
+        $xmlrequest = '<?xml version="1.0" encoding="UTF-8"?>';
+        $xmlrequest .= '<file>';
+        $xmlrequest .= '<displayName>' . mb_convert_encoding( $name, 'UTF-8', $this->encoding ) . '</displayName>';
+        $xmlrequest .= '<mediaType>' . $content_type . '</mediaType>';
+        $xmlrequest .= '</file>';
+
+        $this->doCall( $this->folder, $xmlrequest, 'POST' );
+        $getfiles = $this->getcontents( 'file' );
+        foreach ( $getfiles->file as $getfile ) {
+            if ( $getfile->displayName == $name ) {
+                $this->doCall( $getfile->ref . '/data', $file, 'PUT' );
+
+                return $getfile->ref;
+            }
+        }
+    }
 }
 
 /**
