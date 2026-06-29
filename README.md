@@ -4,6 +4,9 @@ Schedule complete automatic backups of your WordPress installation and push them
 
 **BackupPilot is a fork of the excellent [BackWPup](https://wordpress.org/plugins/backwpup/) plugin (GPLv2+) by Inpsyde, rebranded and maintained independently.**
 
+> **Use in production at your own risk.**
+> BackupPilot has not yet been reviewed or tested by an independent community. It is maintained by a single developer. Treat it as you would any pre-release software: test in a staging environment first, keep an independent copy of your backups, and verify restores before relying on them in production.
+
 ---
 
 ## About
@@ -13,6 +16,8 @@ BackupPilot is aimed at experienced WordPress administrators who want a reliable
 The fork base is BackWPup **3.10.0** — a deliberate choice. BackWPup was an outstanding plugin for years, but went through a series of ownership changes that gradually stripped out the free version, added friction to basic features, and steered users toward paid tiers. Version 3.x represented the last point where the plugin was still clean, complete, and community-oriented.
 
 BackupPilot picks up from there: updated dependencies, security fixes, and an opinionated focus on the features that actually matter for a professional backup workflow.
+
+This is a side project maintained by one person in their spare time — not a product with a roadmap, a support team, or a commitment to feature requests. If this fork doesn't fit your workflow exactly, the codebase is intentionally kept clean and forkable. GPLv2 applies; take it and run.
 
 ---
 
@@ -44,7 +49,11 @@ Features that cannot run due to your server configuration will not appear in the
 
 ## Installation
 
-Upload and activate the plugin like any other WordPress plugin, then go to **BackupPilot → Settings** to configure your first backup job.
+1. Download the latest `backup-pilot.zip` from the [Releases page](https://github.com/QuickBrownFox90/backup-pilot/releases).
+2. In your WordPress admin go to **Plugins → Add New → Upload Plugin**, select the ZIP and click **Install Now**.
+3. Activate the plugin, then go to **BackupPilot → Settings** to configure your first backup job.
+
+Once installed, future updates appear in the standard WordPress update flow — no manual download needed.
 
 ---
 
@@ -140,6 +149,14 @@ This approach gives you a single place to manage all outgoing email from your Wo
 ---
 
 ## Changelog
+
+### 1.0.3
+
+- Removed: About page and all associated marketing assets — the page was already disabled and served no purpose beyond BackWPup promotional content
+- Removed: Custom icon font (`backuppilot.eot/ttf/woff/svg`) — replaced with WordPress Dashicon `dashicons-backup` in the admin menu and admin bar, eliminating a dedicated font load for a single glyph
+- Removed: 9 unused asset files — dead images and vendor JS duplicates left over from the initial rebrand
+- Fixed: Plugin activation redirect pointed to the now-removed About page; now redirects to the Jobs overview
+- Added: Self-hosted plugin update system via GitHub Releases (`inc/class-updater.php`) — WordPress's standard update flow (dashboard badge, "Update now") now works without wordpress.org; the updater queries the GitHub API for the latest release, caches the result for 24 h, and prefers an explicitly attached ZIP asset (built by a new GitHub Actions workflow with the correct `backup-pilot/` root folder) over the auto-generated zipball
 
 ### 1.0.2
 

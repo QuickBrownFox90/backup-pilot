@@ -246,7 +246,7 @@ final class BackupPilot_Admin {
                 'BackupPilot_Page_BackupPilot',
                 'page',
             ],
-            'div' );
+            'dashicons-backup' );
         $this->page_hooks['backuppilot'] = add_submenu_page( 'backuppilot',
             __( 'BackupPilot Dashboard', 'backuppilot' ),
             __( 'Dashboard', 'backuppilot' ),
@@ -417,38 +417,6 @@ final class BackupPilot_Admin {
             'admin_print_scripts-' . $this->page_hooks['backuppilotsettings'],
             [ $this->settings, 'admin_print_scripts' ]
         );
-
-        return $page_hooks;
-    }
-
-    /**
-     * @param $page_hooks
-     *
-     * @return mixed
-     * @deprecated
-     */
-    public function admin_page_about( $page_hooks ) {
-
-        $this->page_hooks['backuppilotabout'] = add_submenu_page( 'backuppilot',
-            __( 'About', 'backuppilot' ),
-            __( 'About', 'backuppilot' ),
-            'backuppilot',
-            'backuppilotabout',
-            [
-                'BackupPilot_Page_About',
-                'page',
-            ] );
-        add_action( 'load-' . $this->page_hooks['backuppilotabout'], [ 'BackupPilot_Admin', 'init_general' ] );
-        add_action( 'admin_print_styles-' . $this->page_hooks['backuppilotabout'],
-            [
-                'BackupPilot_Page_About',
-                'admin_print_styles',
-            ] );
-        add_action( 'admin_print_scripts-' . $this->page_hooks['backuppilotabout'],
-            [
-                'BackupPilot_Page_About',
-                'admin_print_scripts',
-            ] );
 
         return $page_hooks;
     }
@@ -672,16 +640,16 @@ final class BackupPilot_Admin {
         add_filter('backuppilot_admin_pages', [$this, 'admin_page_logs'], 4);
         add_filter('backuppilot_admin_pages', [$this, 'admin_page_backups'], 5);
         add_filter('backuppilot_admin_pages', [$this, 'admin_page_settings'], 6);
-        //add_filter('backuppilot_admin_pages', [$this, 'admin_page_about'], 20);
 
         //Add Menu
-        if (is_multisite()) {
+        if ( is_multisite() ) {
             add_action('network_admin_menu', [$this, 'admin_menu']);
         }
 
         else {
             add_action('admin_menu', [$this, 'admin_menu']);
         }
+
         //add Plugin links
         add_filter('plugin_row_meta', [$this, 'plugin_links'], 10, 2);
         //add more actions

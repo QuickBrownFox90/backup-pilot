@@ -5,9 +5,9 @@
  * Description: WordPress Backup Plugin based on the fantastic BackWPup (GPLv2+)
  * Author: Patrick Mauersberger
  * Author URI: http://dev.patrick-mauersberger.de
- * Version: 1.0.2
+ * Version: 1.0.3
  * Text Domain: backuppilot
- * Domain Path: /plugins/backup-pilot/languages/
+ * Domain Path: /languages/
  * Network: true
  * License: GPLv2+
  *
@@ -42,10 +42,14 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
             }
 
             require_once __DIR__ . '/inc/functions.php';
+            require_once __DIR__ . '/inc/class-updater.php';
 
             if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
                 require_once __DIR__ . '/vendor/autoload.php';
             }
+
+            // GitHub-based self-hosted update check
+            ( new BackupPilot_Updater( 'QuickBrownFox90/backup-pilot', __FILE__ ) )->init();
 
             // Start upgrade if needed
             if (

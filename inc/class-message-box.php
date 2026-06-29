@@ -60,9 +60,6 @@ class BackupPilot_Message_Box {
             return;
         }
 
-        if ( isset( $_GET['page'] ) && $_GET['page'] === 'backuppilotabout' ) {
-            return;
-        }
 
 
         if ( $this->campaign_to_date !== '0000-00-00' ) {

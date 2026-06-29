@@ -33,10 +33,10 @@ class BackupPilot_Adminbar {
         global $wp_admin_bar;
         /* @var WP_Admin_Bar $wp_admin_bar */
 
-        $menu_title = '<span class="ab-icon"></span>';
+        $menu_title = '<span class="ab-icon dashicons dashicons-backup"></span>';
         $menu_herf  = network_admin_url( 'admin.php?page=backuppilot' );
         if ( file_exists( BackupPilot::get_plugin_data( 'running_file' ) ) && current_user_can( 'backuppilot_jobs_start' ) ) {
-            $menu_title = '<span class="ab-icon"></span><span class="ab-label">' . esc_html( BackupPilot::get_plugin_data( 'name' ) )  . ' <span id="backuppilot-adminbar-running">' . esc_html__( 'running', 'backuppilot' ) . '</span></span>';
+            $menu_title = '<span class="ab-icon dashicons dashicons-backup"></span><span class="ab-label">' . esc_html( BackupPilot::get_plugin_data( 'name' ) )  . ' <span id="backuppilot-adminbar-running">' . esc_html__( 'running', 'backuppilot' ) . '</span></span>';
             $menu_herf  = network_admin_url( 'admin.php?page=backuppilotjobs' );
         }
 

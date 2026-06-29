@@ -142,7 +142,7 @@ class BackupPilot_Install {
 
         //only redirect if not in WP CLI environment
         if ( ! $version_db && ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-            wp_redirect( network_admin_url( 'admin.php' ) . '?page=backuppilotabout&welcome=1' );
+            wp_redirect( network_admin_url( 'admin.php' ) . '?page=backuppilot' );
             die();
         }
 
