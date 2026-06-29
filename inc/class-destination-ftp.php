@@ -570,7 +570,14 @@ class BackupPilot_Destination_Ftp extends BackupPilot_Destinations {
 					continue;
 				}
 
-				if ( ! @ftp_chdir( $ftp_conn_id, $ftpdir ) ) {
+				// Suppress the E_WARNING emitted when the directory does not exist yet —
+				// a missing directory is expected and handled by create_dir().
+				// A no-op handler is reliable across PHP versions; @ alone is not.
+				set_error_handler( static function () { return true; } );
+				$can_chdir = ftp_chdir( $ftp_conn_id, $ftpdir );
+				restore_error_handler();
+
+				if ( ! $can_chdir ) {
 					if ( ! $this->create_dir( $ftp_conn_id, $ftpdir, $job_object ) ) {
 						return false;
 					}
@@ -598,25 +605,34 @@ class BackupPilot_Destination_Ftp extends BackupPilot_Destinations {
 
 		//PASV
 		$job_object->log( sprintf( __( 'FTP client command: %s', 'backuppilot' ), 'PASV' ), E_USER_NOTICE );
+
 		if ( $job_object->job['ftppasv'] ) {
+
 			if ( ftp_pasv( $ftp_conn_id, true ) ) {
 				$job_object->log(
 					sprintf( __( 'FTP server reply: %s', 'backuppilot' ), __( 'Entering passive mode', 'backuppilot' ) ),
 					E_USER_NOTICE
 				);
-			} else {
+			}
+
+			else {
 				$job_object->log(
 					sprintf( __( 'FTP server reply: %s', 'backuppilot' ), __( 'Cannot enter passive mode', 'backuppilot' ) ),
 					E_USER_WARNING
 				);
 			}
-		} else {
+		}
+
+		else {
+
 			if ( ftp_pasv( $ftp_conn_id, false ) ) {
 				$job_object->log(
 					sprintf( __( 'FTP server reply: %s', 'backuppilot' ), __( 'Entering normal mode', 'backuppilot' ) ),
 					E_USER_NOTICE
 				);
-			} else {
+			}
+
+			else {
 				$job_object->log(
 					sprintf( __( 'FTP server reply: %s', 'backuppilot' ), __( 'Cannot enter normal mode', 'backuppilot' ) ),
 					E_USER_WARNING
@@ -625,8 +641,11 @@ class BackupPilot_Destination_Ftp extends BackupPilot_Destinations {
 		}
 
 		if ( $job_object->substeps_done < $job_object->backup_filesize ) {
+
 			$job_object->log( __( 'Starting upload to FTP &#160;&hellip;', 'backuppilot' ), E_USER_NOTICE );
+
 			if ( $fp = fopen( $job_object->backup_folder . $job_object->backup_file, 'rb' ) ) {
+
 				//go to actual file pos
 				fseek( $fp, $job_object->substeps_done );
 				$ret = ftp_nb_fput(
@@ -636,17 +655,22 @@ class BackupPilot_Destination_Ftp extends BackupPilot_Destinations {
 					FTP_BINARY,
 					$job_object->substeps_done
 				);
+
 				while ( $ret == FTP_MOREDATA ) {
 					$job_object->substeps_done = ftell( $fp );
 					$job_object->update_working_data();
 					$job_object->do_restart_time();
+
 					$ret = ftp_nb_continue( $ftp_conn_id );
 				}
+
 				if ( $ret != FTP_FINISHED ) {
 					$job_object->log( __( 'Cannot transfer backup to FTP server!', 'backuppilot' ), E_USER_ERROR );
 
 					return false;
-				} else {
+				}
+
+				else {
 					$job_object->substeps_done = $job_object->backup_filesize + 1;
 					$job_object->log(
 						sprintf(
@@ -664,8 +688,11 @@ class BackupPilot_Destination_Ftp extends BackupPilot_Destinations {
 						);
 					}
 				}
+
 				fclose( $fp );
-			} else {
+			}
+
+			else {
 				$job_object->log( __( 'Can not open source file for transfer.', 'backuppilot' ), E_USER_ERROR );
 
 				return false;

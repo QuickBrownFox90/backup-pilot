@@ -661,7 +661,7 @@ class BackupPilot_Page_Settings
 											array( 'code' => array() )
 										),
 										'<code>' . trailingslashit(
-											str_replace( '\\', '/', WP_CONTENT_DIR )
+											str_replace( '\\', '/', wp_upload_dir()['basedir'] )
 										) . '</code>'
 									); ?>
 								</p>

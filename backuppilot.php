@@ -5,7 +5,7 @@
  * Description: WordPress Backup Plugin based on the fantastic BackWPup (GPLv2+)
  * Author: Patrick Mauersberger
  * Author URI: http://dev.patrick-mauersberger.de
- * Version: 1.0.0
+ * Version: 1.0.2
  * Text Domain: backuppilot
  * _Domain Path: /plugins/backuppilot/languages/
  * Network: true
@@ -155,6 +155,7 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 			}
 
 			if ( empty( self::$plugin_data ) ) {
+
 				self::$plugin_data = get_file_data(
 					__FILE__,
 					array(
@@ -164,11 +165,13 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 					'plugin'
 				);
 				self::$plugin_data['name'] = trim( self::$plugin_data['name'] );
+
 				//set some extra vars
 				self::$plugin_data['basename'] = plugin_basename( __DIR__ );
 				self::$plugin_data['mainfile'] = __FILE__;
 				self::$plugin_data['plugindir'] = untrailingslashit( __DIR__ );
 				self::$plugin_data['hash'] = get_site_option( 'backuppilot_cfg_hash' );
+
 				if ( empty( self::$plugin_data['hash'] ) || strlen( self::$plugin_data['hash'] ) < 6
 				     || strlen(
 					        self::$plugin_data['hash']
@@ -176,13 +179,16 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 					self::$plugin_data['hash'] = self::get_generated_hash(6);
 					update_site_option( 'backuppilot_cfg_hash', self::$plugin_data['hash'] );
 				}
+
 				if ( defined( 'WP_TEMP_DIR' ) && is_dir( WP_TEMP_DIR ) ) {
 					self::$plugin_data['temp'] = str_replace(
 						                             '\\',
 						                             '/',
 						                             get_temp_dir()
 					                             ) . 'backuppilot-' . self::$plugin_data['hash'] . '/';
-				} else {
+				}
+
+				else {
 					$upload_dir = wp_upload_dir();
 					self::$plugin_data['temp'] = str_replace(
 						                             '\\',
@@ -190,26 +196,33 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 						                             $upload_dir['basedir']
 					                             ) . '/backuppilot-' . self::$plugin_data['hash'] . '-temp/';
 				}
+
 				self::$plugin_data['running_file'] = self::$plugin_data['temp'] . 'backuppilot-working.php';
 				self::$plugin_data['url'] = plugins_url( '', __FILE__ );
 				self::$plugin_data['cacert'] = apply_filters(
 					'backuppilot_cacert_bundle',
 					ABSPATH . WPINC . '/certificates/ca-bundle.crt'
 				);
+
 				//get unmodified WP Versions
 				include ABSPATH . WPINC . '/version.php';
+
 				/** @var $wp_version string */
 				self::$plugin_data['wp_version'] = $wp_version;
+
 				//Build User Agent
 				self::$plugin_data['user-agent'] = self::$plugin_data['name'] . '/' . self::$plugin_data['version'] . '; WordPress/' . self::$plugin_data['wp_version'] . '; ' . home_url();
 			}
 
 			if ( ! empty( $name ) ) {
 				return self::$plugin_data[ $name ];
-			} else {
+			}
+
+			else {
 				return self::$plugin_data;
 			}
 		}
+
 
         /**
          * Generates a random hash
@@ -218,6 +231,7 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
          *
          * @return string
          */
+
 		public static function get_generated_hash( $length = 6 ) {
 
 		    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -230,11 +244,13 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
             return substr(md5($hash), random_int(0, 31 - $length), $length);
         }
 
+
 		/**
 		 * Load Plugin Translation
 		 *
 		 * @return bool Text domain loaded
 		 */
+
 		public static function load_text_domain() {
 
 			if ( is_textdomain_loaded( 'backuppilot' ) ) {
@@ -244,6 +260,7 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 			return load_plugin_textdomain( 'backuppilot', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 		}
 
+
 		/**
 		 * Get a array of instances for Backup Destination's
 		 *
@@ -251,6 +268,7 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 		 *
 		 * @return array BackupPilot_Destinations
 		 */
+
 		public static function get_destination( $key ) {
 
 			$key = strtoupper( $key );
@@ -260,20 +278,25 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 			}
 
 			$reg_dests = self::get_registered_destinations();
+
 			if ( ! empty( $reg_dests[ $key ]['class'] ) ) {
 				self::$destinations[ $key ] = new $reg_dests[ $key ]['class'];
-			} else {
+			}
+
+			else {
 				return null;
 			}
 
 			return self::$destinations[ $key ];
 		}
 
+
 		/**
 		 * Get a array of registered Destination's for Backups
 		 *
 		 * @return array BackupPilot_Destinations
 		 */
+
 		public static function get_registered_destinations() {
 
 			//only run it one time
@@ -281,7 +304,7 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 				return self::$registered_destinations;
 			}
 
-			//add BackupPilot Destinations
+			// add BackupPilot Destinations
 			// to folder
 			self::$registered_destinations['FOLDER'] = array(
 				'class'    => 'BackupPilot_Destination_Folder',
@@ -297,7 +320,8 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 					'classes'     => array(),
 				),
 			);
-			/* backup with mail --- no support for E-Mail sending giga bytes via mail is shit
+
+			/* backup with mail --- no support for E-Mail sending giga bytes via mail is shit */
 			self::$registered_destinations['EMAIL'] = array(
 				'class' => 'BackupPilot_Destination_Email',
 				'info' => array(
@@ -312,7 +336,7 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 					'classes' => array(),
 				),
 			);
-			/*__*/
+
 			// backup to ftp
 			self::$registered_destinations['FTP'] = array(
 				'class' => 'BackupPilot_Destination_Ftp',
@@ -328,6 +352,7 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 					'classes' => array(),
 				),
 			);
+
 			// backup to dropbox
 			self::$registered_destinations['DROPBOX'] = array(
 				'class' => 'BackupPilot_Destination_Dropbox',
@@ -343,6 +368,7 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 					'classes' => array(),
 				),
 			);
+
 			// Backup to S3
 			self::$registered_destinations['S3'] = array(
 				'class' => 'BackupPilot_Destination_S3',
@@ -358,6 +384,7 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 					'classes' => array( 'XMLWriter' ),
 				),
 			);
+
 			// backup to MS Azure
 			self::$registered_destinations['MSAZURE'] = array(
 				'class' => 'BackupPilot_Destination_MSAzure',
@@ -373,6 +400,7 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 					'classes' => array(),
 				),
 			);
+
 			// backup to Sugarsync
 			self::$registered_destinations['SUGARSYNC'] = array(
 				'class' => 'BackupPilot_Destination_SugarSync',
@@ -401,41 +429,49 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 				self::$registered_destinations[ $dest_key ]['error'] = '';
 				// check PHP Version
 				if ( ! empty( $dest['needed']['php_version'] )
-				     && version_compare(
-					     PHP_VERSION,
-					     $dest['needed']['php_version'],
-					     '<'
-				     ) ) {
+				    && version_compare(
+					    PHP_VERSION,
+					    $dest['needed']['php_version'],
+					    '<'
+				    ) ) {
+
 					self::$registered_destinations[ $dest_key ]['error'] .= sprintf(
-						                                                        __( 'PHP Version %1$s is to low, you need Version %2$s or above.',
-							                                                        'backuppilot' ),
-						                                                        PHP_VERSION,
-						                                                        $dest['needed']['php_version']
-					                                                        ) . ' ';
+                        __( 'PHP Version %1$s is to low, you need Version %2$s or above.',
+                            'backuppilot' ),
+                        PHP_VERSION,
+                        $dest['needed']['php_version']
+                    ) . ' ';
+
 					self::$registered_destinations[ $dest_key ]['class'] = null;
 				}
+
 				//check functions exists
 				if ( ! empty( $dest['needed']['functions'] ) ) {
+
 					foreach ( $dest['needed']['functions'] as $function_need ) {
+
 						if ( ! function_exists( $function_need ) ) {
+
 							self::$registered_destinations[ $dest_key ]['error'] .= sprintf(
-								                                                        __( 'Missing function "%s".',
-									                                                        'backuppilot' ),
-								                                                        $function_need
-							                                                        ) . ' ';
+                                __( 'Missing function "%s".', 'backuppilot' ),
+                                $function_need
+                            ) . ' ';
+
 							self::$registered_destinations[ $dest_key ]['class'] = null;
 						}
 					}
 				}
+
 				//check classes exists
 				if ( ! empty( $dest['needed']['classes'] ) ) {
+
 					foreach ( $dest['needed']['classes'] as $class_need ) {
+
 						if ( ! class_exists( $class_need ) ) {
 							self::$registered_destinations[ $dest_key ]['error'] .= sprintf(
-								                                                        __( 'Missing class "%s".',
-									                                                        'backuppilot' ),
-								                                                        $class_need
-							                                                        ) . ' ';
+                                __( 'Missing class "%s".', 'backuppilot' ),
+                                $class_need
+                            ) . ' ';
 							self::$registered_destinations[ $dest_key ]['class'] = null;
 						}
 					}
@@ -505,18 +541,17 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
 	$system_requirements = new BackupPilot_System_Requirements();
 	$system_tests = new BackupPilot_System_Tests( $system_requirements );
 
-	// Don't activate on anything less than PHP 5.3 or WordPress 3.9
+
+	// Don't activate on anything less than PHP 8.1 or WordPress 6.0
 	if ( ! $system_tests->is_php_version_compatible() || ! $system_tests->is_wp_version_compatible() ) {
 
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
 		deactivate_plugins( __FILE__ );
 
 		die(
 			sprintf(
-				esc_html__(
-					'BackupPilot requires PHP version %1$s with spl extension or greater and WordPress %2$s or greater.',
-					'backuppilot'
-				),
+				esc_html__( 'BackupPilot requires PHP version %1$s with spl extension or greater and WordPress %2$s or greater.', 'backuppilot' ),
 				$system_requirements->php_minimum_version(),
 				$system_requirements->wp_minimum_version()
 			)

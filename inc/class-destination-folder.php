@@ -10,12 +10,11 @@ class BackupPilot_Destination_Folder extends BackupPilot_Destinations {
 	 */
 	public function option_defaults() {
 
-		$upload_dir = wp_upload_dir( null, false, true );
-		$backups_dir = trailingslashit( str_replace( '\\',
-				'/',
-				$upload_dir['basedir'] ) ) . 'backuppilot-' . BackupPilot::get_plugin_data( 'hash' ) . '-backups/';
-		$content_path = trailingslashit( str_replace( '\\', '/', WP_CONTENT_DIR ) );
-		$backups_dir = str_replace( $content_path, '', $backups_dir );
+		$upload_dir   = wp_upload_dir( null, false, true );
+		$uploads_base = trailingslashit( str_replace( '\\', '/', $upload_dir['basedir'] ) );
+		$backups_dir  = $uploads_base . 'backuppilot-' . BackupPilot::get_plugin_data( 'hash' ) . '-backups/';
+		// Store relative to uploads dir so get_absolute_path() resolves it correctly.
+		$backups_dir  = str_replace( $uploads_base, '', $backups_dir );
 
 		return array( 'maxbackups' => 15, 'backupdir' => $backups_dir, 'backupsyncnodelete' => true );
 	}

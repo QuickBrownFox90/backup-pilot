@@ -1,30 +1,6 @@
 <?php
-// Swift Mailer v5.2.2
-// http://swiftmailer.org/
-// https://github.com/swiftmailer/swiftmailer
-
-use \Inpsyde\BackWPupShared\File\MimeTypeExtractor;
 
 class BackupPilot_Destination_Email extends BackupPilot_Destinations {
-
-	/**
-	 * Restrict the sendmail command to a binary path plus simple sendmail-style flags.
-	 * Prevents shell metacharacters from being injected into the command executed by Swift_SendmailTransport.
-	 *
-	 * @param string $command
-	 *
-	 * @return string
-	 */
-	public static function sanitize_sendmail_command( $command ) {
-
-		$command = trim( (string) $command );
-
-		if ( $command === '' || ! preg_match( '#^[a-zA-Z0-9/_.\-]+(?:\s+-{1,2}[a-zA-Z][a-zA-Z0-9]*(?:=[a-zA-Z0-9@.\-]+)?)*$#', $command ) ) {
-			return ini_get( 'sendmail_path' );
-		}
-
-		return $command;
-	}
 
 	/**
 	 * @return array
@@ -36,13 +12,6 @@ class BackupPilot_Destination_Email extends BackupPilot_Destinations {
 		$default['emailefilesize']    = 20;
 		$default['emailsndemail']     = sanitize_email( get_bloginfo( 'admin_email' ) );
 		$default['emailsndemailname'] = 'BackupPilot ' . get_bloginfo( 'name' );
-		$default['emailmethod']       = '';
-		$default['emailsendmail']     = ini_get( 'sendmail_path' );
-		$default['emailhost']         = isset( $_SERVER['SERVER_NAME'] ) ? $_SERVER['SERVER_NAME'] : '';
-		$default['emailhostport']     = 25;
-		$default['emailsecure']       = '';
-		$default['emailuser']         = '';
-		$default['emailpass']         = '';
 
 		return $default;
 	}
@@ -117,81 +86,11 @@ class BackupPilot_Destination_Email extends BackupPilot_Destinations {
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="emailmethod"><?php esc_html_e( 'Sending method', 'backuppilot' ); ?></label>
-				</th>
+				<th scope="row"><?php esc_html_e( 'Mail delivery', 'backuppilot' ); ?></th>
 				<td>
-					<select id="emailmethod" name="emailmethod">
-						<?php
-						echo '<option value=""' . selected( '', BackupPilot_Option::get( $jobid, 'emailmethod' ), false ) . '>' . esc_html__( 'Use WordPress settings', 'backuppilot' ) . '</option>';
-						echo '<option value="mail"' . selected( 'mail', BackupPilot_Option::get( $jobid, 'emailmethod' ), false ) . '>' . esc_html__( 'PHP: mail()', 'backuppilot' ) . '</option>';
-						echo '<option value="sendmail"' . selected( 'sendmail', BackupPilot_Option::get( $jobid, 'emailmethod' ), false ) . '>' . esc_html__( 'Sendmail', 'backuppilot' ) . '</option>';
-						echo '<option value="smtp"' . selected( 'smtp', BackupPilot_Option::get( $jobid, 'emailmethod' ), false ) . '>' . esc_html__( 'SMTP', 'backuppilot' ) . '</option>';
-						?>
-					</select>
-				</td>
-			</tr>
-			<tr id="emailsendmail" <?php if ( BackupPilot_Option::get( $jobid, 'emailmethod' ) !== 'sendmail' ) {
-				echo 'style="display:none;"';
-			} ?>>
-				<th scope="row"><label for="emailsendmail"><?php esc_html_e( 'Sendmail path', 'backuppilot' ); ?></label>
-				</th>
-				<td>
-					<input name="emailsendmail" id="emailsendmail" type="text"
-					       value="<?php echo esc_attr( BackupPilot_Option::get( $jobid, 'emailsendmail' ) ); ?>"
-					       class="regular-text code"/>
-				</td>
-			</tr>
-			<tr class="emailsmtp" <?php if ( BackupPilot_Option::get( $jobid, 'emailmethod' ) !== 'smtp' ) {
-				echo 'style="display:none;"';
-			} ?>>
-				<th scope="row"><label for="emailhost"><?php esc_html_e( 'SMTP host name', 'backuppilot' ); ?></label></th>
-				<td>
-					<input name="emailhost" id="emailhost" type="text"
-					       value="<?php echo esc_attr( BackupPilot_Option::get( $jobid, 'emailhost' ) ); ?>"
-					       class="regular-text code"/>&nbsp;
-					<label for="emailhostport"><?php esc_html_e( 'Port:', 'backuppilot' ); ?><input name="emailhostport"
-					                                                                             id="emailhostport"
-					                                                                             type="number" step="0"
-					                                                                             min="1" max="65000"
-					                                                                             value="<?php echo esc_attr( BackupPilot_Option::get( $jobid, 'emailhostport' ) ); ?>"
-					                                                                             class="small-text code"/></label>
-				</td>
-			</tr>
-			<tr class="emailsmtp" <?php if ( BackupPilot_Option::get( $jobid, 'emailmethod' ) !== 'smtp' ) {
-				echo 'style="display:none;"';
-			} ?>>
-				<th scope="row"><label
-						for="emailsecure"><?php esc_html_e( 'SMTP secure connection', 'backuppilot' ); ?></label>
-				</th>
-				<td>
-					<select id="emailsecure" name="emailsecure">
-						<option
-							value=""<?php selected( '', BackupPilot_Option::get( $jobid, 'emailsecure' ), true ); ?>><?php esc_html_e( 'none', 'backuppilot' ); ?></option>
-						<option
-							value="ssl"<?php selected( 'ssl', BackupPilot_Option::get( $jobid, 'emailsecure' ), true ); ?>><?php esc_html_e( 'SSL', 'backuppilot' ); ?></option>
-						<option
-							value="tls"<?php selected( 'tls', BackupPilot_Option::get( $jobid, 'emailsecure' ), true ); ?>><?php esc_html_e( 'TLS', 'backuppilot' ); ?></option>
-					</select>
-				</td>
-			</tr>
-			<tr class="emailsmtp" <?php if ( BackupPilot_Option::get( $jobid, 'emailmethod' ) !== 'smtp' ) {
-				echo 'style="display:none;"';
-			} ?>>
-				<th scope="row"><label for="emailuser"><?php esc_html_e( 'SMTP username', 'backuppilot' ); ?></label></th>
-				<td>
-					<input name="emailuser" id="emailuser" type="text"
-					       value="<?php echo esc_attr( BackupPilot_Option::get( $jobid, 'emailuser' ) ); ?>"
-					       class="regular-text" autocomplete="off"/>
-				</td>
-			</tr>
-			<tr class="emailsmtp" <?php if ( BackupPilot_Option::get( $jobid, 'emailmethod' ) != 'smtp' ) {
-				echo 'style="display:none;"';
-			} ?>>
-				<th scope="row"><label for="emailpass"><?php esc_html_e( 'SMTP password', 'backuppilot' ); ?></label></th>
-				<td>
-					<input name="emailpass" id="emailpass" type="password"
-					       value="<?php echo esc_attr( BackupPilot_Encryption::decrypt( BackupPilot_Option::get( $jobid, 'emailpass' ) ) ); ?>"
-					       class="regular-text" autocomplete="off"/>
+					<p class="description">
+						<?php esc_html_e( 'Emails are sent via the WordPress mail system (wp_mail). To configure the mail server, SMTP credentials, or delivery provider, use a dedicated mail plugin such as WP Mail SMTP, FluentSMTP, or Post SMTP.', 'backuppilot' ); ?>
+					</p>
 				</td>
 			</tr>
 		</table>
@@ -204,32 +103,13 @@ class BackupPilot_Destination_Email extends BackupPilot_Destinations {
 		?>
 		<script type="text/javascript">
 			jQuery( document ).ready( function ( $ ) {
-				$( '#emailmethod' ).change( function () {
-					if ( 'smtp' == $( '#emailmethod' ).val() ) {
-						$( '.emailsmtp' ).show();
-						$( '#emailsendmail' ).hide();
-					} else if ( 'sendmail' == $( '#emailmethod' ).val() ) {
-						$( '.emailsmtp' ).hide();
-						$( '#emailsendmail' ).show();
-					} else {
-						$( '.emailsmtp' ).hide();
-						$( '#emailsendmail' ).hide();
-					}
-				} );
 				$( '#sendemailtest' ).live( 'click', function () {
 					$( '#sendemailtest' ).after( '&nbsp;<img id="emailsendtext" src="<?php echo get_admin_url() . 'images/loading.gif'; ?>" width="16" height="16" />' );
 					var data = {
 						action           : 'backuppilot_dest_email',
 						emailaddress     : $( 'input[name="emailaddress"]' ).val(),
 						emailsndemail    : $( 'input[name="emailsndemail"]' ).val(),
-						emailmethod      : $( '#emailmethod' ).val(),
-						emailsendmail    : $( 'input[name="emailsendmail"]' ).val(),
 						emailsndemailname: $( 'input[name="emailsndemailname"]' ).val(),
-						emailhost        : $( 'input[name="emailhost"]' ).val(),
-						emailhostport    : $( 'input[name="emailhostport"]' ).val(),
-						emailsecure      : $( '#emailsecure' ).val(),
-						emailuser        : $( 'input[name="emailuser"]' ).val(),
-						emailpass        : $( 'input[name="emailpass"]' ).val(),
 						_ajax_nonce      : $( '#backuppilotajaxnonce' ).val()
 					};
 					$.post( ajaxurl, data, function ( response ) {
@@ -250,14 +130,7 @@ class BackupPilot_Destination_Email extends BackupPilot_Destinations {
 		BackupPilot_Option::update( $jobid, 'emailaddress', isset( $_POST['emailaddress'] ) ? implode( ', ', $this->get_email_array( $_POST['emailaddress'] ) ) : '' );
 		BackupPilot_Option::update( $jobid, 'emailefilesize', ! empty( $_POST['emailefilesize'] ) ? absint( $_POST['emailefilesize'] ) : 0 );
 		BackupPilot_Option::update( $jobid, 'emailsndemail', sanitize_email( $_POST['emailsndemail'] ) );
-		BackupPilot_Option::update( $jobid, 'emailmethod', ( $_POST['emailmethod'] === '' || $_POST['emailmethod'] === 'mail' || $_POST['emailmethod'] === 'sendmail' || $_POST['emailmethod'] === 'smtp' ) ? $_POST['emailmethod'] : '' );
-		BackupPilot_Option::update( $jobid, 'emailsendmail', self::sanitize_sendmail_command( $_POST['emailsendmail'] ) );
 		BackupPilot_Option::update( $jobid, 'emailsndemailname', sanitize_text_field( $_POST['emailsndemailname'] ) );
-		BackupPilot_Option::update( $jobid, 'emailhost', sanitize_text_field( $_POST['emailhost'] ) );
-		BackupPilot_Option::update( $jobid, 'emailhostport', absint( $_POST['emailhostport'] ) );
-		BackupPilot_Option::update( $jobid, 'emailsecure', ( $_POST['emailsecure'] === 'ssl' || $_POST['emailsecure'] === 'tls' ) ? $_POST['emailsecure'] : '' );
-		BackupPilot_Option::update( $jobid, 'emailuser', sanitize_text_field( $_POST['emailuser'] ) );
-		BackupPilot_Option::update( $jobid, 'emailpass', BackupPilot_Encryption::encrypt( $_POST['emailpass'] ) );
 	}
 
 	/**
@@ -270,10 +143,17 @@ class BackupPilot_Destination_Email extends BackupPilot_Destinations {
 		$job_object->substeps_todo = 1;
 		$job_object->log( sprintf( __( '%d. Try to send backup with email&#160;&hellip;', 'backuppilot' ), $job_object->steps_data[ $job_object->step_working ]['STEP_TRY'] ), E_USER_NOTICE );
 
-		//check file Size
 		if ( ! empty( $job_object->job['emailefilesize'] ) ) {
-			if ( $job_object->backup_filesize > $job_object->job['emailefilesize'] * 1024 * 1024 ) {
-				$job_object->log( __( 'Backup archive too big to be sent by email!', 'backuppilot' ), E_USER_ERROR );
+			$limit_bytes  = $job_object->job['emailefilesize'] * 1024 * 1024;
+			if ( $job_object->backup_filesize > $limit_bytes ) {
+				$job_object->log(
+					sprintf(
+						__( 'Backup archive too big to be sent by email (file: %1$s, limit: %2$s). Increase the maximum file size in the Email destination settings or choose a different destination for large backups.', 'backuppilot' ),
+						size_format( $job_object->backup_filesize ),
+						size_format( $limit_bytes )
+					),
+					E_USER_ERROR
+				);
 				$job_object->substeps_done = 1;
 
 				return true;
@@ -282,102 +162,56 @@ class BackupPilot_Destination_Email extends BackupPilot_Destinations {
 
 		$job_object->log( sprintf( __( 'Sending email to %s&hellip;', 'backuppilot' ), $job_object->job['emailaddress'] ), E_USER_NOTICE );
 
-		//get mail settings
-		$emailmethod   = 'mail';
-		$emailsendmail = '';
-		$emailhost     = '';
-		$emailhostport = '';
-		$emailsecure   = '';
-		$emailuser     = '';
-		$emailpass     = '';
+		$attachment_path = $job_object->backup_folder . $job_object->backup_file;
+		$job_object->log( sprintf( __( 'Attaching file: %s', 'backuppilot' ), $attachment_path ), E_USER_NOTICE );
 
-		if (empty($job_object->job['emailmethod'])) {
-            //do so if i'm the wp_mail to get the settings
-            $phpmailer = $this->getPhpMailer();
-
-            //only if PHPMailer really used
-            if (is_object($phpmailer)) {
-                do_action_ref_array('phpmailer_init', [&$phpmailer]);
-                //get settings from PHPMailer
-                $emailmethod = $phpmailer->Mailer;
-                $emailsendmail = $phpmailer->Sendmail;
-                $emailhost = $phpmailer->Host;
-                $emailhostport = $phpmailer->Port;
-                $emailsecure = $phpmailer->SMTPSecure;
-                $emailuser = $phpmailer->Username;
-                $emailpass = $phpmailer->Password;
-            }
-        } else {
-            $emailmethod = $job_object->job['emailmethod'];
-            $emailsendmail = $job_object->job['emailsendmail'];
-            $emailhost = $job_object->job['emailhost'];
-            $emailhostport = $job_object->job['emailhostport'];
-            $emailsecure = $job_object->job['emailsecure'];
-            $emailuser = $job_object->job['emailuser'];
-            $emailpass = BackupPilot_Encryption::decrypt($job_object->job['emailpass']);
-        }
-
-		//Generate mail with Swift Mailer
-		if ( ! class_exists( 'Swift', false ) ) {
-			require BackupPilot::get_plugin_data( 'plugindir' ) . '/vendor/SwiftMailer/swift_required.php';
-		}
-
-		if ( function_exists( 'mb_internal_encoding' ) && ( (int) ini_get( 'mbstring.func_overload' ) ) & 2 ) {
-			$mbEncoding = mb_internal_encoding();
-			mb_internal_encoding( 'ASCII' );
-		}
-
-		try {
-			//Set Temp dir for mailing
-			Swift_Preferences::getInstance()->setTempDir( untrailingslashit( BackupPilot::get_plugin_data( 'TEMP' ) ) )->setCacheType( 'disk' );
-			// Create the Transport
-			if ( $emailmethod == 'smtp' ) {
-				$transport = Swift_SmtpTransport::newInstance( $emailhost, $emailhostport );
-				if ( $emailuser ) {
-					$transport->setUsername( $emailuser );
-					$transport->setPassword( $emailpass );
-				}
-				if ( $emailsecure == 'ssl' ) {
-					$transport->setEncryption( 'ssl' );
-				}
-				if ( $emailsecure == 'tls' ) {
-					$transport->setEncryption( 'tls' );
-				}
-			} elseif ( $emailmethod == 'sendmail' ) {
-				$transport = Swift_SendmailTransport::newInstance( self::sanitize_sendmail_command( $emailsendmail ) );
-			} else {
-				$job_object->need_free_memory( $job_object->backup_filesize * 8 );
-				$transport = Swift_MailTransport::newInstance();
-			}
-			// Create the Mailer using your created Transport
-			$emailer = Swift_Mailer::newInstance( $transport );
-
-			// Create a message
-			$message = Swift_Message::newInstance( sprintf( __( 'BackupPilot archive from %1$s: %2$s', 'backuppilot' ), date_i18n( 'd-M-Y H:i', $job_object->start_time, true ), esc_attr( $job_object->job['name'] ) ) );
-			$message->setFrom( array( $job_object->job['emailsndemail'] => $job_object->job['emailsndemailname'] ) );
-			$message->setTo( $this->get_email_array( $job_object->job['emailaddress'] ) );
-			$message->setBody( sprintf( __( 'Backup archive: %s', 'backuppilot' ), $job_object->backup_file ), 'text/plain', strtolower( get_bloginfo( 'charset' ) ) );
-			$message->attach( Swift_Attachment::fromPath( $job_object->backup_folder . $job_object->backup_file, MimeTypeExtractor::fromFilePath( $job_object->backup_folder . $job_object->backup_file ) ) );
-			// Send the message
-			$result = $emailer->send( $message );
-		} catch ( Exception $e ) {
-			$job_object->log( 'Swift Mailer: ' . $e->getMessage(), E_USER_ERROR );
-		}
-
-		if ( isset( $mbEncoding ) ) {
-			mb_internal_encoding( $mbEncoding );
-		}
-
-		if ( ! isset( $result ) || ! $result ) {
-			$job_object->log( __( 'Error while sending email!', 'backuppilot' ), E_USER_ERROR );
+		if ( ! is_readable( $attachment_path ) ) {
+			$job_object->log(
+				sprintf( __( 'Backup archive not found or not readable: %s', 'backuppilot' ), $attachment_path ),
+				E_USER_ERROR
+			);
 
 			return false;
-		} else {
-			$job_object->substeps_done = 1;
-			$job_object->log( __( 'Email sent.', 'backuppilot' ), E_USER_NOTICE );
-
-			return true;
 		}
+
+		// PHP's mail() must base64-encode the full attachment in memory. Request enough
+		// headroom upfront so ini_set can raise the limit before the send attempt.
+		$job_object->need_free_memory( $job_object->backup_filesize * 8 );
+
+		$to      = $this->get_email_array( $job_object->job['emailaddress'] );
+		$subject = sprintf( __( 'BackupPilot archive from %1$s: %2$s', 'backuppilot' ), date_i18n( 'd-M-Y H:i', $job_object->start_time, true ), esc_attr( $job_object->job['name'] ) );
+		$body    = sprintf( __( 'Backup archive: %s', 'backuppilot' ), $job_object->backup_file );
+		$headers = array(
+			'From: ' . $job_object->job['emailsndemailname'] . ' <' . $job_object->job['emailsndemail'] . '>',
+			'Content-Type: text/plain; charset=' . get_bloginfo( 'charset' ),
+		);
+		$attachments = array( $attachment_path );
+
+		$mail_error = null;
+		$mail_error_handler = function ( WP_Error $error ) use ( &$mail_error ) {
+			$mail_error = $error;
+		};
+		add_action( 'wp_mail_failed', $mail_error_handler );
+		$result = wp_mail( $to, $subject, $body, $headers, $attachments );
+		remove_action( 'wp_mail_failed', $mail_error_handler );
+
+		if ( ! $result ) {
+			$reason = $mail_error instanceof WP_Error ? $mail_error->get_error_message() : __( 'Unknown error', 'backuppilot' );
+			$job_object->log(
+				sprintf(
+					__( 'Error while sending email: %1$s — If you are using PHP\'s mail() function, your mail server may be rejecting the message (e.g. attachment too large for the MTA).', 'backuppilot' ),
+					$reason
+				),
+				E_USER_ERROR
+			);
+
+			return false;
+		}
+
+		$job_object->substeps_done = 1;
+		$job_object->log( __( 'Email sent.', 'backuppilot' ), E_USER_NOTICE );
+
+		return true;
 	}
 
 	/**
@@ -409,90 +243,28 @@ class BackupPilot_Destination_Email extends BackupPilot_Destinations {
 		}
 		check_ajax_referer( 'backuppilot_ajax_nonce' );
 
-		//get mail settings
-		$emailmethod   = 'mail';
-		$emailsendmail = '';
-		$emailhost     = '';
-		$emailhostport = '';
-		$emailsecure   = '';
-		$emailuser     = '';
-		$emailpass     = '';
+		$to      = $this->get_email_array( $_POST['emailaddress'] );
+		$subject = __( 'BackupPilot archive sending TEST Message', 'backuppilot' );
+		$body    = __( 'If this message reaches your inbox, sending backup archives via email should work for you.', 'backuppilot' );
+		$from    = sanitize_email( $_POST['emailsndemail'] );
+		$name    = sanitize_text_field( $_POST['emailsndemailname'] );
+		$headers = array( 'From: ' . $name . ' <' . $from . '>' );
 
-		if ( empty( $_POST['emailmethod'] ) ) {
-			//do so if i'm the wp_mail to get the settings
-            $phpmailer = $this->getPhpMailer();
+		$mail_error = null;
+		$mail_error_handler = function ( WP_Error $error ) use ( &$mail_error ) {
+			$mail_error = $error;
+		};
+		add_action( 'wp_mail_failed', $mail_error_handler );
+		$result = wp_mail( $to, $subject, $body, $headers );
+		remove_action( 'wp_mail_failed', $mail_error_handler );
 
-			//only if PHPMailer really used
-			if ( is_object( $phpmailer ) ) {
-				do_action_ref_array( 'phpmailer_init', array( &$phpmailer ) );
-				//get settings from PHPMailer
-				$emailmethod   = $phpmailer->Mailer;
-				$emailsendmail = $phpmailer->Sendmail;
-				$emailhost     = $phpmailer->Host;
-				$emailhostport = $phpmailer->Port;
-				$emailsecure   = $phpmailer->SMTPSecure;
-				$emailuser     = $phpmailer->Username;
-				$emailpass     = $phpmailer->Password;
-			}
-		} else {
-			$emailmethod   = sanitize_text_field( $_POST['emailmethod'] );
-			$emailsendmail = self::sanitize_sendmail_command( $_POST['emailsendmail'] );
-			$emailhost     = sanitize_text_field( $_POST['emailhost'] );
-			$emailhostport = absint( $_POST['emailhostport'] );
-			$emailsecure   = sanitize_text_field( $_POST['emailsecure'] );
-			$emailuser     = sanitize_text_field( $_POST['emailuser'] );
-			$emailpass     = BackupPilot_Encryption::decrypt( $_POST['emailpass'] );
-		}
-
-		//Generate mail with Swift Mailer
-		if ( ! class_exists( 'Swift', false ) ) {
-			require BackupPilot::get_plugin_data( 'plugindir' ) . '/vendor/SwiftMailer/swift_required.php';
-		}
-
-		if ( function_exists( 'mb_internal_encoding' ) && ( (int) ini_get( 'mbstring.func_overload' ) ) & 2 ) {
-			$mbEncoding = mb_internal_encoding();
-			mb_internal_encoding( 'ASCII' );
-		}
-
-		try {
-			// Create the Transport
-			if ( $emailmethod == 'smtp' ) {
-				$transport = Swift_SmtpTransport::newInstance( $emailhost, $emailhostport );
-				if ( $emailuser ) {
-					$transport->setUsername( $emailuser );
-					$transport->setPassword( $emailpass );
-				}
-				if ( $emailsecure == 'ssl' ) {
-					$transport->setEncryption( 'ssl' );
-				}
-				if ( $emailsecure == 'tls' ) {
-					$transport->setEncryption( 'tls' );
-				}
-			} elseif ( $emailmethod == 'sendmail' ) {
-				$transport = Swift_SendmailTransport::newInstance( self::sanitize_sendmail_command( $emailsendmail ) );
-			} else {
-				$transport = Swift_MailTransport::newInstance();
-			}
-			// Create the Mailer using your created Transport
-			$emailer = Swift_Mailer::newInstance( $transport );
-
-			// Create a message
-			$message = Swift_Message::newInstance( __( 'BackupPilot archive sending TEST Message', 'backuppilot' ) );
-			$message->setFrom( array( $_POST['emailsndemail'] => sanitize_email( $_POST['emailsndemailname'] ) ) );
-			$message->setTo( $this->get_email_array( $_POST['emailaddress'] ) );
-			$message->setBody( __( 'If this message reaches your inbox, sending backup archives via email should work for you.', 'backuppilot' ) );
-			// Send the message
-			$result = $emailer->send( $message );
-		} catch ( Exception $e ) {
-			echo '<span id="emailsendtext" class="bwu-message-error">Swift Mailer: ' . $e->getMessage() . '</span>';
-		}
-
-		if ( isset( $mbEncoding ) ) {
-			mb_internal_encoding( $mbEncoding );
-		}
-
-		if ( ! isset( $result ) || ! $result ) {
-			echo '<span id="emailsendtext" class="bwu-message-error">' . esc_html__( 'Error while sending email!', 'backuppilot' ) . '</span>';
+		if ( ! $result ) {
+			$reason  = $mail_error instanceof WP_Error ? $mail_error->get_error_message() : __( 'Unknown error', 'backuppilot' );
+			$message = sprintf(
+				__( 'Error while sending email: %1$s — If you are using PHP\'s mail() function, your mail server may be rejecting the message.', 'backuppilot' ),
+				$reason
+			);
+			echo '<span id="emailsendtext" class="bwu-message-error">' . esc_html( $message ) . '</span>';
 		} else {
 			echo '<span id="emailsendtext" class="bwu-message-success">' . esc_html__( 'Email sent.', 'backuppilot' ) . '</span>';
 		}
@@ -519,30 +291,4 @@ class BackupPilot_Destination_Email extends BackupPilot_Destinations {
 
 		return $emails;
 	}
-
-    /**
-     * @return PHPMailer|\PHPMailer\PHPMailer\PHPMailer
-     */
-    private function getPhpMailer()
-    {
-        global $phpmailer;
-        if (!is_object($phpmailer) || !$phpmailer instanceof PHPMailer) {
-
-            global $wp_version;
-            if (version_compare($wp_version, '5.5', '>=')) {
-
-                require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
-                require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
-
-                return new PHPMailer\PHPMailer\PHPMailer();
-            }
-
-            require_once ABSPATH . WPINC . '/class-phpmailer.php';
-            require_once ABSPATH . WPINC . '/class-smtp.php';
-
-            return new PHPMailer(true);
-        }
-
-        return $phpmailer;
-    }
 }

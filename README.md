@@ -20,6 +20,7 @@ Schedule complete automatic backups of your WordPress installation and push them
 - Store backups to S3-compatible services *(requires curl)*
 - Store backups to Microsoft Azure Blob *(requires curl)*
 - Store backups to SugarSync *(requires curl)*
+- Send backups to an email adress *(not recommended, but maybe useful for some edge cases)*
 - Send logs by email
 - Multisite support (network admin only)
 
@@ -112,7 +113,34 @@ define( 'WP_TEMP_DIR', '/absolute/path/to/your/temp-dir' );
 
 ---
 
+## Email delivery
+
+BackupPilot sends backup archives by email using WordPress's built-in `wp_mail()` function. This means email delivery is fully controlled by your WordPress configuration — no separate SMTP settings inside BackupPilot.
+
+To configure how emails are sent (SMTP server, API-based delivery, authentication), install one of the widely-used WordPress mail plugins:
+
+- [WP Mail SMTP](https://wordpress.org/plugins/wp-mail-smtp/)
+- [FluentSMTP](https://wordpress.org/plugins/fluent-smtp/)
+- [Post SMTP](https://wordpress.org/plugins/post-smtp/)
+
+This approach gives you a single place to manage all outgoing email from your WordPress site, rather than configuring SMTP credentials separately in every plugin that needs to send mail.
+
+---
+
 ## Changelog
+
+### 1.0.2
+
+**Dependencies**
+- Removed: `swiftmailer/swiftmailer` — SwiftMailer was officially abandoned in November 2021 and receives no further security patches. Email delivery is now handled entirely by WordPress's native `wp_mail()` function, delegating transport to whatever mail configuration the site already has in place (WP Mail SMTP, FluentSMTP, Post SMTP, or WordPress's built-in PHP mail). The per-job "Sending method" configuration (SMTP host/port/credentials, Sendmail path) has been removed from the Email destination settings accordingly, giving site owners a single place to manage all outgoing mail rather than duplicating transport settings inside BackupPilot.
+
+**Email destination improvements**
+- Archive readability is verified before sending; a clear error with the full file path is logged if the file cannot be found
+- PHP memory headroom is requested upfront before attaching large archives, matching the safety margin the former SwiftMailer code applied
+- The file-size limit error now includes the actual archive size and the configured limit
+- Mail send failures are captured via `wp_mail_failed` and logged with the PHPMailer error detail, making MTA-level rejections (e.g. Postfix message size limit) diagnosable from the job log
+
+---
 
 ### 1.0.1
 

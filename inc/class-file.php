@@ -100,16 +100,16 @@ return $files_size;
 	public static function get_absolute_path( $path = '/' ) {
 
 		$path = str_replace( '\\', '/', $path );
-		$content_path = trailingslashit( str_replace( '\\', '/', WP_CONTENT_DIR ) );
+		$upload_dir   = wp_upload_dir();
+		$uploads_path = trailingslashit( str_replace( '\\', '/', $upload_dir['basedir'] ) );
 
-		//use WP_CONTENT_DIR as root folder
 		if ( empty( $path ) || $path === '/' ) {
-			$path = $content_path;
+			$path = $uploads_path;
 		}
 
-		//make relative path to absolute
+		//make relative path to absolute, anchored at the uploads directory
 		if ( substr( $path, 0, 1 ) !== '/' && ! preg_match( '#^[a-zA-Z]:/#', $path ) ) {
-			$path =  $content_path . $path;
+			$path = $uploads_path . $path;
 		}
 
 		$path = self::resolve_path( $path );
