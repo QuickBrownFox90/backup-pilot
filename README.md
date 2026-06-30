@@ -150,6 +150,13 @@ This approach gives you a single place to manage all outgoing email from your Wo
 
 ## Changelog
 
+### 1.0.4
+
+- Fixed: Fatal error when BackupPilot is activated while BackWPup is still active — `remove_invalid_characters_from_directory_name()` name collision; function is now guarded with `function_exists()`, and the activation hook aborts with a clear error message if BackWPup is detected
+- Removed: Dead upgrade paths for BackWPup 2.x and 3.0.x — no BackupPilot installation can have data that old
+- Fixed: FTP destination silently reported success when the TLS data channel failed — `ftp_nb_fput()` returns `FTP_FINISHED` immediately on SSL handshake failure, leaving a 0-byte file on the server; a post-transfer `ftp_size()` check now catches this and logs a clear error with a hint about TLS session resumption
+- Fixed: FTP destination logged a spurious warning when the server closed the TLS connection without a proper `close_notify` alert; suppressed via `@ftp_close()` after the transfer has already been verified
+
 ### 1.0.3
 
 - Removed: About page and all associated marketing assets — the page was already disabled and served no purpose beyond BackWPup promotional content

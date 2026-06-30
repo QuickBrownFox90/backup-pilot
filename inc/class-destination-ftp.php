@@ -328,13 +328,16 @@ class BackupPilot_Destination_Ftp extends BackupPilot_Destinations {
 
             //set actual ftp dir to ftp dir
             $ftp_dir = BackupPilot_Option::get( $jobid, 'ftpdir' );
+
             if ( empty( $ftp_dir ) ) {
                 $ftp_dir = trailingslashit( ftp_pwd( $ftp_conn_id ) );
             }
+
             // prepend actual ftp dir if relative dir
             if ( substr( $ftp_dir, 0, 1 ) != '/' ) {
                 $ftp_dir = trailingslashit( ftp_pwd( $ftp_conn_id ) ) . $ftp_dir;
             }
+
             ftp_chdir( $ftp_conn_id, $ftp_dir );
 
             if ( BackupPilot_Option::get( $jobid, 'ftppasv' ) ) {
@@ -349,13 +352,15 @@ class BackupPilot_Destination_Ftp extends BackupPilot_Destinations {
 
         else {
             $ftp_conn_id = $this->ftp_conn_id;
-            $ftp_dir = $job_object->job['ftpdir'];
+            $ftp_dir     = $job_object->job['ftpdir'];
         }
 
         $backupfilelist = [];
         $filecounter    = 0;
         $files          = [];
+
         if ( $filelist = ftp_nlist( $ftp_conn_id, '.' ) ) {
+
             foreach ( $filelist as $file ) {
                 if ( basename( $file ) != '.' && basename( $file ) != '..' ) {
                     if ( $this->is_backup_archive( $file )
@@ -700,6 +705,21 @@ class BackupPilot_Destination_Ftp extends BackupPilot_Destinations {
                     return false;
                 }
 
+                $remote_size = ftp_size( $ftp_conn_id, $current_ftp_dir . $job_object->backup_file );
+
+                if ( $remote_size !== $job_object->backup_filesize ) {
+                    $job_object->log(
+                        sprintf(
+                            __( 'FTP transfer failed: remote file size is %1$d bytes, expected %2$d bytes. The TLS data channel may require session resumption which PHP does not support — try disabling encryption or configuring the FTP server accordingly.', 'backuppilot' ),
+                            max( 0, $remote_size ),
+                            $job_object->backup_filesize
+                        ),
+                        E_USER_ERROR
+                    );
+
+                    return false;
+                }
+
                 else {
                     $job_object->substeps_done = $job_object->backup_filesize + 1;
                     $job_object->log(
@@ -732,7 +752,9 @@ class BackupPilot_Destination_Ftp extends BackupPilot_Destinations {
             $this->file_update_list( $job_object, true );
         $job_object->substeps_done ++;
 
-        ftp_close( $ftp_conn_id );
+        // Suppress SSL close_notify warning — some servers close the TLS connection without
+        // sending the required alert. The transfer has already been verified via ftp_size() above.
+        @ftp_close( $ftp_conn_id );
 
         return true;
     }

@@ -117,6 +117,7 @@ function backuppilot_wpdb() {
  *
  * @return string The cleaned directory path
  */
+if ( ! function_exists( 'remove_invalid_characters_from_directory_name' ) ) :
 function remove_invalid_characters_from_directory_name( $directory ) {
 
     return str_replace(
@@ -151,6 +152,7 @@ function remove_invalid_characters_from_directory_name( $directory ) {
         $directory
     );
 }
+endif;
 
 /**
  * Escapes a URL, adding https by default if protocol is not specified.

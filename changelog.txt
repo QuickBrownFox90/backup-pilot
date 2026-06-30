@@ -1,5 +1,12 @@
 == Changelog ==
 
+= Version 1.0.4 =
+
+* Fixed: Fatal error when BackupPilot is activated while BackWPup is active — remove_invalid_characters_from_directory_name() collision; function is now guarded with function_exists(), and the activation hook aborts with a clear error message if BackWPup is detected
+* Removed: Dead upgrade paths for BackWPup 2.x and 3.0.x (version_compare blocks and upgrade_from_version_two()) — no BackupPilot installation can have data that old
+* Fixed: FTP destination silently reported a successful transfer when the TLS data channel failed (PHP's ftp_nb_fput() returns FTP_FINISHED immediately on SSL handshake failure, leaving a 0-byte file on the server); a post-transfer ftp_size() check now detects this and logs a clear error with a hint about TLS session resumption
+* Fixed: FTP destination logged a spurious warning on job completion when the server closed the TLS connection without a proper close_notify alert — the warning was suppressed via @ftp_close() after the transfer has already been verified
+
 = Version 1.0.3 =
 
 * Removed: About page (class-page-about.php) and all associated marketing assets — the page was already disabled (filter commented out) and served no purpose beyond BackWPup promotional content
