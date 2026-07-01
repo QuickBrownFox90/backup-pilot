@@ -202,6 +202,7 @@ final class BackupPilot_Option {
         $default['type'] = [ 'DBDUMP', 'FILE', 'WPPLUGIN' ];
         $default['destinations'] = [];
         $default['name'] = __( 'New Job', 'backuppilot' );
+        $default['notes'] = '';
         $default['activetype'] = '';
         $default['logfile'] = '';
         $default['lastbackupdownloadurl'] = '';

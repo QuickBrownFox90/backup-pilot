@@ -22,9 +22,14 @@ class BackupPilot_Page_Editjob {
         }
     }
 
+
     /**
      * Save Form data
+     *
+     * @since  1.0.0
+     * @since  1.0.5  Added notice field
      */
+
     public static function save_post_form($tab, $jobid) {
 
         if ( ! current_user_can( 'backuppilot_jobs_edit' ) ) {
@@ -93,6 +98,7 @@ class BackupPilot_Page_Editjob {
                     $name = sprintf( __( 'Job with ID %d', 'backuppilot' ), $jobid );
                 }
                 BackupPilot_Option::update( $jobid, 'name', $name );
+                BackupPilot_Option::update( $jobid, 'notes', sanitize_textarea_field( wp_unslash( $_POST['notes'] ?? '' ) ) );
 
                 $emails = explode( ',', sanitize_text_field( $_POST['mailaddresslog'] ) );
                 foreach ( $emails as $key => $email ) {
@@ -232,12 +238,14 @@ class BackupPilot_Page_Editjob {
         }
     }
 
+
     /**
      *
      * Output css
      *
      * @return void
      */
+
     public static function admin_print_styles() {
 
         ?>
@@ -316,11 +324,18 @@ class BackupPilot_Page_Editjob {
         }
     }
 
+
+    /**
+     * @since  1.0.0
+     * @since  1.0.5  Added notice field
+     */
+
     public static function page() {
 
         if ( ! empty( $_GET[ 'jobid' ] ) ) {
             $jobid = (int)$_GET[ 'jobid' ];
         }
+
         else {
             //generate jobid if not exists
             $jobid = BackupPilot_Option::next_job_id();
@@ -392,6 +407,13 @@ class BackupPilot_Page_Editjob {
                             <th scope="row"><label for="name"><?php esc_html_e( 'Please name this job.', 'backuppilot' ); ?></label></th>
                             <td>
                                 <input name="name" type="text" id="name" placeholder="<?php esc_attr_e( 'Job Name', 'backuppilot' ); ?>" data-empty="<?php esc_attr_e( 'New Job', 'backuppilot' ); ?>" value="<?php echo esc_attr( BackupPilot_Option::get( $jobid, 'name' ) ); ?>" class="regular-text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="notes"><?php esc_html_e( 'Notes', 'backuppilot' ); ?></label></th>
+                            <td>
+                                <textarea name="notes" id="notes" rows="3" class="large-text"><?php echo esc_textarea( BackupPilot_Option::get( $jobid, 'notes' ) ); ?></textarea>
+                                <p class="description"><?php esc_html_e( 'Optional notes visible in the jobs overview. Use this to document what this job backs up, where it sends files, or any other context.', 'backuppilot' ); ?></p>
                             </td>
                         </tr>
                     </table>

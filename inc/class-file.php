@@ -10,36 +10,41 @@ class BackupPilot_File {
      *
      * Get the folder for blog uploads
      *
+     * @since  1.0.0
+     * @since  1.0.5  Fixed hardcoded upload path in multisites
+     *
      * @return string
      */
+
     public static function get_upload_dir() {
 
-        if ( is_multisite() ) {
-            if ( defined( 'UPLOADBLOGSDIR' ) )
-                return trailingslashit( str_replace( '\\', '/',ABSPATH . UPLOADBLOGSDIR ) );
-            elseif ( is_dir( trailingslashit( WP_CONTENT_DIR ) . 'uploads/sites') )
-                return str_replace( '\\', '/', trailingslashit( WP_CONTENT_DIR ) . 'uploads/sites/' );
-            elseif ( is_dir( trailingslashit( WP_CONTENT_DIR ) . 'uploads' ) )
-                return str_replace( '\\', '/', trailingslashit( WP_CONTENT_DIR ) . 'uploads/' );
-            else
-                return trailingslashit( str_replace( '\\', '/', WP_CONTENT_DIR ) );
+        if ( ! is_multisite() ) {
+            $upload_dir = wp_upload_dir( null, false, true );
         }
 
         else {
+            // Switch to the main site so wp_upload_dir() returns the network-level
+            // base directory (e.g. wp-content/uploads/) rather than a sub-site's
+            // subdirectory. This correctly handles custom upload paths set via the
+            // UPLOADS constant or the upload_path option, which the old hardcoded
+            // is_dir() checks could not detect.
+            switch_to_blog( get_main_site_id() );
             $upload_dir = wp_upload_dir( null, false, true );
-            return trailingslashit( str_replace( '\\', '/', $upload_dir[ 'basedir' ] ) );
+            restore_current_blog();
         }
 
+        return trailingslashit( str_replace( '\\', '/', $upload_dir['basedir'] ) );
     }
+
 
     /**
      *
      * check if path in open basedir
      *
-     * @param string $file the file path to check
-     *
-     * @return bool is it in open basedir
+     * @param   string  $file  The file path to check
+     * @return  bool           If it is in open basedir true, otherwise false.
      */
+
     public static function is_in_open_basedir( $file ) {
 
         $ini_open_basedir = ini_get( 'open_basedir' );
@@ -66,14 +71,16 @@ class BackupPilot_File {
         return FALSE;
     }
 
+
     /**
      *
      * get size of files in folder
      *
-     * @param string $folder the folder to calculate
-     * @param bool $deep went thrue suborders
-     * @return int folder size in byte
+     * @param   string  $folder  the folder to calculate
+     * @param   bool    $deep    went thrue suborders
+     * @return  int              folder size in byte
      */
+
     public static function get_folder_size( $folder ) {
         $files_size = 0;
 
@@ -89,16 +96,17 @@ class BackupPilot_File {
             }
         }
 
-return $files_size;
+        return $files_size;
     }
+
 
     /**
      * Get an absolute path if it is relative
      *
-     * @param string $path
-     *
-     * @return string
+     * @param   string  $path
+     * @return  string
      */
+
     public static function get_absolute_path( $path = '/' ) {
 
         $path = str_replace( '\\', '/', $path );
@@ -119,16 +127,17 @@ return $files_size;
         return $path;
     }
 
+
     /**
      *
      * Check is folder readable and exists create it if not
      * add .htaccess or index.html file in folder to prevent directory listing
      *
-     * @param string $folder the folder to check
-     * @param bool   $donotbackup Create a file that the folder will not backuped
-     *
-     * @return string with error message if one
+     * @param   string  $folder       The folder to check
+     * @param   bool    $donotbackup  Create a file that the folder will not backuped
+     * @return  string                With error message if one
      */
+
     public static function check_folder( $folder, $donotbackup = FALSE ) {
 
         $folder = self::get_absolute_path( $folder );
@@ -178,12 +187,16 @@ return $files_size;
                         "\t</system.webServer>" . PHP_EOL .
                         "</configuration>" );
                 }
-            } //Nginx
+            }
+
+            //Nginx
             elseif ( strstr( $server_software, 'nginx' ) ) {
                 if ( ! file_exists( $folder . '/index.php' ) ) {
                     file_put_contents( $folder . '/index.php', "<?php" . PHP_EOL . "header( \$_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found' );" . PHP_EOL . "header( 'Status: 404 Not Found' );" . PHP_EOL );
                 }
-            } //Aapche and other
+            }
+
+            //Aapche and other
             else {
                 if ( ! file_exists( $folder . '/.htaccess' ) ) {
                     file_put_contents( $folder . '/.htaccess', "<Files \"*\">" . PHP_EOL . "<IfModule mod_access.c>" . PHP_EOL . "Deny from all" . PHP_EOL . "</IfModule>" . PHP_EOL . "<IfModule !mod_access_compat>" . PHP_EOL . "<IfModule mod_authz_host.c>" . PHP_EOL . "Deny from all" . PHP_EOL . "</IfModule>" . PHP_EOL . "</IfModule>" . PHP_EOL . "<IfModule mod_access_compat>" . PHP_EOL . "Deny from all" . PHP_EOL . "</IfModule>" . PHP_EOL . "</Files>" );
@@ -202,13 +215,14 @@ return $files_size;
         return '';
     }
 
+
     /**
      * Resolve internal .. within a path
      *
-     * @param string $path The path to resolve
-     *
-     * @return string The resolved path
+     * @param   string  $path  The path to resolve
+     * @return  string         The resolved path
      */
+
     protected static function resolve_path( $path ) {
 
         $search = explode( '/', $path );

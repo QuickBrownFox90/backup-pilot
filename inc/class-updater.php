@@ -26,6 +26,8 @@ class BackupPilot_Updater {
 
 
     /**
+     * @since   1.0.3
+     *
      * @param  string  $github_repo  GitHub repository in "owner/repo" format, e.g. "QuickBrownFox90/backup-pilot".
      * @param  string  $plugin_file  Absolute path to the plugin's main file (typically __FILE__ from backuppilot.php).
      */
@@ -46,6 +48,9 @@ class BackupPilot_Updater {
      * Must be called once after instantiation. Safe to call on every request —
      * the actual GitHub API call is deferred and cached.
      *
+     * @since   1.0.3
+     * @since   1.0.5  Added "Check for updates" actions and filter
+     *
      * @return  void
      */
 
@@ -54,6 +59,9 @@ class BackupPilot_Updater {
         add_filter( 'plugins_api', [ $this, 'plugin_info' ], 20, 3 );
         add_filter( 'site_transient_update_plugins', [ $this, 'check_update' ] );
         add_action( 'upgrader_process_complete', [ $this, 'purge_cache' ], 10, 2 );
+        add_filter( 'plugin_action_links_' . $this->plugin_basename, [ $this, 'action_links' ] );
+        add_action( 'admin_post_backuppilot_check_updates', [ $this, 'handle_cache_bust' ] );
+        add_action( 'admin_notices', [ $this, 'update_check_notice' ] );
     }
 
 
@@ -66,6 +74,8 @@ class BackupPilot_Updater {
      * When a release has an attached ZIP asset it is preferred over GitHub's
      * auto-generated zipball, since the attached asset has the correct plugin
      * folder structure expected by the WordPress upgrader.
+     *
+     * @since   1.0.3
      *
      * @return  object|false  Release object with version, download_url, changelog and published_at properties, or false on failure.
      */
@@ -136,6 +146,8 @@ class BackupPilot_Updater {
      * Hooked into {@see 'plugins_api'} at priority 20. Returns early for any slug
      * that does not match this plugin so other plugins' update checks are unaffected.
      *
+     * @since   1.0.3
+     *
      * @param   mixed   $result  Default result passed through the filter chain.
      * @param   string  $action  The API action being performed (e.g. "plugin_information").
      * @param   object  $args    Request arguments; $args->slug identifies the plugin.
@@ -183,6 +195,8 @@ class BackupPilot_Updater {
      * an update entry when a newer version is available, triggering the standard
      * WordPress update badge and "Update now" flow.
      *
+     * @since   1.0.3
+     *
      * @param   mixed   $transient  The update transient object populated by WordPress.
      * @return  mixed               The transient with an update entry injected when applicable, or unchanged when no update is available or the API call fails.
      */
@@ -224,6 +238,8 @@ class BackupPilot_Updater {
      * Hooked into {@see 'upgrader_process_complete'} to ensure the next update
      * check fetches fresh data from GitHub rather than serving stale cache.
      *
+     * @since   1.0.3
+     *
      * @param   WP_Upgrader  $upgrader    The upgrader instance that just ran.
      * @param   array        $hook_extra  Metadata about the completed upgrade action.
      *
@@ -239,5 +255,80 @@ class BackupPilot_Updater {
         ) {
             delete_transient( $this->cache_key );
         }
+    }
+
+
+    /**
+     * Adds a "Check for updates" link to this plugin's row in the Plugins list table.
+     *
+     * Hooked into {@see 'plugin_action_links_{basename}'}. The link leads to a
+     * nonce-protected admin-post handler that clears the release cache and redirects
+     * back to the Plugins page.
+     *
+     * @since   1.0.5
+     *
+     * @param   array  $links  Existing action links for this plugin row.
+     * @return  array          Links with the cache-bust entry appended.
+     */
+
+    public function action_links( array $links ): array {
+
+        $url = wp_nonce_url(
+            add_query_arg( 'action', 'backuppilot_check_updates', admin_url( 'admin-post.php' ) ),
+            'backuppilot_check_updates'
+        );
+
+        $links[] = '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Check for updates', 'backuppilot' ) . '</a>';
+
+        return $links;
+    }
+
+
+    /**
+     * Handles the cache-bust request: verifies the nonce, deletes the release transient,
+     * then redirects back to the Plugins page with a success flag.
+     *
+     * Hooked into {@see 'admin_post_backuppilot_check_updates'}.
+     *
+     * @since   1.0.5
+     *
+     * @return  void
+     */
+
+    public function handle_cache_bust(): void {
+
+        if ( ! current_user_can( 'update_plugins' ) ) {
+            wp_die( esc_html__( 'You do not have permission to do this.', 'backuppilot' ) );
+        }
+
+        check_admin_referer( 'backuppilot_check_updates' );
+
+        delete_transient( $this->cache_key );
+
+        wp_safe_redirect( add_query_arg( 'bp_update_checked', '1', self_admin_url( 'plugins.php' ) ) );
+        exit;
+    }
+
+
+    /**
+     * Displays a one-time success notice after the release cache has been cleared.
+     *
+     * Hooked into {@see 'admin_notices'}. The notice appears only when the
+     * {@see handle_cache_bust()} redirect lands with `?bp_update_checked=1`.
+     *
+     * @since   1.0.5
+     *
+     * @return  void
+     */
+
+    public function update_check_notice(): void {
+
+        if ( empty( $_GET['bp_update_checked'] ) ) {
+            return;
+        }
+
+        echo '<div class="notice notice-success is-dismissible"><p>'
+            . esc_html__( 'Update cache cleared — WordPress will check for a new BackupPilot version on the next update check.', 'backuppilot' )
+            . '</p></div>';
     }
 }

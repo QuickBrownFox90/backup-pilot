@@ -695,11 +695,6 @@ class BackupPilot_Job {
      */
     public function log( $message, $type = E_USER_NOTICE, $file = '', $line = 0 ) {
 
-        // if error has been suppressed with an @
-        if ( error_reporting() == 0 ) {
-            return true;
-        }
-
         //if first the type an second the message switch it on user errors
         if ( ! is_int( $type ) && is_int( $message ) && in_array( $message,
                 [
@@ -724,6 +719,16 @@ class BackupPilot_Job {
             $temp = $message;
             $message = $type;
             $type = $temp;
+        }
+
+        // Skip errors suppressed with @ when called as PHP error handler.
+        // PHP 7: @ sets error_reporting() to 0 inside the handler.
+        // PHP 8: @ reduces it to a mask of fatal-only levels (does not include
+        //        E_WARNING or E_NOTICE), so == 0 no longer catches it.
+        // After the arg-swap above, $type is always the numeric error level, so
+        // !(error_reporting() & $type) correctly detects suppression in both versions.
+        if ( is_int( $type ) && ! ( error_reporting() & $type ) ) {
+            return true;
         }
 
         //json message if array or object
@@ -1491,7 +1496,15 @@ class BackupPilot_Job {
         $this->write_running_file();
         if ( $this->is_debug() ) {
             @ini_set( 'error_log', $this->logfile );
-            error_reporting( - 1 );
+            error_reporting( -1 );
+        } elseif ( error_reporting() === 0 ) {
+            // Some environments zero error_reporting via php.ini or a plugin.
+            // log() now uses !(error_reporting() & $type) to detect @-suppression,
+            // so a globally-zeroed level would cause every log() call to be silently
+            // dropped. Restore a comprehensive level that mirrors WordPress's own
+            // non-debug setting and includes E_WARNING so PHP-extension warnings
+            // (e.g. from FTP/SSL) are not falsely treated as @-suppressed.
+            error_reporting( E_ALL & ~( E_DEPRECATED | E_USER_DEPRECATED ) );
         }
         @ini_set( 'display_errors', '0' );
         @ini_set( 'log_errors', '1' );
@@ -2192,16 +2205,16 @@ class BackupPilot_Job {
             }
         }
 
-        if ( ! file_put_contents( BackupPilot::get_plugin_data( 'TEMP' ) . 'manifest.json', json_encode( $manifest ) ) ) {
+        if ( ! file_put_contents( BackupPilot::get_plugin_data( 'TEMP' ) . 'backuppilot_manifest.json', json_encode( $manifest ) ) ) {
             return false;
         }
         $this->substeps_done = 1;
 
         //Create backuppilot_readme.txt
-        $readme_text = __( 'You may have noticed the manifest.json file in this archive.', 'backuppilot' ) . PHP_EOL;
-        $readme_text .= __( 'manifest.json might be needed for later restoring a backup from this archive.',
+        $readme_text = __( 'You may have noticed the backuppilot_manifest.json file in this archive.', 'backuppilot' ) . PHP_EOL;
+        $readme_text .= __( 'backuppilot_manifest.json might be needed for later restoring a backup from this archive.',
                 'backuppilot' ) . PHP_EOL;
-        $readme_text .= __( 'Please leave manifest.json untouched and in place. Otherwise it is safe to be ignored.',
+        $readme_text .= __( 'Please leave backuppilot_manifest.json untouched and in place. Otherwise it is safe to be ignored.',
                 'backuppilot' ) . PHP_EOL;
         if ( ! file_put_contents( BackupPilot::get_plugin_data( 'TEMP' ) . 'backuppilot_readme.txt', $readme_text ) ) {
             return false;
@@ -2209,11 +2222,11 @@ class BackupPilot_Job {
         $this->substeps_done = 2;
 
         //add file to backup files
-        if ( is_readable( BackupPilot::get_plugin_data( 'TEMP' ) . 'manifest.json' ) ) {
-            $this->additional_files_to_backup[] = BackupPilot::get_plugin_data( 'TEMP' ) . 'manifest.json';
+        if ( is_readable( BackupPilot::get_plugin_data( 'TEMP' ) . 'backuppilot_manifest.json' ) ) {
+            $this->additional_files_to_backup[] = BackupPilot::get_plugin_data( 'TEMP' ) . 'backuppilot_manifest.json';
             $this->additional_files_to_backup[] = BackupPilot::get_plugin_data( 'TEMP' ) . 'backuppilot_readme.txt';
-            $this->log( sprintf( __( 'Added manifest.json file with %1$s to backup file list.', 'backuppilot' ),
-                size_format( filesize( BackupPilot::get_plugin_data( 'TEMP' ) . 'manifest.json' ), 2 ) ) );
+            $this->log( sprintf( __( 'Added backuppilot_manifest.json file with %1$s to backup file list.', 'backuppilot' ),
+                size_format( filesize( BackupPilot::get_plugin_data( 'TEMP' ) . 'backuppilot_manifest.json' ), 2 ) ) );
         }
         $this->substeps_done = 3;
 

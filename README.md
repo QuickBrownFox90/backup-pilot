@@ -150,6 +150,20 @@ This approach gives you a single place to manage all outgoing email from your Wo
 
 ## Changelog
 
+### 1.0.5
+
+- Added: "Check for updates" link in the plugin row on the Plugins page — clears the 24 h GitHub release cache and triggers a fresh update check without needing WP-CLI or direct database access
+- Fixed: Clicking "Abort" on a running job rendered a blank page — added a redirect back to the Jobs overview after the abort is triggered
+- Fixed: `get_upload_dir()` on multisite used hardcoded path probing (`is_dir()`) instead of the WordPress API — custom upload paths set via the `UPLOADS` constant or `upload_path` option were silently ignored; now uses `switch_to_blog( get_main_site_id() )` + `wp_upload_dir()` to resolve the network-level base directory correctly
+- Fixed: Normal-mode log only showed the 6-line header and nothing else on production hosts where `error_reporting` is `0` (a common `php.ini` default on shared hosting, or set by a plugin) — `log()` returns early for `error_reporting()==0` to filter `@`-suppressed PHP errors when acting as an error handler, but that same check silently dropped every direct `log()` call; Debug mode worked because it already called `error_reporting(-1)` in `run()`, Normal mode did not; `run()` now restores a comprehensive reporting level (`E_ALL` without `DEPRECATED`) when it finds `0`
+- Fixed: FTP SSL close_notify warning (`ftp_close(): SSL_read on shutdown …`) still appeared in the backup log despite `@ftp_close()` — PHP 8.0+ changed `@` operator semantics: inside a `set_error_handler` callback, `error_reporting()` no longer returns `0` for `@`-suppressed errors but a reduced fatal-only mask that excludes `E_WARNING`; `log()`'s suppression check was updated from `== 0` to `!(error_reporting() & $type)` to work correctly on both PHP 7 and PHP 8
+- Fixed: BackupPilot's generated manifest was silently overwritten inside the archive by a `manifest.json` present in the WordPress root (e.g. a PWA web app manifest) — extra files are written to the archive before the regular file scan runs, so the WP-root copy added later wins on extraction; renamed the generated file to `backuppilot_manifest.json` to eliminate the collision
+- Added: Optional "Notes" column in the jobs overview — enable via Screen Options ("Ansicht anpassen"); each job can carry a free-text notes field (editable on the General tab) for documenting purpose, destination context, or anything else; long notes are truncated in the column with the full text visible on hover
+- Fixed: Migrating from BackWPup left FTP (and other) passwords unusable — BackWPup stores passwords encrypted with the prefix `$BackWPup$`, which `BackupPilot_Encryption::decrypt()` did not recognise, causing it to return the raw ciphertext as the password value; the migration now rewrites the prefix to `$BackupPilot$` before storage (key material is identical: `DB_NAME . DB_USER . DB_PASSWORD` on the same WordPress installation)
+- Fixed: Migrating from BackWPup left path-based settings (log folder, local backup destination, etc.) pointing at non-existent directories — BackWPup path segments such as `backwpup-abc123-logs/` are now rewritten to `backuppilot-abc123-logs/` during migration; the hash is preserved because `backwpup_cfg_hash` is migrated to `backuppilot_cfg_hash` before any path is evaluated
+- Fixed: Job name missing from the "Job currently running" heading on the jobs page — `esc_html()` was called without `echo`, so the return value was silently discarded and the `<h2>` rendered empty
+- Fixed: CSS rule for the running-job heading had a typo in the selector (`h2#runnigtitle` instead of `h2#runningtitle`) and never matched the element
+
 ### 1.0.4
 
 - Fixed: Fatal error when BackupPilot is activated while BackWPup is still active — `remove_invalid_characters_from_directory_name()` name collision; function is now guarded with `function_exists()`, and the activation hook aborts with a clear error message if BackWPup is detected

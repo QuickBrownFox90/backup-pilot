@@ -2,6 +2,7 @@
 /**
  * Class for WP-CLI commands
  */
+
 class BackupPilot_WP_CLI extends WP_CLI_Command {
 
     /**
@@ -12,9 +13,10 @@ class BackupPilot_WP_CLI extends WP_CLI_Command {
      *   backuppilot start 13
      *   backuppilot start --jobid=13 (deprecated)
      *
-     * @param $args
-     * @param $assoc_args
+     * @param  $args
+     * @param  $assoc_args
      */
+
     public function start( $args, $assoc_args ) {
 
         $jobid = 0;
@@ -35,8 +37,8 @@ class BackupPilot_WP_CLI extends WP_CLI_Command {
             WP_CLI::error( __( 'No job ID specified!', 'backuppilot' ) );
         }
 
-
         $jobids = BackupPilot_Option::get_job_ids();
+
         if ( ! in_array( $jobid, $jobids, true ) ) {
             WP_CLI::error( __( 'Job ID does not exist!', 'backuppilot' ) );
         }
@@ -44,10 +46,12 @@ class BackupPilot_WP_CLI extends WP_CLI_Command {
         BackupPilot_Job::start_cli( $jobid );
     }
 
+
     /**
      *  Abort a working BackupPilot Job
      *
      */
+
     public function abort( $args, $assoc_args ) {
 
         if ( ! file_exists( BackupPilot::get_plugin_data( 'running_file' ) ) ) {
@@ -62,8 +66,8 @@ class BackupPilot_WP_CLI extends WP_CLI_Command {
 
     /**
      * Display a List of Jobs
-     *
      */
+
     public function jobs( $args, $assoc_args ) {
 
         $formatter_args = [
@@ -72,7 +76,7 @@ class BackupPilot_WP_CLI extends WP_CLI_Command {
                 'Job ID',
                 'Name'
             ],
-            'field' => NULL
+            'field'  => NULL
         ];
 
         $items = [];
@@ -81,22 +85,25 @@ class BackupPilot_WP_CLI extends WP_CLI_Command {
 
         $jobids = BackupPilot_Option::get_job_ids();
 
-        foreach ($jobids as $jobid ) {
+        foreach ( $jobids as $jobid ) {
+
             $items[] = [
                 'Job ID' => $jobid,
-                'Name'  => BackupPilot_Option::get( $jobid, 'name' )
+                'Name'   => BackupPilot_Option::get( $jobid, 'name' )
             ];
         }
 
         $formatter->display_items( $items );
     }
 
+
     /**
      * See Status of a working job
      *
-     * @param $args
-     * @param $assoc_args
+     * @param  $args
+     * @param  $assoc_args
      */
+
     public function working( $args, $assoc_args ) {
 
         $job_object = BackupPilot_Job::get_working_data();
@@ -115,19 +122,19 @@ class BackupPilot_WP_CLI extends WP_CLI_Command {
                 'On Step',
                 'Done',
             ],
-            'field' => NULL
+            'field'  => NULL
         ];
 
         $formatter = new WP_CLI\Formatter( $formatter_args );
 
-        $items = [];
+        $items   = [];
         $items[] = [
-            'JobID' => $job_object->job[ 'jobid' ],
-            'Name' => $job_object->job[ 'name' ],
-            'Warnings' => $job_object->warnings,
-            'Errors' => $job_object->errors,
-            'On Step' => $job_object->steps_data[ $job_object->step_working ][ 'NAME' ],
-            'Done' => $job_object->step_percent . ' / ' . $job_object->substep_percent,
+            'JobID'        => $job_object->job[ 'jobid' ],
+            'Name'         => $job_object->job[ 'name' ],
+            'Warnings'     => $job_object->warnings,
+            'Errors'       => $job_object->errors,
+            'On Step'      => $job_object->steps_data[ $job_object->step_working ][ 'NAME' ],
+            'Done'         => $job_object->step_percent . ' / ' . $job_object->substep_percent,
             'Last message' => str_replace( '&hellip;', '...', strip_tags( $job_object->lastmsg ) )
         ];
 
