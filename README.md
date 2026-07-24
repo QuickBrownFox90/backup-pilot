@@ -150,6 +150,10 @@ This approach gives you a single place to manage all outgoing email from your Wo
 
 ## Changelog
 
+### 1.0.6
+
+- Fixed: Plugin header `Version` stayed at `1.0.4` after the 1.0.5 release — the 1.0.5 release commit updated the readme/changelog but not the `Version:` header in `backuppilot.php`, so the running plugin still reported itself as `1.0.4` (visible in the Plugins list, `WP_DEBUG`, and the self-hosted GitHub updater's version comparison) despite `1.0.5` already being installed; header bumped to `1.0.6` to resolve the mismatch
+
 ### 1.0.5
 
 - Added: "Check for updates" link in the plugin row on the Plugins page — clears the 24 h GitHub release cache and triggers a fresh update check without needing WP-CLI or direct database access

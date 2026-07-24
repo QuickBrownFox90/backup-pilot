@@ -5,7 +5,7 @@
  * Description: WordPress Backup Plugin based on the fantastic BackWPup (GPLv2+)
  * Author: Patrick Mauersberger
  * Author URI: http://dev.patrick-mauersberger.de
- * Version: 1.0.4
+ * Version: 1.0.6
  * Text Domain: backuppilot
  * Domain Path: /languages/
  * Network: true
