@@ -79,7 +79,7 @@ class BackupPilot_Page_Jobs extends WP_List_Table {
 
             $job_configs[ $i ][ 'type' ]    = array_shift( $job_configs[ $i ][ 'type' ] );
             $job_configs[ $i ][ 'dest' ]    = array_shift( $job_configs[ $i ][ 'dest' ] );
-            $job_configs[ $i ][ 'next' ]    = (int) wp_next_scheduled( 'backuppilot_cron', [ 'arg' => $item ] );
+            $job_configs[ $i ][ 'next' ]    = (int) wp_next_scheduled( 'backuppilot_cron', [ (int) $item ] );
             $job_configs[ $i ][ 'last' ]    = BackupPilot_Option::get( $item, 'lastrun' );
 
             $i++;
@@ -285,55 +285,61 @@ class BackupPilot_Page_Jobs extends WP_List_Table {
      */
     public function column_dest( $item ) {
 
-        $r = '';
+        $r         = '';
         $backup_to = FALSE;
+
         foreach ( BackupPilot_Option::get( $item, 'type' ) as $typeid ) {
             if ( isset( $this->job_types[ $typeid ] ) && $this->job_types[ $typeid ]->creates_file() ) {
                 $backup_to = TRUE;
                 break;
             }
         }
+
         if ( $backup_to ) {
             foreach ( BackupPilot_Option::get( $item, 'destinations' ) as $destid ) {
-                if ( isset( $this->destinations[ $destid ][ 'info' ][ 'name' ] ) ) {
+                if ( isset( $this->destinations[ $destid ][ 'info' ][ 'name' ] ) )
                     $r .= $this->destinations[ $destid ][ 'info' ][ 'name' ] . '<br />';
-                }
 
-                else {
+                else
                     $r .= $destid . '<br />';
-                }
             }
         }
-        else {
+
+        else
             $r .= '<i>' . __( 'Not needed or set', 'backuppilot' ) . '</i><br />';
-        }
 
         return $r;
     }
 
+
     /**
      * The next Column
      *
-     * @param $item
-     * @return string
+     * @param   $item
+     * @return  string
      */
+
     public function column_next( $item ) {
 
         $r = '';
 
         $job_normal_hide = '';
-        if ( is_object( $this->job_object ) ) {
+        if ( is_object( $this->job_object ) )
             $job_normal_hide = ' style="display:none;"';
-        }
+
         if ( is_object( $this->job_object ) && $this->job_object->job[ 'jobid' ] == $item ) {
             $runtime = current_time( 'timestamp' ) - $this->job_object->start_time;
             $r .= '<div class="job-run">' . sprintf( esc_html__( 'Running for: %s seconds', 'backuppilot' ), '<span id="runtime">' . $runtime . '</span>' ) .'</div>';
         }
-        if ( is_object( $this->job_object ) && $this->job_object->job[ 'jobid' ] == $item ) {
+
+        if ( is_object( $this->job_object ) && $this->job_object->job[ 'jobid' ] == $item )
             $r .='<div class="job-normal"' . $job_normal_hide . '>';
-        }
+
         if ( BackupPilot_Option::get( $item, 'activetype' ) == 'wpcron' ) {
-            if ( $nextrun = wp_next_scheduled( 'backuppilot_cron', [ 'arg' => $item ] ) + ( get_option( 'gmt_offset' ) * 3600 )  ) {
+            $next_scheduled = wp_next_scheduled( 'backuppilot_cron', [ (int) $item ] );
+
+            if ( $next_scheduled ) {
+                $nextrun = $next_scheduled + ( get_option( 'gmt_offset' ) * 3600 );
                 $r .= '<span title="' . sprintf( esc_html__( 'Cron: %s','backuppilot'),BackupPilot_Option::get( $item, 'cron' ) ). '">' . sprintf( __( '%1$s at %2$s by WP-Cron', 'backuppilot' ) , date_i18n( get_option( 'date_format' ), $nextrun, TRUE ) , date_i18n( get_option( 'time_format' ), $nextrun, TRUE ) ) . '</span><br />';
             }
 
@@ -341,9 +347,12 @@ class BackupPilot_Page_Jobs extends WP_List_Table {
                 $r .= __( 'Not scheduled!', 'backuppilot' ) . '<br />';
             }
         }
+
         elseif ( BackupPilot_Option::get( $item, 'activetype' ) == 'easycron' ) {
+
             $easycron_status = BackupPilot_EasyCron::status( $item );
-            if ( !empty( $easycron_status ) ) {
+
+            if ( ! empty( $easycron_status ) ) {
                 $nextrun = BackupPilot_Cron::cron_next( $easycron_status[ 'cron_expression' ] ) + ( get_option( 'gmt_offset' ) * 3600 );
                 $r .= '<span title="' . sprintf( esc_html__( 'Cron: %s','backuppilot'), $easycron_status[ 'cron_expression' ] ). '">' . sprintf( __( '%1$s at %2$s by EasyCron', 'backuppilot' ) , date_i18n( get_option( 'date_format' ), $nextrun, TRUE ) , date_i18n( get_option( 'time_format' ), $nextrun, TRUE ) ) . '</span><br />';
             }
@@ -352,15 +361,16 @@ class BackupPilot_Page_Jobs extends WP_List_Table {
                 $r .= __( 'Not scheduled!', 'backuppilot' ) . '<br />';
             }
         }
-        elseif ( BackupPilot_Option::get( $item, 'activetype' ) == 'link' ) {
+
+        elseif ( BackupPilot_Option::get( $item, 'activetype' ) == 'link' )
             $r .= __( 'External link', 'backuppilot' ) . '<br />';
-        }
-        else {
+
+        else
             $r .= __( 'Inactive', 'backuppilot' );
-        }
-        if ( is_object( $this->job_object ) && $this->job_object->job[ 'jobid' ] == $item ) {
+
+        if ( is_object( $this->job_object ) && $this->job_object->job[ 'jobid' ] == $item )
             $r .= '</div>';
-        }
+
         return $r;
     }
 
@@ -375,31 +385,38 @@ class BackupPilot_Page_Jobs extends WP_List_Table {
         $r = '';
 
         if ( BackupPilot_Option::get( $item, 'lastrun' ) ) {
-            $lastrun = BackupPilot_Option::get( $item, 'lastrun' );
-            $r .= sprintf( __( '%1$s at %2$s', 'backuppilot' ), date_i18n( get_option( 'date_format' ), $lastrun, TRUE ), date_i18n( get_option( 'time_format' ), $lastrun, TRUE ) );
-            if ( BackupPilot_Option::get( $item, 'lastruntime' ) ) {
-                $r .= '<br />' . sprintf( __( 'Runtime: %d seconds', 'backuppilot' ), BackupPilot_Option::get( $item, 'lastruntime' ) );
-            }
-        }
-        else {
-            $r .= __( 'not yet', 'backuppilot' );
-        }
-        $r .= "<br /><span class=\"last-action-links\">";
-        if ( current_user_can( 'backuppilot_backups_download' ) ) {
-            $download_url = BackupPilot_Option::get( $item, 'lastbackupdownloadurl' );
-            if ( ! empty( $download_url ) ) {
-                $r .= "<a  href=\"" . wp_nonce_url( $download_url, 'backuppilot_action_nonce' ). "\" title=\"" . esc_attr( __( 'Download last backup', 'backuppilot' ) ) . "\">" . esc_html__( 'Download', 'backuppilot' ) . "</a> | ";
-            }
-        }
-        if ( current_user_can( 'backuppilot_logs' ) && BackupPilot_Option::get( $item, 'logfile' ) ) {
-            $logfile = basename( BackupPilot_Option::get( $item, 'logfile' ) );
-            if ( is_object( $this->job_object ) && $this->job_object->job[ 'jobid' ] == $item ) {
-                $logfile = basename( $this->job_object->logfile );
-            }
-            $log_name = str_replace( [ '.html', '.gz' ], '', basename( $logfile ) );
-            $r .= '<a class="thickbox" href="' . admin_url( 'admin-ajax.php' ) . '?&action=backuppilot_view_log&log=' . $log_name .'&_ajax_nonce=' . wp_create_nonce( 'view-log_' . $log_name ) . '&amp;TB_iframe=true&amp;width=640&amp;height=440" title="' . esc_attr( $logfile ) . '">' . esc_html__( 'Log', 'backuppilot' ) . '</a>';
 
+            $lastrun = BackupPilot_Option::get( $item, 'lastrun' );
+            $r      .= sprintf( __( '%1$s at %2$s', 'backuppilot' ), date_i18n( get_option( 'date_format' ), $lastrun, TRUE ), date_i18n( get_option( 'time_format' ), $lastrun, TRUE ) );
+
+            if ( BackupPilot_Option::get( $item, 'lastruntime' ) )
+                $r .= '<br />' . sprintf( __( 'Runtime: %d seconds', 'backuppilot' ), BackupPilot_Option::get( $item, 'lastruntime' ) );
         }
+
+        else
+            $r .= __( 'not yet', 'backuppilot' );
+
+        $r .= "<br /><span class=\"last-action-links\">";
+
+        if ( current_user_can( 'backuppilot_backups_download' ) ) {
+
+            $download_url = BackupPilot_Option::get( $item, 'lastbackupdownloadurl' );
+
+            if ( ! empty( $download_url ) )
+                $r .= "<a  href=\"" . wp_nonce_url( $download_url, 'backuppilot_action_nonce' ). "\" title=\"" . esc_attr( __( 'Download last backup', 'backuppilot' ) ) . "\">" . esc_html__( 'Download', 'backuppilot' ) . "</a> | ";
+        }
+
+        if ( current_user_can( 'backuppilot_logs' ) && BackupPilot_Option::get( $item, 'logfile' ) ) {
+
+            $logfile = basename( BackupPilot_Option::get( $item, 'logfile' ) );
+
+            if ( is_object( $this->job_object ) && $this->job_object->job[ 'jobid' ] == $item )
+                $logfile = basename( $this->job_object->logfile );
+
+            $log_name = str_replace( [ '.html', '.gz' ], '', basename( $logfile ) );
+            $r       .= '<a class="thickbox" href="' . admin_url( 'admin-ajax.php' ) . '?&action=backuppilot_view_log&log=' . $log_name .'&_ajax_nonce=' . wp_create_nonce( 'view-log_' . $log_name ) . '&amp;TB_iframe=true&amp;width=640&amp;height=440" title="' . esc_attr( $logfile ) . '">' . esc_html__( 'Log', 'backuppilot' ) . '</a>';
+        }
+
         $r .= "</span>";
 
         return $r;
@@ -412,39 +429,52 @@ class BackupPilot_Page_Jobs extends WP_List_Table {
 
         switch ( self::$listtable->current_action() ) {
             case 'delete': //Delete Job
-                if ( ! current_user_can( 'backuppilot_jobs_edit' ) ) {
+                if ( ! current_user_can( 'backuppilot_jobs_edit' ) )
                     break;
-                }
+
                 if ( is_array( $_GET[ 'jobs' ] ) ) {
+
                     check_admin_referer( 'bulk-jobs' );
+
                     foreach ( $_GET[ 'jobs' ] as $jobid ) {
-                        wp_clear_scheduled_hook( 'backuppilot_cron', [ 'arg' => absint( $jobid ) ] );
+                        wp_clear_scheduled_hook( 'backuppilot_cron', [ absint( $jobid ) ] );
                         BackupPilot_Option::delete_job( absint( $jobid ) );
                     }
                 }
-                break;
+            break;
+
             case 'copy': //Copy Job
-                if ( ! current_user_can( 'backuppilot_jobs_edit' ) ) {
+                if ( ! current_user_can( 'backuppilot_jobs_edit' ) )
                     break;
-                }
+
                 $old_job_id = absint( $_GET[ 'jobid' ] );
+
                 check_admin_referer( 'copy-job_' . $old_job_id );
+
                 //create new
                 $newjobid = BackupPilot_Option::get_job_ids();
+
                 sort( $newjobid );
+
                 $newjobid    = end( $newjobid ) + 1;
                 $old_options = BackupPilot_Option::get_job( $old_job_id );
+
                 foreach ( $old_options as $key => $option ) {
                     if ( $key === "jobid" )
                         $option = $newjobid;
+
                     if ( $key === "name" )
                         $option = __( 'Copy of', 'backuppilot' ) . ' ' . $option;
+
                     if ( $key === "activetype" )
                         $option = '';
+
                     if ( $key === "archivename" )
                         $option = str_replace( $old_job_id, $newjobid, $option );
+
                     if ( $key === "logfile" || $key === "lastbackupdownloadurl" || $key === "lastruntime" || $key === "lastrun" )
                         continue;
+
                     BackupPilot_Option::update( $newjobid, $key, $option );
                 }
             break;
@@ -465,15 +495,16 @@ class BackupPilot_Page_Jobs extends WP_List_Table {
                     BackupPilot_Admin::message( $temp_folder_message, TRUE );
 
                     //check log folder
-                    $log_folder = get_site_option( 'backuppilot_cfg_logfolder' );
-                    $log_folder = BackupPilot_File::get_absolute_path( $log_folder );
+                    $log_folder         = get_site_option( 'backuppilot_cfg_logfolder' );
+                    $log_folder         = BackupPilot_File::get_absolute_path( $log_folder );
                     $log_folder_message = BackupPilot_File::check_folder( $log_folder );
+
                     BackupPilot_Admin::message( $log_folder_message, TRUE );
 
                     //check backup destinations
-                    $job_types = BackupPilot::get_job_types();
+                    $job_types      = BackupPilot::get_job_types();
                     $job_conf_types = BackupPilot_Option::get( $jobid, 'type' );
-                    $creates_file = FALSE;
+                    $creates_file   = FALSE;
 
                     foreach ( $job_types as $id => $job_type_class ) {
 
@@ -486,7 +517,7 @@ class BackupPilot_Page_Jobs extends WP_List_Table {
                     if ( $creates_file ) {
 
                         $job_conf_dests = BackupPilot_Option::get( $jobid, 'destinations' );
-                        $destinations = 0;
+                        $destinations   = 0;
 
                         /* @var BackupPilot_Destinations $dest_class */
                         foreach ( BackupPilot::get_registered_destinations() as $id => $dest ) {
@@ -494,7 +525,7 @@ class BackupPilot_Page_Jobs extends WP_List_Table {
                             if ( ! in_array( $id, $job_conf_dests, true ) || empty( $dest[ 'class' ] ) )
                                 continue;
 
-                            $dest_class = BackupPilot::get_destination( $id );
+                            $dest_class   = BackupPilot::get_destination( $id );
                             $job_settings = BackupPilot_Option::get_job( $jobid );
 
                             if ( ! $dest_class->can_run( $job_settings ) )
@@ -503,9 +534,8 @@ class BackupPilot_Page_Jobs extends WP_List_Table {
                             $destinations++;
                         }
 
-                        if ( $destinations < 1 ) {
+                        if ( $destinations < 1 )
                             BackupPilot_Admin::message( sprintf( __( 'The job "%s" needs properly configured destinations to run!','backuppilot' ), esc_attr( BackupPilot_Option::get( $jobid, 'name' ) ) ), TRUE );
-                        }
                     }
 
                     //only start job if messages empty
@@ -514,6 +544,7 @@ class BackupPilot_Page_Jobs extends WP_List_Table {
                     if ( empty( $log_messages ) ) {
 
                         $old_log_file = BackupPilot_Option::get( $jobid, 'logfile' );
+
                         BackupPilot_Job::get_jobrun_url( 'runnow', $jobid );
 
                         usleep( 250000 ); //wait a quarter second
@@ -526,6 +557,7 @@ class BackupPilot_Page_Jobs extends WP_List_Table {
                         while ( $old_log_file === $new_log_file ) {
 
                             usleep( 250000 ); //wait a quarter second for next try
+
                             $new_log_file = BackupPilot_Option::get( $jobid, 'logfile', null, false );
 
                             //wait maximal 10 sec.

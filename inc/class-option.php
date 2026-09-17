@@ -7,21 +7,27 @@ use Base32\Base32;
  */
 final class BackupPilot_Option {
 
+
     /**
+     * Add filter for Site option defaults
+     * @since   1.0.0
      *
-     * add filter for Site option defaults
-     *
+     * @return  void
      */
+
     public static function default_site_options() {
 
         //global
         add_site_option( 'backuppilot_version', '0.0.0' );
+
         //job default
         add_site_option( 'backuppilot_jobs', [] );
+
         //general
         add_site_option( 'backuppilot_cfg_showadminbar', false );
         add_site_option( 'backuppilot_cfg_showfoldersize', false );
         add_site_option( 'backuppilot_cfg_protectfolders', true );
+
         //job
         add_site_option( 'backuppilot_cfg_jobmaxexecutiontime', 30 );
         add_site_option( 'backuppilot_cfg_jobstepretry', 3 );
@@ -30,56 +36,66 @@ final class BackupPilot_Option {
         add_site_option( 'backuppilot_cfg_jobwaittimems', 0 );
         add_site_option( 'backuppilot_cfg_jobdooutput', 0 );
         add_site_option( 'backuppilot_cfg_windows', 0 );
+
         //Logs
         add_site_option( 'backuppilot_cfg_maxlogs', 30 );
         add_site_option( 'backuppilot_cfg_gzlogs', 0 );
+
         $upload_dir = wp_upload_dir( null, false, true );
+
         $logs_dir = trailingslashit( str_replace( '\\',
-                '/',
-                $upload_dir['basedir'] ) ) . 'backuppilot-' . BackupPilot::get_plugin_data( 'hash' ) . '-logs/';
+            '/',
+            $upload_dir['basedir'] )
+        ) . 'backuppilot-' . BackupPilot::get_plugin_data( 'hash' ) . '-logs/';
+
         $content_path = trailingslashit( str_replace( '\\', '/', WP_CONTENT_DIR ) );
-        $logs_dir = str_replace( $content_path, '', $logs_dir );
+        $logs_dir     = str_replace( $content_path, '', $logs_dir );
+
         add_site_option( 'backuppilot_cfg_logfolder', $logs_dir );
+
         //Network Auth
         add_site_option( 'backuppilot_cfg_httpauthuser', '' );
         add_site_option( 'backuppilot_cfg_httpauthpassword', '' );
 
     }
 
+
     /**
-     *
      * Update a BackupPilot option
+     * @since   1.0.0
      *
-     * @param int $jobid the job id
-     * @param string $option Option key
-     * @param mixed $value the value to store
-     *
-     * @return bool if option save or not
+     * @param   int     $jobid   The job id
+     * @param   string  $option  Option key
+     * @param   mixed   $value   The value to store
+     * @return  bool             If option save or not
      */
+
     public static function update( $jobid, $option, $value ) {
 
-        $jobid = (int) $jobid;
+        $jobid  = (int) $jobid;
         $option = sanitize_key( trim( $option ) );
 
-        if ( empty( $jobid ) || empty( $option ) ) {
+        if ( empty( $jobid ) || empty( $option ) )
             return false;
-        }
 
         //Update option
         $jobs_options = self::jobs_options( false );
+
         $jobs_options[ $jobid ][ $option ] = $value;
 
         return self::update_jobs_options( $jobs_options );
     }
 
+
     /**
      *
      * Load BackupPilot Options
+     * @since   1.0.0
      *
-     * @param bool $use_cache
-     *
-     * @return array of options
+     * @param   bool  $use_cache  Default: true
+     * @return  array             Array of options
      */
+
     private static function jobs_options( $use_cache = true ) {
 
         global $current_site;
@@ -88,13 +104,16 @@ final class BackupPilot_Option {
         if ( ! $use_cache ) {
             if ( is_multisite() ) {
                 $network_id = $current_site->id;
-                $cache_key = "$network_id:backuppilot_jobs";
+                $cache_key  = "$network_id:backuppilot_jobs";
+
                 wp_cache_delete( $cache_key, 'site-options' );
             }
 
             else {
                 wp_cache_delete( 'backuppilot_jobs', 'options' );
+
                 $alloptions = wp_cache_get( 'alloptions', 'options' );
+
                 if ( isset( $alloptions['backuppilot_jobs'] ) ) {
                     unset( $alloptions['backuppilot_jobs'] );
                     wp_cache_set( 'alloptions', $alloptions, 'options' );
@@ -105,14 +124,15 @@ final class BackupPilot_Option {
         return get_site_option( 'backuppilot_jobs', [] );
     }
 
+
     /**
-     *
      * Update BackupPilot Options
+     * @since   1.0.0
      *
-     * @param array $options The options array to save
-     *
-     * @return bool updated or not
+     * @param   array  $options  The options array to save
+     * @return  bool             updated or not
      */
+
     private static function update_jobs_options( $options ) {
 
         return update_site_option( 'backuppilot_jobs', $options );
@@ -131,134 +151,130 @@ final class BackupPilot_Option {
      */
     public static function get( $jobid, $option, $default = null, $use_cache = true ) {
 
-        $jobid = (int) $jobid;
+        $jobid  = (int) $jobid;
         $option = sanitize_key( trim( $option ) );
 
-        if ( empty( $jobid ) || empty( $option ) ) {
+        if ( empty( $jobid ) || empty( $option ) )
             return false;
-        }
 
         $jobs_options = self::jobs_options( $use_cache );
 
-        if ( isset( $jobs_options[ $jobid ] ) && isset( $jobs_options[ $jobid ]['archivename'] ) ) {
+        if ( isset( $jobs_options[ $jobid ] ) && isset( $jobs_options[ $jobid ]['archivename'] ) )
             $jobs_options[ $jobid ]['archivenamenohash'] = $jobs_options[ $jobid ]['archivename'];
-        }
 
-        if ( ! isset( $jobs_options[ $jobid ][ $option ] ) && $default !== null ) {
+        if ( ! isset( $jobs_options[ $jobid ][ $option ] ) && $default !== null )
             return $default;
-        }
 
         if ( ! isset( $jobs_options[ $jobid ][ $option ] ) ) {
-            if ( $option === 'archivename' ) {
+
+            if ( $option === 'archivename' )
                 return self::normalize_archive_name( self::defaults_job( $option ), $jobid );
-            }
 
             return self::defaults_job( $option );
         }
 
         // Ensure archive name formatted properly
-        if ( $option === 'archivename' ) {
+        if ( $option === 'archivename' )
             return self::normalize_archive_name( $jobs_options[ $jobid ][ $option ], $jobid, true );
-        }
 
-        if ( $option === 'archivenamenohash' ) {
+        if ( $option === 'archivenamenohash' )
             return self::normalize_archive_name( $jobs_options[ $jobid ]['archivename'], $jobid, false );
-        }
 
         $option_value = $jobs_options[ $jobid ][ $option ];
 
         switch ( $option ) {
             case 'archiveformat':
-                if ( $option_value === '.tar.bz2' ) {
+                if ( $option_value === '.tar.bz2' )
                     $option_value = '.tar.gz';
-                }
-                break;
+
+            break;
+
             case 'pluginlistfilecompression':
             case 'wpexportfilecompression':
-                if ( $option_value === '.bz2' ) {
+                if ( $option_value === '.bz2' )
                     $option_value = '.gz';
-                }
-                break;
+            break;
         }
 
         return $option_value;
     }
 
+
     /**
-     *
      * Get default option for BackupPilot option
+     * @since     1.0.0
      *
-     * @param string $key Option key
-     *
-     * @internal param int $id The job id
-     *
-     * @return bool|mixed
+     * @param     string      $key  Option key
+     * @internal  param  int  $id   The job id
+     * @return    bool|mixed
      */
+
     public static function defaults_job( $key = '' ) {
 
         $key = sanitize_key( trim( $key ) );
 
         //set defaults
-        $default['type'] = [ 'DBDUMP', 'FILE', 'WPPLUGIN' ];
-        $default['destinations'] = [];
-        $default['name'] = __( 'New Job', 'backuppilot' );
-        $default['notes'] = '';
-        $default['activetype'] = '';
-        $default['logfile'] = '';
+        $default['type']                  = [ 'DBDUMP', 'FILE', 'WPPLUGIN' ];
+        $default['destinations']          = [];
+        $default['name']                  = __( 'New Job', 'backuppilot' );
+        $default['notes']                 = '';
+        $default['activetype']            = '';
+        $default['logfile']               = '';
         $default['lastbackupdownloadurl'] = '';
-        $default['cronselect'] = 'basic';
-        $default['cron'] = '0 3 * * *';
-        $default['mailaddresslog'] = sanitize_email( get_bloginfo( 'admin_email' ) );
-        $default['mailaddresssenderlog'] = 'BackupPilot ' . get_bloginfo( 'name' ) . ' <' . sanitize_email( get_bloginfo( 'admin_email' ) ) . '>';
-        $default['mailerroronly'] = true;
-        $default['backuptype'] = 'archive';
-        $default['archiveformat'] = '.zip';
-        $default['archivename'] = '%Y-%m-%d_%H-%i-%s_%hash%';
-        $default['archivenamenohash'] = '%Y-%m-%d_%H-%i-%s_%hash%';
+        $default['cronselect']            = 'basic';
+        $default['cron']                  = '0 3 * * *';
+        $default['mailaddresslog']        = sanitize_email( get_bloginfo( 'admin_email' ) );
+        $default['mailaddresssenderlog']  = 'BackupPilot ' . get_bloginfo( 'name' ) . ' <' . sanitize_email( get_bloginfo( 'admin_email' ) ) . '>';
+        $default['mailerroronly']         = true;
+        $default['backuptype']            = 'archive';
+        $default['archiveformat']         = '.zip';
+        $default['archivename']           = '%Y-%m-%d_%H-%i-%s_%hash%';
+        $default['archivenamenohash']     = '%Y-%m-%d_%H-%i-%s_%hash%';
+
         //defaults vor destinations
         foreach ( BackupPilot::get_registered_destinations() as $dest_key => $dest ) {
+
             if ( ! empty( $dest['class'] ) ) {
                 $dest_object = BackupPilot::get_destination( $dest_key );
                 $default = array_merge( $default, $dest_object->option_defaults() );
             }
         }
         //defaults vor job types
-        foreach ( BackupPilot::get_job_types() as $job_type ) {
+        foreach ( BackupPilot::get_job_types() as $job_type )
             $default = array_merge( $default, $job_type->option_defaults() );
-        }
 
         //return all
-        if ( empty( $key ) ) {
+        if ( empty( $key ) )
             return $default;
-        }
-        //return one default setting
-        if ( isset( $default[ $key ] ) ) {
-            return $default[ $key ];
-        }
 
-        else {
+        //return one default setting
+        if ( isset( $default[ $key ] ) )
+            return $default[ $key ];
+
+        else
             return false;
-        }
     }
+
 
     /**
      *
      * BackupPilot Job Options
      *
-     * @param int $id The job id
-     * @param bool $use_cache
-     *
-     * @return array  of all job options
+     * @param  int   $id          The job ID
+     * @param  bool  $use_cache   Default: true
+     * @return array              Array of all job options
      */
+
     public static function get_job( $id, $use_cache = true ) {
 
-        if ( ! is_numeric( $id ) ) {
+        if ( ! is_numeric( $id ) )
             return false;
-        }
 
-        $id = intval( $id );
+        $id           = intval( $id );
         $jobs_options = self::jobs_options( $use_cache );
+
         if ( isset( $jobs_options[ $id ]['archivename'] ) ) {
+
             $jobs_options[ $id ]['archivename'] = self::normalize_archive_name(
                 $jobs_options[ $id ]['archivename'],
                 $id,
@@ -266,21 +282,20 @@ final class BackupPilot_Option {
             );
         }
 
-        if ( ! isset( $jobs_options[ $id ] ) ) {
+        if ( ! isset( $jobs_options[ $id ] ) )
             return false;
-        }
 
-        $options = wp_parse_args( $jobs_options[ $id ], self::defaults_job() );
+        $options          = wp_parse_args( $jobs_options[ $id ], self::defaults_job() );
+        $options['jobid'] = $id;
 
-        if ( isset( $options['archiveformat'] ) && $options['archiveformat'] === '.tar.bz2' ) {
+        if ( isset( $options['archiveformat'] ) && $options['archiveformat'] === '.tar.bz2' )
             $options['archiveformat'] = '.tar.gz';
-        }
-        if ( isset($options['pluginlistfilecompression'] ) && $options['pluginlistfilecompression'] === '.bz2' ) {
+
+        if ( isset($options['pluginlistfilecompression'] ) && $options['pluginlistfilecompression'] === '.bz2' )
             $options['pluginlistfilecompression'] = '.gz';
-        }
-        if ( isset($options['wpexportfilecompression'] ) && $options['wpexportfilecompression'] === '.bz2' ) {
+
+        if ( isset($options['wpexportfilecompression'] ) && $options['wpexportfilecompression'] === '.bz2' )
             $options['wpexportfilecompression'] = '.gz';
-        }
 
         return $options;
     }
@@ -295,17 +310,18 @@ final class BackupPilot_Option {
      *
      * @return bool deleted or not
      */
+
     public static function delete( $jobid, $option ) {
 
-        $jobid = (int) $jobid;
+        $jobid  = (int) $jobid;
         $option = sanitize_key( trim( $option ) );
 
-        if ( empty( $jobid ) || empty( $option ) ) {
+        if ( empty( $jobid ) || empty( $option ) )
             return false;
-        }
 
         //delete option
         $jobs_options = self::jobs_options( false );
+
         unset( $jobs_options[ $jobid ][ $option ] );
 
         return self::update_jobs_options( $jobs_options );
@@ -321,12 +337,12 @@ final class BackupPilot_Option {
      */
     public static function delete_job( $id ) {
 
-        if ( ! is_numeric( $id ) ) {
+        if ( ! is_numeric( $id ) )
             return false;
-        }
 
-        $id = intval( $id );
+        $id           = intval( $id );
         $jobs_options = self::jobs_options( false );
+
         unset( $jobs_options[ $id ] );
 
         return self::update_jobs_options( $jobs_options );
@@ -335,78 +351,85 @@ final class BackupPilot_Option {
     /**
      *
      * get the id's of jobs
+     * @since   1.0.0
      *
-     * @param string|null $key Option key or null for getting all id's
-     * @param bool $value Value that the option must have to get the id
-     *
-     * @return array job id's
+     * @param   string|null  $key    Option key or null for getting all IDs
+     * @param   bool         $value  Value that the option must have to get the id
+     * @return  array                Job IDs
      */
+
     public static function get_job_ids( $key = null, $value = false ) {
 
-        $key = sanitize_key( trim( $key ? $key : '' ) );
+        $key          = sanitize_key( trim( $key ? $key : '' ) );
         $jobs_options = self::jobs_options( false );
 
-        if ( empty( $jobs_options ) ) {
+        if ( empty( $jobs_options ) )
             return [];
-        }
 
-        //get option job ids
-        if ( empty( $key ) ) {
+        //get option job IDs
+        if ( empty( $key ) )
             return array_keys( $jobs_options );
-        }
 
         //get option ids for option with the defined value
         $new_option_job_ids = [];
+
         foreach ( $jobs_options as $id => $option ) {
             if ( isset( $option[ $key ] ) && $value == $option[ $key ] ) {
                 $new_option_job_ids[] = (int) $id;
             }
         }
+
         sort( $new_option_job_ids );
 
         return $new_option_job_ids;
     }
 
+
     /**
      * Gets the next available job id.
+     * @since   1.0.0
      *
-     * @return int
+     * @return  int
      */
+
     public static function next_job_id() {
 
         $ids = self::get_job_ids();
+
         sort( $ids );
 
         return end( $ids ) + 1;
     }
 
+
     /**
      * Normalizes the archive name.
      *
      * The archive name should include the hash to identify this site, and the job id to identify this job.
-     *
      * This allows backup files belonging to this job to be tracked.
      *
-     * @param string $archive_name
-     * @param int $jobid
+     * @since  1.0.0
      *
-     * @return string The normalized archive name
+     * @param  string  $archive_name
+     * @param  int     $jobid
+     *
+     * @return string  The normalized archive name
      */
+
     public static function normalize_archive_name( $archive_name, $jobid, $substitute_hash = true ) {
 
-        $hash = BackupPilot::get_plugin_data( 'hash' );
+        $hash           = BackupPilot::get_plugin_data( 'hash' );
         $generated_hash = self::get_generated_hash( $jobid );
 
         // Does the string contain %hash%?
         if ( strpos( $archive_name, '%hash%' ) !== false ) {
-            if ( $substitute_hash == true ) {
-                return str_replace( '%hash%', $generated_hash, $archive_name );
-            }
 
-            else {
-                // Nothing needs to be done since we don't have to substitute it.
+            if ( $substitute_hash == true )
+                return str_replace( '%hash%', $generated_hash, $archive_name );
+
+            // Nothing needs to be done since we don't have to substitute it.
+            else
                 return $archive_name;
-            }
         }
 
         else {
@@ -416,38 +439,33 @@ final class BackupPilot_Option {
                 $parts = explode( '_', $archive_name );
 
                 // Decode hash part if hash not found (from 3.4.2)
-                if ( strpos( $parts[1], $hash ) === false ) {
+                if ( strpos( $parts[1], $hash ) === false )
                     $parts[1] = is_numeric($parts[1]) ? base_convert( $parts[1], 36, 16 ) : $parts[1];
-                }
 
                 // Search again
-                if ( strpos( $parts[1], $hash ) !== false ) {
+                if ( strpos( $parts[1], $hash ) !== false )
                     $parts[1] = '%hash%';
-                }
 
-                else {
-                    // Hash not included, so insert
+                // Hash not included, so insert
+                else
                     array_splice( $parts, 1, 0, '%hash%' );
-                }
-                $archive_name = implode( '_', $parts );
-                if ( $substitute_hash == true ) {
-                    return str_replace( '%hash%', $generated_hash, $archive_name );
-                }
 
-                else {
+                $archive_name = implode( '_', $parts );
+
+                if ( $substitute_hash == true )
+                    return str_replace( '%hash%', $generated_hash, $archive_name );
+
+                else
                     return $archive_name;
-                }
             }
 
             else {
                 // But otherwise, just append the hash
-                if ( $substitute_hash == true ) {
+                if ( $substitute_hash == true )
                     return $archive_name . '_' . $generated_hash;
-                }
 
-                else {
+                else
                     return $archive_name . '_%hash%';
-                }
             }
 
         }
@@ -456,8 +474,10 @@ final class BackupPilot_Option {
 
     /**
      * Generate a hash including random bytes and job ID
+     * @since   1.0.0
      *
-     * @return string
+     * @param   int     $jobid
+     * @return  string
      */
     public static function get_generated_hash( $jobid ) {
 
@@ -469,15 +489,18 @@ final class BackupPilot_Option {
                sprintf( '%02d', $jobid );
     }
 
+
     /**
      * Return the decoded hash and the job ID.
      *
      * If the hash is not found in the given code, then false is returned.
      *
-     * @param string $code The string to decode
+     * @since   1.0.0
      *
-     * @return array|bool An array with hash and job ID, or false otherwise
+     * @param   string      $code  The string to decode
+     * @return  array|bool         An array with hash and job ID, or false otherwise
      */
+
     public static function decode_hash( $code ) {
 
         $hash = BackupPilot::get_plugin_data( 'hash' );
@@ -485,32 +508,31 @@ final class BackupPilot_Option {
         // Try base 32 first
         $decoded = bin2hex( Base32::decode( substr( $code, 0, 8 ) ) );
 
-        if ( substr( $decoded, 2, 6 ) == $hash ) {
+        if ( substr( $decoded, 2, 6 ) == $hash )
             return [ substr( $decoded, 2, 6 ), intval( substr( $code, - 2 ) ) ];
-        }
 
         // Try base 36
         $decoded = is_numeric($code)  ? base_convert( $code, 36, 16 ) : $code;
-        if ( substr( $decoded, 2, 6 ) == $hash ) {
+        if ( substr( $decoded, 2, 6 ) == $hash )
             return [ substr( $decoded, 2, 6 ), intval( substr( $decoded, - 2 ) ) ];
-        }
 
         // Check style prior to 3.4.1
-        if ( substr( $code, 0, 6 ) == $hash ) {
+        if ( substr( $code, 0, 6 ) == $hash )
             return [ substr( $code, 0, 6 ), intval( substr( $code, - 2 ) ) ];
-        }
 
         // Tried everything, now return failure
         return false;
     }
 
+
     /**
      * Substitute date variables in archive name.
+     * @since   1.0.0
      *
-     * @param string $archivename The name of the archive.
-     *
-     * @return string The archive name with substituted variables.
+     * @param   string  $archivename  The name of the archive.
+     * @return  string                The archive name with substituted variables.
      */
+
     public static function substitute_date_vars( $archivename ) {
 
         $current_time = current_time( 'timestamp' );
@@ -531,6 +553,7 @@ final class BackupPilot_Option {
             '%i',
             '%s',
         ];
+
         $datevalues = [
             date( 'd', $current_time ),
             date( 'j', $current_time ),
@@ -548,6 +571,7 @@ final class BackupPilot_Option {
             date( 'i', $current_time ),
             date( 's', $current_time ),
         ];
+
         // Temporarily replace %hash% with [hash]
         $archivename = str_replace( '%hash%', '[hash]', $archivename );
         $archivename = str_replace( $datevars,
@@ -557,5 +581,4 @@ final class BackupPilot_Option {
 
         return BackupPilot_Job::sanitize_file_name( $archivename );
     }
-
 }

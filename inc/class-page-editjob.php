@@ -5,7 +5,9 @@ class BackupPilot_Page_Editjob {
     public static function auth() {
 
         if ( isset($_GET[ 'tab' ] ) ) {
+
             $_GET[ 'tab' ] = sanitize_title_with_dashes( $_GET[ 'tab' ] );
+
             if ( substr( $_GET[ 'tab' ], 0, 5 ) != 'dest-' && substr( $_GET[ 'tab' ], 0, 8 ) != 'jobtype-'  && ! in_array( $_GET[ 'tab' ], [ 'job','cron' ], true ) )
                 $_GET[ 'tab' ] = 'job';
         }
@@ -15,9 +17,11 @@ class BackupPilot_Page_Editjob {
         }
 
         if ( substr( $_GET[ 'tab' ], 0, 5 ) == 'dest-' ) {
-            $jobid        = (int)$_GET[ 'jobid' ];
-            $id = strtoupper( str_replace( 'dest-', '', $_GET[ 'tab' ] ) );
+
+            $jobid      = (int) $_GET[ 'jobid' ];
+            $id         = strtoupper( str_replace( 'dest-', '', $_GET[ 'tab' ] ) );
             $dest_class = BackupPilot::get_destination( $id );
+
             $dest_class->edit_auth( $jobid );
         }
     }
@@ -44,20 +48,25 @@ class BackupPilot_Page_Editjob {
 
                 //set type of backup
                 $backuptype = 'archive';
+
                 BackupPilot_Option::update( $jobid, 'backuptype', $backuptype );
 
                 $type_post = isset( $_POST['type'] ) ? (array) $_POST['type'] : [];
+
                 //check existing type
                 foreach ( $type_post as $key => $value ) {
                     if ( ! isset( $job_types[ $value ] ) ) {
                         unset( $type_post[ $key ] );
                     }
                 }
+
                 sort( $type_post );
+
                 BackupPilot_Option::update( $jobid, 'type', $type_post );
 
                 //test if job type makes backup
                 $makes_file = false;
+
                 /* @var BackupPilot_JobTypes $job_type */
                 foreach ( $job_types as $type_id => $job_type ) {
                     if ( in_array( $type_id, $type_post, true ) ) {
@@ -68,51 +77,58 @@ class BackupPilot_Page_Editjob {
                     }
                 }
 
-                if ( $makes_file ) {
+                if ( $makes_file )
                     $destinations_post = isset( $_POST['destinations'] ) ? (array) $_POST['destinations'] : [];
-                }
 
-                else {
+                else
                     $destinations_post = [];
-                }
 
                 $destinations = BackupPilot::get_registered_destinations();
+
                 foreach ( $destinations_post as $key => $dest_id ) {
+
                     //remove all destinations that not exists
                     if ( ! isset( $destinations[ $dest_id ] ) ) {
                         unset( $destinations_post[ $key ] );
                         continue;
                     }
+
                     //if sync remove all not sync destinations
                     if ( $backuptype === 'sync' ) {
-                        if ( ! $destinations[ $dest_id ]['can_sync'] ) {
+                        if ( ! $destinations[ $dest_id ]['can_sync'] )
                             unset( $destinations_post[ $key ] );
-                        }
                     }
                 }
+
                 sort( $destinations_post );
+
                 BackupPilot_Option::update( $jobid, 'destinations', $destinations_post );
 
                 $name = sanitize_text_field( trim( $_POST['name'] ) );
+
                 if ( ! $name || $name === __( 'New Job', 'backuppilot' ) ) {
                     $name = sprintf( __( 'Job with ID %d', 'backuppilot' ), $jobid );
                 }
+
                 BackupPilot_Option::update( $jobid, 'name', $name );
                 BackupPilot_Option::update( $jobid, 'notes', sanitize_textarea_field( wp_unslash( $_POST['notes'] ?? '' ) ) );
 
                 $emails = explode( ',', sanitize_text_field( $_POST['mailaddresslog'] ) );
+
                 foreach ( $emails as $key => $email ) {
                     $emails[ $key ] = sanitize_email( trim( $email ) );
                     if ( ! is_email( $emails[ $key ] ) ) {
                         unset( $emails[ $key ] );
                     }
                 }
+
                 $mailaddresslog = implode( ', ', $emails );
+
                 BackupPilot_Option::update( $jobid, 'mailaddresslog', $mailaddresslog );
 
                 $mailaddresssenderlog = trim( $_POST['mailaddresssenderlog'] );
-                BackupPilot_Option::update( $jobid, 'mailaddresssenderlog', $mailaddresssenderlog );
 
+                BackupPilot_Option::update( $jobid, 'mailaddresssenderlog', $mailaddresssenderlog );
                 BackupPilot_Option::update( $jobid, 'mailerroronly', ! empty( $_POST['mailerroronly'] ) );
 
                 $archiveformat = isset( $_POST['archiveformat'] ) && in_array( $_POST['archiveformat'], [
@@ -120,11 +136,13 @@ class BackupPilot_Page_Editjob {
                     '.tar',
                     '.tar.gz'
                 ], true ) ? $_POST['archiveformat'] : '.zip';
+
                 BackupPilot_Option::update( $jobid, 'archiveformat', $archiveformat );
                 BackupPilot_Option::update( $jobid, 'archiveencryption', ! empty( $_POST['archiveencryption'] ) );
-
                 BackupPilot_Option::update( $jobid, 'archivename', BackupPilot_Job::sanitize_file_name( BackupPilot_Option::normalize_archive_name( $_POST['archivename'], $jobid, false ) ) );
-                break;
+
+            break;
+
             case 'cron':
                 $activetype = in_array( $_POST['activetype'], [
                     '',
@@ -132,98 +150,101 @@ class BackupPilot_Page_Editjob {
                     'easycron',
                     'link'
                 ], true ) ? $_POST['activetype'] : '';
+
                 BackupPilot_Option::update( $jobid, 'activetype', $activetype );
 
                 $cronselect = $_POST['cronselect'] === 'advanced' ? 'advanced' : 'basic';
+
                 BackupPilot_Option::update( $jobid, 'cronselect', $cronselect );
 
                 //save advanced
                 if ( $cronselect === 'advanced' ) {
+
                     if ( empty( $_POST['cronminutes'] ) || $_POST['cronminutes'][0] === '*' ) {
-                        if ( ! empty( $_POST['cronminutes'][1] ) ) {
+                        if ( ! empty( $_POST['cronminutes'][1] ) )
                             $_POST['cronminutes'] = [ '*/' . $_POST['cronminutes'][1] ];
-                        }
 
-                        else {
+                        else
                             $_POST['cronminutes'] = [ '*' ];
-                        }
                     }
+
                     if ( empty( $_POST['cronhours'] ) || $_POST['cronhours'][0] === '*' ) {
-                        if ( ! empty( $_POST['cronhours'][1] ) ) {
+                        if ( ! empty( $_POST['cronhours'][1] ) )
                             $_POST['cronhours'] = [ '*/' . $_POST['cronhours'][1] ];
-                        }
 
-                        else {
+                        else
                             $_POST['cronhours'] = [ '*' ];
-                        }
                     }
+
                     if ( empty( $_POST['cronmday'] ) || $_POST['cronmday'][0] === '*' ) {
-                        if ( ! empty( $_POST['cronmday'][1] ) ) {
+                        if ( ! empty( $_POST['cronmday'][1] ) )
                             $_POST['cronmday'] = [ '*/' . $_POST['cronmday'][1] ];
-                        }
 
-                        else {
+                        else
                             $_POST['cronmday'] = [ '*' ];
-                        }
                     }
+
                     if ( empty( $_POST['cronmon'] ) || $_POST['cronmon'][0] === '*' ) {
-                        if ( ! empty( $_POST['cronmon'][1] ) ) {
+                        if ( ! empty( $_POST['cronmon'][1] ) )
                             $_POST['cronmon'] = [ '*/' . $_POST['cronmon'][1] ];
-                        }
 
-                        else {
+                        else
                             $_POST['cronmon'] = [ '*' ];
-                        }
                     }
-                    if ( empty( $_POST['cronwday'] ) || $_POST['cronwday'][0] === '*' ) {
-                        if ( ! empty( $_POST['cronwday'][1] ) ) {
-                            $_POST['cronwday'] = [ '*/' . $_POST['cronwday'][1] ];
-                        }
 
-                        else {
+                    if ( empty( $_POST['cronwday'] ) || $_POST['cronwday'][0] === '*' ) {
+                        if ( ! empty( $_POST['cronwday'][1] ) )
+                            $_POST['cronwday'] = [ '*/' . $_POST['cronwday'][1] ];
+
+                        else
                             $_POST['cronwday'] = [ '*' ];
-                        }
                     }
+
                     $cron = implode( ",", $_POST['cronminutes'] ) . ' ' . implode( ",", $_POST['cronhours'] ) . ' ' . implode( ",", $_POST['cronmday'] ) . ' ' . implode( ",", $_POST['cronmon'] ) . ' ' . implode( ",", $_POST['cronwday'] );
+
                     BackupPilot_Option::update( $jobid, 'cron', $cron );
                 }
 
                 else {
                     //Save basic
-                    if ( $_POST['cronbtype'] === 'mon' ) {
+                    if ( $_POST['cronbtype'] === 'mon' )
                         BackupPilot_Option::update( $jobid, 'cron', absint( $_POST['moncronminutes'] ) . ' ' . absint( $_POST['moncronhours'] ) . ' ' . absint( $_POST['moncronmday'] ) . ' * *' );
-                    }
-                    if ( $_POST['cronbtype'] === 'week' ) {
+
+                    if ( $_POST['cronbtype'] === 'week' )
                         BackupPilot_Option::update( $jobid, 'cron', absint( $_POST['weekcronminutes'] ) . ' ' . absint( $_POST['weekcronhours'] ) . ' * * ' . absint( $_POST['weekcronwday'] ) );
-                    }
-                    if ( $_POST['cronbtype'] === 'day' ) {
+
+                    if ( $_POST['cronbtype'] === 'day' )
                         BackupPilot_Option::update( $jobid, 'cron', absint( $_POST['daycronminutes'] ) . ' ' . absint( $_POST['daycronhours'] ) . ' * * *' );
-                    }
-                    if ( $_POST['cronbtype'] === 'hour' ) {
+
+                    if ( $_POST['cronbtype'] === 'hour' )
                         BackupPilot_Option::update( $jobid, 'cron', absint( $_POST['hourcronminutes'] ) . ' * * * *' );
-                    }
-                }
-                //reschedule
-                $activetype = BackupPilot_Option::get( $jobid, 'activetype' );
-                wp_clear_scheduled_hook( 'backuppilot_cron', [ 'arg' => $jobid ] );
-                if ( $activetype === 'wpcron' ) {
-                    $cron_next = BackupPilot_Cron::cron_next( BackupPilot_Option::get( $jobid, 'cron' ) );
-                    wp_schedule_single_event( $cron_next, 'backuppilot_cron', [ 'arg' => $jobid ] );
-                }
-                $easy_cron_job_id = BackupPilot_Option::get( $jobid, 'easycronjobid' );
-                if ( $activetype === 'easycron' ) {
-                    BackupPilot_EasyCron::update( $jobid );
                 }
 
-                elseif ( $easy_cron_job_id ) {
-                    BackupPilot_EasyCron::delete( $jobid );
+                //reschedule
+                $activetype = BackupPilot_Option::get( $jobid, 'activetype' );
+
+                wp_clear_scheduled_hook( 'backuppilot_cron', [ $jobid ] );
+
+                if ( $activetype === 'wpcron' ) {
+                    $cron_next = BackupPilot_Cron::cron_next( BackupPilot_Option::get( $jobid, 'cron' ) );
+                    wp_schedule_single_event( $cron_next, 'backuppilot_cron', [ $jobid ] );
                 }
-                break;
+
+                $easy_cron_job_id = BackupPilot_Option::get( $jobid, 'easycronjobid' );
+
+                if ( $activetype === 'easycron' )
+                    BackupPilot_EasyCron::update( $jobid );
+
+                elseif ( $easy_cron_job_id )
+                    BackupPilot_EasyCron::delete( $jobid );
+            break;
+
             default:
                 if ( strstr( $tab, 'dest-' ) ) {
                     $dest_class = BackupPilot::get_destination( str_replace( 'dest-', '', $tab ) );
                     $dest_class->edit_form_post_save( $jobid );
                 }
+
                 if ( strstr( $tab, 'jobtype-' ) ) {
                     $id = strtoupper( str_replace( 'jobtype-', '', $tab ) );
                     $job_types[ $id ]->edit_form_post_save( $jobid );
@@ -232,6 +253,7 @@ class BackupPilot_Page_Editjob {
 
         //saved message
         $messages = BackupPilot_Admin::get_messages();
+
         if ( empty( $messages['error'] ) ) {
             $url = BackupPilot_Job::get_jobrun_url( 'runnowlink', $jobid );
             BackupPilot_Admin::message( sprintf( __( 'Changes for job <i>%s</i> saved.', 'backuppilot' ), BackupPilot_Option::get( $jobid, 'name' ) ) . ' <a href="' . network_admin_url( 'admin.php' ) . '?page=backuppilotjobs">' . __( 'Jobs overview', 'backuppilot' ) . '</a> | <a href="' . $url['url'] . '">' . __( 'Run now', 'backuppilot' ) . '</a>' );
@@ -240,10 +262,9 @@ class BackupPilot_Page_Editjob {
 
 
     /**
-     *
      * Output css
      *
-     * @return void
+     * @return  void
      */
 
     public static function admin_print_styles() {
@@ -276,6 +297,7 @@ class BackupPilot_Page_Editjob {
             $dest_object = BackupPilot::get_destination( str_replace( 'dest-', '', $_GET[ 'tab' ] ) );
             $dest_object->admin_print_styles();
         }
+
         elseif ( substr( $_GET[ 'tab' ], 0, 8 ) == 'jobtype-' ) {
             $job_type = BackupPilot::get_job_types();
             $id       = strtoupper( str_replace( 'jobtype-', '', $_GET[ 'tab' ] ) );
@@ -283,43 +305,45 @@ class BackupPilot_Page_Editjob {
         }
     }
 
+
     /**
-     *
      * Output js
      *
      * @return void
      */
+
     public static function admin_print_scripts() {
 
         wp_enqueue_script( 'backuppilotgeneral' );
 
         //add js for the first tabs
         if ( $_GET[ 'tab' ] == 'job' ) {
-            if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+            if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG )
                 wp_enqueue_script( 'backuppilottabjob', BackupPilot::get_plugin_data( 'URL' ) . '/assets/js/page_edit_tab_job.js', ['jquery'], time(), TRUE );
-            }
 
-            else {
+            else
                 wp_enqueue_script( 'backuppilottabjob', BackupPilot::get_plugin_data( 'URL' ) . '/assets/js/page_edit_tab_job.min.js', ['jquery'], BackupPilot::get_plugin_data( 'Version' ), TRUE );
-            }
         }
-        elseif ( $_GET[ 'tab' ] == 'cron' ) {
-            if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
-                wp_enqueue_script( 'backuppilottabcron', BackupPilot::get_plugin_data( 'URL' ) . '/assets/js/page_edit_tab_cron.js', ['jquery'], time(), TRUE );
-            }
 
-            else {
+        elseif ( $_GET[ 'tab' ] == 'cron' ) {
+            if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG )
+                wp_enqueue_script( 'backuppilottabcron', BackupPilot::get_plugin_data( 'URL' ) . '/assets/js/page_edit_tab_cron.js', ['jquery'], time(), TRUE );
+
+            else
                 wp_enqueue_script( 'backuppilottabcron', BackupPilot::get_plugin_data( 'URL' ) . '/assets/js/page_edit_tab_cron.min.js', ['jquery'], BackupPilot::get_plugin_data( 'Version' ), TRUE );
-            }
         }
+
         //add js for all other tabs
         elseif ( strstr( $_GET[ 'tab' ], 'dest-' ) ) {
             $dest_object = BackupPilot::get_destination( str_replace( 'dest-', '', $_GET[ 'tab' ] ) );
+
             $dest_object->admin_print_scripts();
         }
+
         elseif (  strstr( $_GET[ 'tab' ], 'jobtype-' ) ) {
             $job_type = BackupPilot::get_job_types();
             $id       = strtoupper( str_replace( 'jobtype-', '', $_GET[ 'tab' ] ) );
+
             $job_type[ $id ]->admin_print_scripts( );
         }
     }
@@ -332,28 +356,25 @@ class BackupPilot_Page_Editjob {
 
     public static function page() {
 
-        if ( ! empty( $_GET[ 'jobid' ] ) ) {
+        if ( ! empty( $_GET[ 'jobid' ] ) )
             $jobid = (int)$_GET[ 'jobid' ];
-        }
 
-        else {
-            //generate jobid if not exists
+        else //generate jobid if not exists
             $jobid = BackupPilot_Option::next_job_id();
-        }
 
         $destinations = BackupPilot::get_registered_destinations();
         $job_types    = BackupPilot::get_job_types();
 
         $archive_format_option = BackupPilot_Option::get( $jobid, 'archiveformat' );
-        ?>
-    <div class="wrap" id="backuppilot-page">
-        <?php
+
+        echo '<div class="wrap" id="backuppilot-page">';
         echo '<h1>' . sprintf( esc_html__( '%1$s &rsaquo; Job: %2$s', 'backuppilot' ), BackupPilot::get_plugin_data( 'name' ), '<span id="h2jobtitle">' . esc_html( BackupPilot_Option::get( $jobid, 'name' ) ) . '</span>' ). '</h1>';
 
         //default tabs
         $tabs = [ 'job' => [ 'name' => esc_html__( 'General', 'backuppilot' ), 'display' => TRUE ], 'cron' => [ 'name' => __( 'Schedule', 'backuppilot' ), 'display' => TRUE ] ];
         //add jobtypes to tabs
         $job_job_types = BackupPilot_Option::get( $jobid, 'type' );
+
         foreach ( $job_types as $typeid => $typeclass ) {
             $tabid          = 'jobtype-' . strtolower( $typeid );
             $tabs[ $tabid ][ 'name' ] = $typeclass->info[ 'name' ];
@@ -362,8 +383,10 @@ class BackupPilot_Page_Editjob {
                 $tabs[ $tabid ][ 'display' ] = FALSE;
 
         }
+
         //add destinations to tabs
         $jobdests = BackupPilot_Option::get( $jobid, 'destinations' );
+
         foreach ( $destinations as $destid => $dest ) {
             $tabid          = 'dest-' . strtolower( $destid );
             $tabs[ $tabid ][ 'name' ] = sprintf( __( 'To: %s', 'backuppilot' ), $dest[ 'info' ][ 'name' ] );
@@ -371,8 +394,10 @@ class BackupPilot_Page_Editjob {
             if ( ! in_array( $destid, $jobdests, true ) )
                 $tabs[ $tabid ][ 'display' ] = FALSE;
         }
+
         //display tabs
         echo '<h2 class="nav-tab-wrapper">';
+
         foreach ( $tabs as $id => $tab ) {
             $addclass = '';
             if ( $id === $_GET[ 'tab' ] ) {
@@ -384,7 +409,9 @@ class BackupPilot_Page_Editjob {
             }
             echo '<a href="' . wp_nonce_url( network_admin_url( 'admin.php?page=backuppiloteditjob&tab=' . $id . '&jobid=' . $jobid ), 'edit-job' )   . '" class="nav-tab' . $addclass . '" id="tab-' . esc_attr( $id ) . '" data-nexttab="' . esc_attr( $id ) . '"' . $display . '>' . esc_html( $tab[ 'name' ] ) . '</a>';
         }
+
         echo '</h2>';
+
         //display messages
         BackupPilot_Admin::display_messages();
         echo '<form name="editjob" id="editjob" method="post" action="' . esc_attr(admin_url( 'admin-post.php' )) . '">';
@@ -634,27 +661,32 @@ class BackupPilot_Page_Editjob {
                         </tr>
                         <?php
 
-                        list( $cronstr[ 'minutes' ], $cronstr[ 'hours' ], $cronstr[ 'mday' ], $cronstr[ 'mon' ], $cronstr[ 'wday' ] ) = explode( ' ', BackupPilot_Option::get( $jobid, 'cron' ), 5 );
-                        if ( strstr( $cronstr[ 'minutes' ], '*/' ) )
-                            $minutes = explode( '/', $cronstr[ 'minutes' ] );
-                        else
-                            $minutes = explode( ',', $cronstr[ 'minutes' ] );
-                        if ( strstr( $cronstr[ 'hours' ], '*/' ) )
-                            $hours = explode( '/', $cronstr[ 'hours' ] );
-                        else
-                            $hours = explode( ',', $cronstr[ 'hours' ] );
-                        if ( strstr( $cronstr[ 'mday' ], '*/' ) )
-                            $mday = explode( '/', $cronstr[ 'mday' ] );
-                        else
-                            $mday = explode( ',', $cronstr[ 'mday' ] );
-                        if ( strstr( $cronstr[ 'mon' ], '*/' ) )
-                            $mon = explode( '/', $cronstr[ 'mon' ] );
-                        else
-                            $mon = explode( ',', $cronstr[ 'mon' ] );
-                        if ( strstr( $cronstr[ 'wday' ], '*/' ) )
-                            $wday = explode( '/', $cronstr[ 'wday' ] );
-                        else
-                            $wday = explode( ',', $cronstr[ 'wday' ] );
+                            list( $cronstr[ 'minutes' ], $cronstr[ 'hours' ], $cronstr[ 'mday' ], $cronstr[ 'mon' ], $cronstr[ 'wday' ] ) = explode( ' ', BackupPilot_Option::get( $jobid, 'cron' ), 5 );
+
+                            if ( strstr( $cronstr[ 'minutes' ], '*/' ) )
+                                $minutes = explode( '/', $cronstr[ 'minutes' ] );
+                            else
+                                $minutes = explode( ',', $cronstr[ 'minutes' ] );
+
+                            if ( strstr( $cronstr[ 'hours' ], '*/' ) )
+                                $hours = explode( '/', $cronstr[ 'hours' ] );
+                            else
+                                $hours = explode( ',', $cronstr[ 'hours' ] );
+
+                            if ( strstr( $cronstr[ 'mday' ], '*/' ) )
+                                $mday = explode( '/', $cronstr[ 'mday' ] );
+                            else
+                                $mday = explode( ',', $cronstr[ 'mday' ] );
+
+                            if ( strstr( $cronstr[ 'mon' ], '*/' ) )
+                                $mon = explode( '/', $cronstr[ 'mon' ] );
+                            else
+                                $mon = explode( ',', $cronstr[ 'mon' ] );
+
+                            if ( strstr( $cronstr[ 'wday' ], '*/' ) )
+                                $wday = explode( '/', $cronstr[ 'wday' ] );
+                            else
+                                $wday = explode( ',', $cronstr[ 'wday' ] );
                         ?>
                         <tr class="wpcronbasic"<?php if ( BackupPilot_Option::get( $jobid, 'cronselect' ) !== 'basic' ) echo ' style="display:none;"';?>>
                             <th scope="row"><?php _e( 'Scheduler', 'backuppilot' ); ?></th>
@@ -688,13 +720,15 @@ class BackupPilot_Page_Editjob {
                                     <tr>
                                         <td><label for="idcronbtype-week"><?php echo '<input class="radio" type="radio"' . checked( TRUE, is_numeric( $wday[ 0 ] ), FALSE ) . ' name="cronbtype" id="idcronbtype-week" value="week" /> ' . esc_html__( 'weekly', 'backuppilot' ); ?></label></td>
                                         <td><select name="weekcronwday">
-                                            <?php     echo '<option ' . selected( in_array( "0", $wday, TRUE ), TRUE, FALSE ) . '  value="0" />' . esc_html__( 'Sunday', 'backuppilot' ) . '</option>';
-                                            echo '<option ' . selected( in_array( "1", $wday, TRUE ), TRUE, FALSE ) . '  value="1" />' . esc_html__( 'Monday', 'backuppilot' ) . '</option>';
-                                            echo '<option ' . selected( in_array( "2", $wday, TRUE ), TRUE, FALSE ) . '  value="2" />' . esc_html__( 'Tuesday', 'backuppilot' ) . '</option>';
-                                            echo '<option ' . selected( in_array( "3", $wday, TRUE ), TRUE, FALSE ) . '  value="3" />' . esc_html__( 'Wednesday', 'backuppilot' ) . '</option>';
-                                            echo '<option ' . selected( in_array( "4", $wday, TRUE ), TRUE, FALSE ) . '  value="4" />' . esc_html__( 'Thursday', 'backuppilot' ) . '</option>';
-                                            echo '<option ' . selected( in_array( "5", $wday, TRUE ), TRUE, FALSE ) . '  value="5" />' . esc_html__( 'Friday', 'backuppilot' ) . '</option>';
-                                            echo '<option ' . selected( in_array( "6", $wday, TRUE ), TRUE, FALSE ) . '  value="6" />' . esc_html__( 'Saturday', 'backuppilot' ) . '</option>'; ?>
+                                            <?php
+                                                echo '<option ' . selected( in_array( "0", $wday, TRUE ), TRUE, FALSE ) . '  value="0" />' . esc_html__( 'Sunday', 'backuppilot' ) . '</option>';
+                                                echo '<option ' . selected( in_array( "1", $wday, TRUE ), TRUE, FALSE ) . '  value="1" />' . esc_html__( 'Monday', 'backuppilot' ) . '</option>';
+                                                echo '<option ' . selected( in_array( "2", $wday, TRUE ), TRUE, FALSE ) . '  value="2" />' . esc_html__( 'Tuesday', 'backuppilot' ) . '</option>';
+                                                echo '<option ' . selected( in_array( "3", $wday, TRUE ), TRUE, FALSE ) . '  value="3" />' . esc_html__( 'Wednesday', 'backuppilot' ) . '</option>';
+                                                echo '<option ' . selected( in_array( "4", $wday, TRUE ), TRUE, FALSE ) . '  value="4" />' . esc_html__( 'Thursday', 'backuppilot' ) . '</option>';
+                                                echo '<option ' . selected( in_array( "5", $wday, TRUE ), TRUE, FALSE ) . '  value="5" />' . esc_html__( 'Friday', 'backuppilot' ) . '</option>';
+                                                echo '<option ' . selected( in_array( "6", $wday, TRUE ), TRUE, FALSE ) . '  value="6" />' . esc_html__( 'Saturday', 'backuppilot' ) . '</option>';
+                                            ?>
                                         </select></td>
                                         <td><select name="weekcronhours"><?php for ( $i = 0; $i < 24; $i ++ ) {
                                             echo '<option ' . selected( in_array( (string) $i, $hours, TRUE ), TRUE, FALSE ) . '  value="' . esc_attr( $i ) . '" />' . esc_html( $i ) . '</option>';
@@ -814,58 +848,67 @@ class BackupPilot_Page_Editjob {
                 break;
             default:
                 echo '<div class="table" id="info-tab-' . $_GET[ 'tab' ] . '">';
+
                 if ( strstr( $_GET[ 'tab' ], 'dest-' ) ) {
                     $dest_object = BackupPilot::get_destination( str_replace( 'dest-', '', $_GET[ 'tab' ] ) );
                     $dest_object->edit_tab( $jobid );
                 }
+
                 if ( strstr( $_GET[ 'tab' ], 'jobtype-' ) ) {
                     $id = strtoupper( str_replace( 'jobtype-', '', $_GET[ 'tab' ] ) );
                     $job_types[ $id ]->edit_tab( $jobid );
                 }
+
                 echo '</div>';
         }
+
         echo '<p class="submit">';
         submit_button( __( 'Save changes', 'backuppilot' ), 'primary', 'save', FALSE, [ 'tabindex' => '2', 'accesskey' => 'p' ] );
         echo '</p></form>';
-        ?>
-    </div>
+        echo '</div>';
 
-    <script type="text/javascript">
-        jQuery(document).ready(function ($) {
-            // auto post if things changed
-            var changed = false;
-            $( '#editjob' ).change( function () {
-                changed = true;
+        ?>
+        <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+                // auto post if things changed
+                var changed = false;
+                $( '#editjob' ).change( function () {
+                    changed = true;
+                });
+                $( '.nav-tab' ).click( function () {
+                    if ( changed ) {
+                        $( 'input[name="nexttab"]' ).val( $(this).data( "nexttab" ) );
+                        $( '#editjob' ).submit();
+                        return false;
+                    }
+                });
             });
-            $( '.nav-tab' ).click( function () {
-                if ( changed ) {
-                    $( 'input[name="nexttab"]' ).val( $(this).data( "nexttab" ) );
-                    $( '#editjob' ).submit();
-                    return false;
-                }
-            });
-        });
-    </script>
+        </script>
         <?php
+
         //add inline js
         if ( strstr( $_GET[ 'tab' ], 'dest-' ) ) {
             $dest_object = BackupPilot::get_destination( str_replace( 'dest-', '', sanitize_text_field( $_GET[ 'tab' ] ) ) );
+
             $dest_object->edit_inline_js();
         }
+
         if ( strstr( $_GET[ 'tab' ], 'jobtype-' ) ) {
             $id = strtoupper( str_replace( 'jobtype-', '', sanitize_text_field( $_GET[ 'tab' ] ) ) );
+
             $job_types[ $id ]->edit_inline_js();
         }
 
     }
 
+
     /**
      * @static
      *
-     * @param string $args
-     *
-     * @return mixed
+     * @param   string  $args
+     * @return  mixed
      */
+
     public static function ajax_cron_text( $args = '' ) {
 
         if ( is_array( $args ) ) {
@@ -876,41 +919,54 @@ class BackupPilot_Page_Editjob {
         else {
             if ( ! current_user_can( 'backuppilot_jobs_edit' ) )
                 wp_die( -1 );
+
             check_ajax_referer( 'backuppilot_ajax_nonce' );
+
             if ( empty( $_POST[ 'cronminutes' ] ) || $_POST[ 'cronminutes' ][ 0 ] == '*' ) {
+
                 if ( ! empty( $_POST[ 'cronminutes' ][ 1 ] ) )
                     $_POST[ 'cronminutes' ] = [ '*/' . $_POST[ 'cronminutes' ][ 1 ] ];
                 else
                     $_POST[ 'cronminutes' ] = [ '*' ];
             }
+
             if ( empty( $_POST[ 'cronhours' ] ) || $_POST[ 'cronhours' ][ 0 ] == '*' ) {
+
                 if ( ! empty( $_POST[ 'cronhours' ][ 1 ] ) )
                     $_POST[ 'cronhours' ] = [ '*/' . $_POST[ 'cronhours' ][ 1 ] ];
                 else
                     $_POST[ 'cronhours' ] = [ '*' ];
             }
+
             if ( empty( $_POST[ 'cronmday' ] ) || $_POST[ 'cronmday' ][ 0 ] == '*' ) {
+
                 if ( ! empty( $_POST[ 'cronmday' ][ 1 ] ) )
                     $_POST[ 'cronmday' ] = [ '*/' . $_POST[ 'cronmday' ][ 1 ] ];
                 else
                     $_POST[ 'cronmday' ] = [ '*' ];
             }
+
             if ( empty( $_POST[ 'cronmon' ] ) || $_POST[ 'cronmon' ][ 0 ] == '*' ) {
+
                 if ( ! empty( $_POST[ 'cronmon' ][ 1 ] ) )
                     $_POST[ 'cronmon' ] = [ '*/' . $_POST[ 'cronmon' ][ 1 ] ];
                 else
                     $_POST[ 'cronmon' ] = [ '*' ];
             }
+
             if ( empty( $_POST[ 'cronwday' ] ) || $_POST[ 'cronwday' ][ 0 ] == '*' ) {
+
                 if ( ! empty( $_POST[ 'cronwday' ][ 1 ] ) )
                     $_POST[ 'cronwday' ] = [ '*/' . $_POST[ 'cronwday' ][ 1 ] ];
                 else
                     $_POST[ 'cronwday' ] = [ '*' ];
             }
+
             $crontype  = $_POST[ 'crontype' ];
             $cronstamp = implode( ",", $_POST[ 'cronminutes' ] ) . ' ' . implode( ",", $_POST[ 'cronhours' ] ) . ' ' . implode( ",", $_POST[ 'cronmday' ] ) . ' ' . implode( ",", $_POST[ 'cronmon' ] ) . ' ' . implode( ",", $_POST[ 'cronwday' ] );
             $ajax      = TRUE;
         }
+
         echo '<p class="wpcron" id="schedulecron">';
 
         if ( $crontype == 'advanced' ) {
@@ -919,24 +975,30 @@ class BackupPilot_Page_Editjob {
         }
 
         list( $cronstr[ 'minutes' ], $cronstr[ 'hours' ], $cronstr[ 'mday' ], $cronstr[ 'mon' ], $cronstr[ 'wday' ] ) = explode( ' ', $cronstamp, 5 );
+
         if ( FALSE !== strpos( $cronstr[ 'minutes' ], '*/' ) || $cronstr[ 'minutes' ] == '*' ) {
             $repeatmins = str_replace( '*/', '', $cronstr[ 'minutes' ] );
             if ( $repeatmins == '*' || empty( $repeatmins ) )
                 $repeatmins = 5;
             echo '<span class="bwu-message-error">' . sprintf( __( 'ATTENTION: Job runs every %d minutes!', 'backuppilot' ), $repeatmins ) . '</span><br />';
         }
+
         $cron_next = BackupPilot_Cron::cron_next( $cronstamp ) + ( get_option( 'gmt_offset' ) * 3600 );
+
         if ( PHP_INT_MAX === $cron_next ) {
             echo '<span class="bwu-message-error">' . __( 'ATTENTION: Can\'t calculate cron!', 'backuppilot' ) . '</span><br />';
         }
+
         else {
             _e( 'Next runtime:', 'backuppilot' );
             echo ' <b>' . date_i18n( 'D, j M Y, H:i', $cron_next, TRUE ) . '</b>';
         }
+
         echo "</p>";
 
         if ( $ajax )
             die();
+
         else
             return;
     }

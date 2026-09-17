@@ -12,6 +12,7 @@ class BackupPilot_Page_BackupPilot {
      * @return void
      */
     public static function load() {
+
         global $wpdb;
 
         if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'dbdumpdl' ) {
@@ -28,6 +29,7 @@ class BackupPilot_Page_BackupPilot {
             header( "Cache-Control: must-revalidate, post-check=0, pre-check=0" );
             header( "Content-Type: application/octet-stream; charset=". get_bloginfo( 'charset' ) );
             header( "Content-Disposition: attachment; filename=" . DB_NAME . ".sql;" );
+
             try {
                 $sql_dump = new BackupPilot_MySQLDump();
                 foreach ( $sql_dump->tables_to_dump as $key => $table ) {
@@ -36,9 +38,12 @@ class BackupPilot_Page_BackupPilot {
                 }
                 $sql_dump->execute();
                 unset( $sql_dump );
-            } catch ( Exception $e ) {
+            }
+
+            catch ( Exception $e ) {
                 die( $e->getMessage() );
             }
+
             die();
         }
     }
@@ -132,6 +137,7 @@ class BackupPilot_Page_BackupPilot {
 
         if ( ! current_user_can( 'backuppilot_jobs' ) )
             return;
+
         ?>
         <table class="wp-list-table widefat" cellspacing="0">
             <caption><?php _e( 'Next scheduled jobs', 'backuppilot' ); ?></caption>
@@ -142,53 +148,65 @@ class BackupPilot_Page_BackupPilot {
             </tr>
             </thead>
             <?php
-            //get next jobs
-            $mainsactive = BackupPilot_Option::get_job_ids( 'activetype', 'wpcron' );
-            sort( $mainsactive );
-            $alternate = TRUE;
-            // add working job if it not in active jobs
-            $job_object = BackupPilot_Job::get_working_data();
-            if ( ! empty( $job_object ) && ! empty( $job_object->job[ 'jobid' ] ) && ! in_array($job_object->job[ 'jobid' ], $mainsactive, true ) )
-                $mainsactive[ ] = $job_object->job[ 'jobid' ];
-            foreach ( $mainsactive as $jobid ) {
-                $name = BackupPilot_Option::get( $jobid, 'name' );
-                if ( ! empty( $job_object ) && $job_object->job[ 'jobid' ] == $jobid ) {
-                    $runtime  = current_time( 'timestamp' ) -  $job_object->job[ 'lastrun' ];
-                    if ( ! $alternate ) {
-                        echo '<tr>';
-                        $alternate = TRUE;
+                //get next jobs
+                $mainsactive = BackupPilot_Option::get_job_ids( 'activetype', 'wpcron' );
+                sort( $mainsactive );
+                $alternate = TRUE;
+                // add working job if it not in active jobs
+                $job_object = BackupPilot_Job::get_working_data();
+
+                if ( ! empty( $job_object ) && ! empty( $job_object->job[ 'jobid' ] ) && ! in_array($job_object->job[ 'jobid' ], $mainsactive, true ) )
+                    $mainsactive[ ] = $job_object->job[ 'jobid' ];
+
+                foreach ( $mainsactive as $jobid ) {
+                    $name = BackupPilot_Option::get( $jobid, 'name' );
+                    if ( ! empty( $job_object ) && $job_object->job[ 'jobid' ] == $jobid ) {
+                        $runtime  = current_time( 'timestamp' ) -  $job_object->job[ 'lastrun' ];
+                        if ( ! $alternate ) {
+                            echo '<tr>';
+                            $alternate = TRUE;
+                        }
+
+                        else {
+                            echo '<tr class="alternate">';
+                            $alternate = FALSE;
+                        }
+                        echo '<td>' . sprintf( '<span style="color:#e66f00;">' . esc_html__( 'working since %d seconds', 'backuppilot' ) . '</span>', $runtime ) . '</td>';
+                        echo '<td><span style="font-weight:bold;">' . esc_html ( $job_object->job[ 'name' ] ) . '</span><br />';
+                        echo "<a style=\"color:red;\" href=\"" . wp_nonce_url( network_admin_url( 'admin.php?page=backuppilotjobs&action=abort'), 'abort-job' ) . "\">" . esc_html__( 'Abort', 'backuppilot' ) . "</a>";
+                        echo "</td></tr>";
                     }
 
                     else {
-                        echo '<tr class="alternate">';
-                        $alternate = FALSE;
-                    }
-                    echo '<td>' . sprintf( '<span style="color:#e66f00;">' . esc_html__( 'working since %d seconds', 'backuppilot' ) . '</span>', $runtime ) . '</td>';
-                    echo '<td><span style="font-weight:bold;">' . esc_html ( $job_object->job[ 'name' ] ) . '</span><br />';
-                    echo "<a style=\"color:red;\" href=\"" . wp_nonce_url( network_admin_url( 'admin.php?page=backuppilotjobs&action=abort'), 'abort-job' ) . "\">" . esc_html__( 'Abort', 'backuppilot' ) . "</a>";
-                    echo "</td></tr>";
-                }
-                else {
-                    if ( ! $alternate ) {
-                        echo '<tr>';
-                        $alternate = TRUE;
-                    }
 
-                    else {
-                        echo '<tr class="alternate">';
-                        $alternate = FALSE;
-                    }
-                    if ( $nextrun = wp_next_scheduled( 'backuppilot_cron', [ 'arg' => $jobid ] ) + ( get_option( 'gmt_offset' ) * 3600 ) )
-                        echo '<td>' . sprintf( __( '%1$s at %2$s', 'backuppilot' ), date_i18n( get_option( 'date_format' ), $nextrun, TRUE ), date_i18n( get_option( 'time_format' ), $nextrun, TRUE ) ) . '</td>';
-                    else
-                        echo '<td><em>' . esc_html__( 'Not scheduled!', 'backuppilot' ) . '</em></td>';
+                        if ( ! $alternate ) {
+                            echo '<tr>';
+                            $alternate = TRUE;
+                        }
 
-                    echo '<td><a href="' . wp_nonce_url( network_admin_url( 'admin.php' ) . '?page=backuppiloteditjob&jobid=' . $jobid, 'edit-job' ) . '" title="' . esc_attr( __( 'Edit Job', 'backuppilot' ) ) . '">' . esc_html($name) . '</a></td></tr>';
+                        else {
+                            echo '<tr class="alternate">';
+                            $alternate = FALSE;
+                        }
+
+                        $next_scheduled = wp_next_scheduled( 'backuppilot_cron', [ (int) $jobid ] );
+
+                        if ( $next_scheduled ) {
+                            $nextrun = $next_scheduled + ( get_option( 'gmt_offset' ) * 3600 );
+                            echo '<td>' . sprintf( __( '%1$s at %2$s', 'backuppilot' ), date_i18n( get_option( 'date_format' ), $nextrun, TRUE ), date_i18n( get_option( 'time_format' ), $nextrun, TRUE ) ) . '</td>';
+                        }
+
+                        else {
+                            echo '<td><em>' . esc_html__( 'Not scheduled!', 'backuppilot' ) . '</em></td>';
+                        }
+
+                        echo '<td><a href="' . wp_nonce_url( network_admin_url( 'admin.php' ) . '?page=backuppiloteditjob&jobid=' . $jobid, 'edit-job' ) . '" title="' . esc_attr( __( 'Edit Job', 'backuppilot' ) ) . '">' . esc_html($name) . '</a></td></tr>';
+                    }
                 }
-            }
-            if ( empty( $mainsactive ) and ! empty( $job_object ) ) {
-                echo '<tr><td colspan="2"><i>' . esc_html__( 'none', 'backuppilot' ) . '</i></td></tr>';
-            }
+
+                if ( empty( $mainsactive ) and ! empty( $job_object ) ) {
+                    echo '<tr><td colspan="2"><i>' . esc_html__( 'none', 'backuppilot' ) . '</i></td></tr>';
+                }
             ?>
         </table>
         <?php

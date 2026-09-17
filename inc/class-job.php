@@ -200,7 +200,7 @@ class BackupPilot_Job {
         $starttype_exists = in_array( $starttype, [ 'runnow', 'runnowalt', 'runext', 'cronrun' ], true );
         if ( ! $backuppilot_job_object && $starttype_exists && $jobid ) {
             // Schedule restart event.
-            wp_schedule_single_event( time() + 60, 'backuppilot_cron', [ 'arg' => 'restart' ] );
+            wp_schedule_single_event( time() + 60, 'backuppilot_cron', [ 'restart' ] );
             // Sstart job.
             $backuppilot_job_object = new self();
             $backuppilot_job_object->create( $starttype, $jobid );
@@ -447,12 +447,12 @@ class BackupPilot_Job {
         }
         if ( $this->job['activetype'] === 'wpcron' ) {
             //check next run
-            $cron_next = wp_next_scheduled( 'backuppilot_cron', [ 'arg' => $this->job['jobid'] ] );
+            $cron_next = wp_next_scheduled( 'backuppilot_cron', [ $this->job['jobid'] ] );
             if ( ! $cron_next || $cron_next < time() ) {
-                wp_unschedule_event( $cron_next, 'backuppilot_cron', [ 'arg' => $this->job['jobid'] ] );
+                wp_unschedule_event( $cron_next, 'backuppilot_cron', [ $this->job['jobid'] ] );
                 $cron_next = BackupPilot_Cron::cron_next( $this->job['cron'] );
-                wp_schedule_single_event( $cron_next, 'backuppilot_cron', [ 'arg' => $this->job['jobid'] ] );
-                $cron_next = wp_next_scheduled( 'backuppilot_cron', [ 'arg' => $this->job['jobid'] ] );
+                wp_schedule_single_event( $cron_next, 'backuppilot_cron', [ $this->job['jobid'] ] );
+                $cron_next = wp_next_scheduled( 'backuppilot_cron', [ $this->job['jobid'] ] );
             }
             //output scheduling
             if ( $this->is_debug() ) {
@@ -1308,8 +1308,8 @@ class BackupPilot_Job {
         $this->write_running_file();
         remove_action( 'shutdown', [ $this, 'shutdown' ] );
         //do restart
-        wp_clear_scheduled_hook( 'backuppilot_cron', [ 'arg' => 'restart' ] );
-        wp_schedule_single_event( time() + 5, 'backuppilot_cron', [ 'arg' => 'restart' ] );
+        wp_clear_scheduled_hook( 'backuppilot_cron', [ 'restart' ] );
+        wp_schedule_single_event( time() + 5, 'backuppilot_cron', [ 'restart' ] );
         self::get_jobrun_url( 'restart' );
 
         exit();
@@ -1497,13 +1497,16 @@ class BackupPilot_Job {
         if ( $this->is_debug() ) {
             @ini_set( 'error_log', $this->logfile );
             error_reporting( -1 );
-        } elseif ( error_reporting() === 0 ) {
-            // Some environments zero error_reporting via php.ini or a plugin.
-            // log() now uses !(error_reporting() & $type) to detect @-suppression,
-            // so a globally-zeroed level would cause every log() call to be silently
-            // dropped. Restore a comprehensive level that mirrors WordPress's own
-            // non-debug setting and includes E_WARNING so PHP-extension warnings
-            // (e.g. from FTP/SSL) are not falsely treated as @-suppressed.
+        } else {
+            // log() uses !(error_reporting() & $type) to detect @-suppression, so
+            // whatever baseline error_reporting() already has when run() starts
+            // determines which of our own direct log() calls get through - not just
+            // an explicitly-zeroed level, but also WordPress's own non-debug default
+            // (E_ALL minus notices/deprecated), which excludes E_USER_NOTICE - the
+            // default type for most of our progress messages. Always set a
+            // comprehensive level here in normal mode, the same one debug mode would
+            // effectively get via error_reporting(-1) minus deprecated noise, so a
+            // normal-mode log is never silently reduced to just its header.
             error_reporting( E_ALL & ~( E_DEPRECATED | E_USER_DEPRECATED ) );
         }
         @ini_set( 'display_errors', '0' );

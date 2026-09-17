@@ -5,9 +5,107 @@
  */
 class BackupPilot_Cron {
 
+
     /**
-     * @param string $arg
+     * The 'backuppilot_cron' argument captured by watch_dispatch() for the event
+     * currently being processed, or null if no dispatch has been observed yet.
+     *
+     * @var  string|int|null
      */
+
+    private static $dispatch_arg = null;
+
+
+    /**
+     * Records which 'backuppilot_cron' argument is currently being dispatched.
+     *
+     * Hooked at priority 0, ahead of run() at the default priority, so the value
+     * is captured even if run() itself never gets to execute (e.g. a fatal error
+     * while WordPress binds the call). notify_missed_dispatch() reads this back
+     * on shutdown to identify which job a missed automatic run belonged to.
+     *
+     * @since   1.0.7
+     *
+     * @param   string|int  $arg
+     * @return  void
+     */
+
+    public static function watch_dispatch( $arg = 'restart' ) {
+
+        self::$dispatch_arg = $arg;
+    }
+
+
+    /**
+     * Notifies about an automatic backup run that never started because of a
+     * fatal error during the WP-Cron dispatch itself.
+     *
+     * Registered via register_shutdown_function() only for genuine WP-Cron
+     * requests. A fatal error here means the run() callback for 'backuppilot_cron'
+     * crashed before (or while) it was invoked - the job never got a chance to
+     * start, so none of the job's own error handling or notification logic ever
+     * ran either. This is the only place that can still tell the site owner
+     * their automatic backup was missed.
+     *
+     * @since   1.0.7
+     *
+     * @return  void
+     */
+
+    public static function notify_missed_dispatch() {
+
+        $error = error_get_last();
+
+        $fatal_types = [ E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ];
+
+        if ( ! $error || ! in_array( $error['type'], $fatal_types, true ) ) {
+            return;
+        }
+
+        if ( self::$dispatch_arg === null ) {
+            return;
+        }
+
+        $jobid = is_numeric( self::$dispatch_arg ) ? abs( (int) self::$dispatch_arg ) : 0;
+        $jobname = $jobid ? BackupPilot_Option::get( $jobid, 'name' ) : '';
+        $recipient = $jobid ? BackupPilot_Option::get( $jobid, 'mailaddresslog' ) : '';
+
+        if ( empty( $recipient ) ) {
+            $recipient = get_bloginfo( 'admin_email' );
+        }
+
+        $subject = sprintf(
+            __( '[%s] Automatic backup job could not start', 'backuppilot' ),
+            get_bloginfo( 'name' )
+        );
+
+        $body = sprintf(
+            __( "A scheduled BackupPilot job was due to run automatically but never started, because WordPress itself hit a fatal error while trying to trigger it.\n\nJob: %1\$s\nTime: %2\$s\nError: %3\$s\nFile: %4\$s:%5\$d\n\nThis is different from a job that ran and failed - it means the scheduled run was skipped entirely. The next scheduled run may be affected in the same way; if this keeps happening, please check with your hosting provider or a developer.", 'backuppilot' ),
+            $jobname ?: self::$dispatch_arg,
+            current_time( 'mysql' ),
+            $error['message'],
+            $error['file'],
+            $error['line']
+        );
+
+        wp_mail( $recipient, $subject, $body );
+
+        error_log( sprintf(
+            'BackupPilot: automatic backup dispatch for arg "%1$s" was missed due to a fatal error: %2$s in %3$s:%4$d',
+            self::$dispatch_arg,
+            $error['message'],
+            $error['file'],
+            $error['line']
+        ) );
+    }
+
+
+    /**
+     * @since  1.0.0
+     *
+     * @param  string $arg
+     */
+
     public static function run( $arg = 'restart' ) {
 
         if ( ! is_main_site( get_current_blog_id() ) ) {
@@ -16,7 +114,7 @@ class BackupPilot_Cron {
 
         if ( $arg === 'restart' ) {
             //reschedule restart
-            wp_schedule_single_event( time() + 60, 'backuppilot_cron', [ 'arg' => 'restart' ] );
+            wp_schedule_single_event( time() + 60, 'backuppilot_cron', [ 'restart' ] );
             //restart job if not working or a restart imitated
             self::cron_active( [ 'run' => 'restart' ] );
 
@@ -40,14 +138,14 @@ class BackupPilot_Cron {
         $job_object = BackupPilot_Job::get_working_data();
 
         if ( $job_object ) {
-            wp_schedule_single_event( time() + 300, 'backuppilot_cron', [ 'arg' => $arg ] );
+            wp_schedule_single_event( time() + 300, 'backuppilot_cron', [ $arg ] );
 
             return;
         }
 
         //reschedule next job run
         $cron_next = self::cron_next( BackupPilot_Option::get( $arg, 'cron' ) );
-        wp_schedule_single_event( $cron_next, 'backuppilot_cron', [ 'arg' => $arg ] );
+        wp_schedule_single_event( $cron_next, 'backuppilot_cron', [ $arg ] );
 
         //start job
         self::cron_active( [
@@ -57,9 +155,11 @@ class BackupPilot_Cron {
 
     }
 
+
     /**
      * Check Jobs worked and Cleanup logs and so on
      */
+
     public static function check_cleanup() {
 
         $job_object = BackupPilot_Job::get_working_data();
@@ -123,7 +223,7 @@ class BackupPilot_Cron {
         //Jobs cleanings
         if ( ! $job_object ) {
             //remove restart cron
-            wp_clear_scheduled_hook( 'backuppilot_cron', [ 'arg' => 'restart' ] );
+            wp_clear_scheduled_hook( 'backuppilot_cron', [ 'restart' ] );
             //temp cleanup
             BackupPilot_Job::clean_temp_folder();
         }
@@ -133,21 +233,27 @@ class BackupPilot_Cron {
 
         foreach ( $activejobs as $jobid ) {
 
-            $cron_next = wp_next_scheduled( 'backuppilot_cron', [ 'arg' => $jobid ] );
+            $cron_next = wp_next_scheduled( 'backuppilot_cron', [ $jobid ] );
 
             if ( ! $cron_next || $cron_next < time() ) {
 
-                wp_unschedule_event( $cron_next, 'backuppilot_cron', [ 'arg' => $jobid ] );
+                wp_unschedule_event( $cron_next, 'backuppilot_cron', [ $jobid ] );
                 $cron_next = BackupPilot_Cron::cron_next( BackupPilot_Option::get( $jobid, 'cron' ) );
-                wp_schedule_single_event( $cron_next, 'backuppilot_cron', [ 'arg' => $jobid ] );
+                wp_schedule_single_event( $cron_next, 'backuppilot_cron', [ $jobid ] );
             }
         }
 
     }
 
+
     /**
      * Start job if in cron and run query args are set.
+     * @since   1.0.0
+     *
+     * @param   array  $args  Arguments
+     * @return  void
      */
+
     public static function cron_active( $args = [] ) {
 
         //only if cron active
@@ -264,14 +370,16 @@ class BackupPilot_Cron {
         BackupPilot_Job::start_http( $args['run'], $args['jobid'] );
     }
 
+
     /**
-     *
      * Get the local time timestamp of the next cron execution
+     * @since   1.0.0
+     * @since   1.0.7  Updated minimum value for minutes to 5
      *
-     * @param string $cronstring cron (* * * * *).
-     *
-     * @return int Timestamp
+     * @param   string  $cronstring  cron (* * * * *).
+     * @return  int                  Timestamp
      */
+
     public static function cron_next( $cronstring ) {
 
         $cron      = [];
@@ -335,8 +443,8 @@ class BackupPilot_Cron {
 
                     if ( $cronarraykey === 'minutes' ) {
 
-                        if ( $step < 10 ) //set step minimum to 5 min.
-                            $step = 10;
+                        if ( $step < 5 ) //set step minimum to 5 min.
+                            $step = 5;
 
                         for ( $i = 0; $i <= 59; $i = $i + $step )
                             $range[] = $i;

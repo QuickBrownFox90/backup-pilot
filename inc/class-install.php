@@ -37,8 +37,11 @@ class BackupPilot_Install {
             add_option( 'backuppilot_jobs', [], null, 'no' );
         }
 
-        //remove old schedule
-        wp_clear_scheduled_hook( 'backuppilot_cron' );
+        //remove old schedule (wp_clear_scheduled_hook() without $args only matches events
+        //scheduled with an empty args array, which 'backuppilot_cron' never is - it needs
+        //wp_unschedule_hook() to actually catch every args variant, e.g. leftover pre-1.0.7
+        //events scheduled with the old ['arg' => $id] shape instead of the current [$id])
+        wp_unschedule_hook( 'backuppilot_cron' );
         //make new schedule
         $activejobs = BackupPilot_Option::get_job_ids( 'activetype', 'wpcron' );
 
@@ -46,7 +49,7 @@ class BackupPilot_Install {
 
             foreach ( $activejobs as $id ) {
                 $cron_next = BackupPilot_Cron::cron_next( BackupPilot_Option::get( $id, 'cron') );
-                wp_schedule_single_event( $cron_next, 'backuppilot_cron', [ 'arg' => $id ] );
+                wp_schedule_single_event( $cron_next, 'backuppilot_cron', [ $id ] );
             }
         }
 
@@ -255,16 +258,9 @@ class BackupPilot_Install {
 
     public static function deactivate() {
 
-        wp_clear_scheduled_hook( 'backuppilot_cron' );
-
-        $activejobs = BackupPilot_Option::get_job_ids( 'activetype', 'wpcron' );
-
-        if ( ! empty( $activejobs ) ) {
-
-            foreach ( $activejobs as $id ) {
-                wp_clear_scheduled_hook( 'backuppilot_cron', [ 'arg' => $id ] );
-            }
-        }
+        //catches every args variant, including leftover pre-1.0.7 events scheduled
+        //with the old ['arg' => $id] shape instead of the current [$id]
+        wp_unschedule_hook( 'backuppilot_cron' );
 
         wp_clear_scheduled_hook( 'backuppilot_check_cleanup' );
 

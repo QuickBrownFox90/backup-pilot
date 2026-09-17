@@ -4,95 +4,95 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Plugins - BackupPilot – WordPress Backup &amp; Restore "
 "Plugin - Stable (latest release)\n"
-"POT-Creation-Date: 2026-07-01 10:39+0200\n"
-"PO-Revision-Date: 2026-07-01 10:40+0200\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2026-09-17 08:32+0200\n"
+"PO-Revision-Date: 2026-09-17 08:36+0200\n"
+"Last-Translator: Patrick Mauersberger <mauersberger@punkt191.de>\n"
 "Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.2.2\n"
-"X-Poedit-KeywordsList: __;_e;_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
-"_nx:1,2,4c;_ex:1,2c;esc_attr__;esc_attr_x:1,2c\n"
+"X-Generator: Poedit 3.6\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_nx:1,2,4c;_ex:1,2c;esc_attr__;esc_attr_x:1,2c\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: backuppilot.php:324 inc/class-page-backups.php:232
+#: backuppilot.php:329 inc/class-page-backups.php:232
 msgid "Folder"
 msgstr "Ordner"
 
-#: backuppilot.php:325
+#: backuppilot.php:330
 msgid "Backup to Folder"
 msgstr "Backup in Verzeichnis"
 
-#: backuppilot.php:340
+#: backuppilot.php:345
 msgid "Email"
 msgstr "E-Mail"
 
-#: backuppilot.php:341
+#: backuppilot.php:346
 msgid "Backup sent via email"
 msgstr "Backup per E-Mail versenden"
 
-#: backuppilot.php:356
+#: backuppilot.php:361
 msgid "FTP"
 msgstr "FTP"
 
-#: backuppilot.php:357
+#: backuppilot.php:362
 msgid "Backup to FTP"
 msgstr "Backup zu FTP"
 
-#: backuppilot.php:372 inc/class-destination-dropbox.php:495
+#: backuppilot.php:377 inc/class-destination-dropbox.php:495
 msgid "Dropbox"
 msgstr "Dropbox"
 
-#: backuppilot.php:373
+#: backuppilot.php:378
 msgid "Backup to Dropbox"
 msgstr "Backup in die Dropbox"
 
-#: backuppilot.php:388 inc/class-destination-s3.php:45
+#: backuppilot.php:393 inc/class-destination-s3.php:45
 msgid "S3 Service"
 msgstr "S3 Service"
 
-#: backuppilot.php:389
+#: backuppilot.php:394
 msgid "Backup to an S3 Service"
 msgstr "Backup zu einem S3 Service"
 
-#: backuppilot.php:404
+#: backuppilot.php:409
 msgid "MS Azure"
 msgstr "MS Azure"
 
-#: backuppilot.php:405
+#: backuppilot.php:410
 msgid "Backup to Microsoft Azure (Blob)"
 msgstr "Backup zu Microsoft Azure (Blob)"
 
-#: backuppilot.php:420
+#: backuppilot.php:425
 msgid "SugarSync"
 msgstr "SugarSync"
 
-#: backuppilot.php:421
+#: backuppilot.php:426
 msgid "Backup to SugarSync"
 msgstr "Backup zu SugarSync"
 
-#: backuppilot.php:449
+#: backuppilot.php:454
 #, php-format
 msgid "PHP Version %1$s is to low, you need Version %2$s or above."
 msgstr ""
 "Du nutzt die veraltete PHP-Version %1$s. Es wird aber mindestens die Version "
 "%2$s benötigt."
 
-#: backuppilot.php:465
+#: backuppilot.php:470
 #, php-format
 msgid "Missing function \"%s\"."
 msgstr "Fehlende Funktion „%s“."
 
-#: backuppilot.php:481
+#: backuppilot.php:486
 #, php-format
 msgid "Missing class \"%s\"."
 msgstr "Fehlende Klasse „%s“."
 
-#: backuppilot.php:565
+#: backuppilot.php:570
 #, php-format
 msgid ""
 "BackupPilot requires PHP version %1$s with spl extension or greater and "
@@ -110,7 +110,7 @@ msgstr "Ungültige Kündigungsart angegeben"
 msgid "Method %1$s::%2$s() requires at least 1 argument; %3$d given"
 msgstr ""
 "Die Methode %1$s::%2$s() benötigt mindestens 1 Argument; es wurde %3$d "
-"angegeben."
+"angegeben"
 
 #: inc/Notice/NoticeView.php:71
 #, php-format
@@ -183,7 +183,7 @@ msgstr "Jetzt läuft"
 msgid "Abort!"
 msgstr "Abbrechen!"
 
-#: inc/class-adminbar.php:78 inc/class-page-jobs.php:664
+#: inc/class-adminbar.php:78 inc/class-page-jobs.php:696
 msgid "Add new"
 msgstr "Neu hinzufügen"
 
@@ -321,7 +321,43 @@ msgstr "Unbekannt"
 msgid "Cannot open source file %s."
 msgstr "Die Quelldatei %s kann nicht geöffnet werden."
 
-#: inc/class-cron.php:76
+#: inc/class-cron.php:78
+#, php-format
+msgid "[%s] Automatic backup job could not start"
+msgstr "[%s] Der automatische Sicherungsauftrag konnte nicht gestartet werden"
+
+#: inc/class-cron.php:83
+#, php-format
+msgid ""
+"A scheduled BackupPilot job was due to run automatically but never started, "
+"because WordPress itself hit a fatal error while trying to trigger it.\n"
+"\n"
+"Job: %1$s\n"
+"Time: %2$s\n"
+"Error: %3$s\n"
+"File: %4$s:%5$d\n"
+"\n"
+"This is different from a job that ran and failed - it means the scheduled "
+"run was skipped entirely. The next scheduled run may be affected in the same "
+"way; if this keeps happening, please check with your hosting provider or a "
+"developer."
+msgstr ""
+"Ein geplanter BackupPilot-Auftrag hätte automatisch ausgeführt werden "
+"sollen, wurde jedoch nie gestartet, da WordPress selbst beim Versuch, ihn "
+"auszulösen, einen schwerwiegenden Fehler verzeichnete.\r\n"
+"\r\n"
+"Auftrag: %1$s\r\n"
+"Zeit: %2$s\r\n"
+"Fehler: %3$s\r\n"
+"Datei: %4$s:%5$d\r\n"
+"\r\n"
+"Dies unterscheidet sich von einem Auftrag, der ausgeführt wurde und "
+"fehlgeschlagen ist – es bedeutet, dass die geplante Ausführung vollständig "
+"übersprungen wurde. Die nächste geplante Ausführung könnte auf dieselbe "
+"Weise betroffen sein; sollte dies weiterhin vorkommen, wenden Sie sich bitte "
+"an Ihren Hosting-Anbieter oder einen Entwickler."
+
+#: inc/class-cron.php:176
 msgid "Aborted, because no progress for one hour!"
 msgstr "Abgebrochen, da es eine Stunde lang kein Fortschritt gab!"
 
@@ -485,7 +521,7 @@ msgstr "Uneingeschränkter Zugang zur Dropbox"
 
 #: inc/class-destination-dropbox.php:170
 msgid "Get full Dropbox auth code "
-msgstr "Vollständigen Dropbox-Auth-Code anfordern"
+msgstr "Vollständigen Dropbox-Auth-Code anfordern "
 
 #: inc/class-destination-dropbox.php:172
 msgid ""
@@ -743,7 +779,7 @@ msgid "Folder to store backups in"
 msgstr "Backup-Ordner"
 
 #: inc/class-destination-folder.php:232 inc/class-job.php:1078
-#: inc/class-job.php:1250 inc/class-job.php:2069 inc/class-jobtype-file.php:482
+#: inc/class-job.php:1250 inc/class-job.php:2072 inc/class-jobtype-file.php:482
 #, php-format
 msgid "Could not open path: %s"
 msgstr "Pfad %s konnte nicht geöffnet werden"
@@ -802,7 +838,7 @@ msgstr "FTP-Passivmodus"
 
 #: inc/class-destination-ftp.php:155
 msgid "Use FTP Passive Mode."
-msgstr "FTP-Passivmodus verwenden"
+msgstr "FTP-Passivmodus verwenden."
 
 #: inc/class-destination-ftp.php:326
 msgid "Could not log in to FTP server."
@@ -1042,7 +1078,7 @@ msgstr "Wähle einen S3-Dienst aus"
 
 #: inc/class-destination-s3.php:71
 msgid "Or a S3 Server URL"
-msgstr "oder eine S3-Server-URL"
+msgstr "Oder eine S3-Server-URL"
 
 #: inc/class-destination-s3.php:80
 msgid "Endpoint"
@@ -1151,7 +1187,7 @@ msgstr "Serverseitige Verschlüsselung"
 
 #: inc/class-destination-s3.php:431
 msgid "Save files encrypted (AES256) on server."
-msgstr "Dateien verschlüsselt (AES256) auf dem Server speichern"
+msgstr "Dateien verschlüsselt (AES256) auf dem Server speichern."
 
 #: inc/class-destination-s3.php:479 inc/class-s3-destination.php:22
 #: inc/class-s3-destination.php:207
@@ -1407,15 +1443,15 @@ msgstr ""
 msgid "Plugin Activation Error"
 msgstr "Fehler bei der Aktivierung des Plugins"
 
-#: inc/class-install.php:85
+#: inc/class-install.php:88
 msgid "BackupPilot Admin"
 msgstr "BackupPilot Admin"
 
-#: inc/class-install.php:100
+#: inc/class-install.php:103
 msgid "BackupPilot jobs checker"
 msgstr "BackupPilot-Auftragsprüfung"
 
-#: inc/class-install.php:115
+#: inc/class-install.php:118
 msgid "BackupPilot jobs functions"
 msgstr "BackupPilot Jobs-Funktionen"
 
@@ -1493,8 +1529,8 @@ msgstr "[INFO] BackupPilot-Auftrag: %1$s"
 msgid "[INFO] Runs with user: %1$s (%2$d) "
 msgstr "[INFO] Läuft mit Benutzer: %1$s (%2$d) "
 
-#: inc/class-job.php:460 inc/class-page-backwpup.php:184
-#: inc/class-page-jobs.php:341 inc/class-page-jobs.php:352
+#: inc/class-job.php:460 inc/class-page-backwpup.php:200
+#: inc/class-page-jobs.php:347 inc/class-page-jobs.php:361
 msgid "Not scheduled!"
 msgstr "Nicht geplant!"
 
@@ -1597,11 +1633,11 @@ msgstr ""
 "Kann Fortschritt nicht in die Arbeitsdatei schreiben. Auftrag wird "
 "abgebrochen."
 
-#: inc/class-job.php:761 inc/class-page-jobs.php:894
+#: inc/class-job.php:761 inc/class-page-jobs.php:926
 msgid "WARNING:"
 msgstr "WARNUNG:"
 
-#: inc/class-job.php:770 inc/class-page-jobs.php:891
+#: inc/class-job.php:770 inc/class-page-jobs.php:923
 msgid "ERROR:"
 msgstr "FEHLER:"
 
@@ -1621,7 +1657,7 @@ msgstr "BEHEBBARER FEHLER:"
 msgid "Aborted by user!"
 msgstr "Vom Benutzer abgebrochen!"
 
-#: inc/class-job.php:1105 inc/class-page-jobs.php:891
+#: inc/class-job.php:1105 inc/class-page-jobs.php:923
 #, php-format
 msgid ""
 "Job has ended with errors in %s seconds. You must resolve the errors for "
@@ -1639,7 +1675,7 @@ msgstr ""
 "Job mit Warnungen beendet in %s Sekunden. Um eine korrekte Ausführung zu "
 "gewährleisten, behebe bitte die Fehler."
 
-#: inc/class-job.php:1119 inc/class-page-jobs.php:897
+#: inc/class-job.php:1119 inc/class-page-jobs.php:929
 #, php-format
 msgid "Job done in %s seconds."
 msgstr "Auftrag erledigt in %s Sekunden."
@@ -1674,40 +1710,40 @@ msgstr "Neustart, nachdem ein Signal erhalten wurde."
 msgid "Job restarts due to inactivity for more than 5 minutes."
 msgstr "Auftrag durch Inaktivität von mehr als 5 Minuten neu gestartet."
 
-#: inc/class-job.php:1597
+#: inc/class-job.php:1600
 msgid "Step aborted: too many attempts!"
 msgstr "Schritt abgebrochen: zu viele Versuche!"
 
-#: inc/class-job.php:1686
+#: inc/class-job.php:1689
 #, php-format
 msgid "%d. Trying to create backup archive &hellip;"
 msgstr "%d. Versuche, Backup-Archiv zu erstellen &hellip;"
 
-#: inc/class-job.php:1696
+#: inc/class-job.php:1699
 #, php-format
 msgctxt "Archive compression method"
 msgid "Compressing files as %s. Please be patient, this may take a moment."
 msgstr "Komprimiere Dateien als %s. Bitte habe einen Moment Geduld."
 
-#: inc/class-job.php:1706
+#: inc/class-job.php:1709
 msgid "Adding Extra files to Archive"
 msgstr "Extra-Dateien zum Archiv hinzufügen"
 
-#: inc/class-job.php:1719 inc/class-job.php:1786
+#: inc/class-job.php:1722 inc/class-job.php:1789
 msgid "Cannot create backup archive correctly. Aborting creation."
 msgstr ""
 "Backup-Archiv kann nicht korrekt angelegt werden. Anlegeprozess abgebrochen."
 
-#: inc/class-job.php:1736
+#: inc/class-job.php:1739
 #, php-format
 msgid "Archiving Folder: %s"
 msgstr "Archiviere Verzeichnis: %s"
 
-#: inc/class-job.php:1797
+#: inc/class-job.php:1800
 msgid "Backup archive created."
 msgstr "Backup wurde erstellt."
 
-#: inc/class-job.php:1811
+#: inc/class-job.php:1814
 msgid ""
 "The Backup archive will be too large for file operations with this PHP "
 "Version. You might want to consider splitting the backup job in multiple "
@@ -1717,79 +1753,79 @@ msgstr ""
 "solltest die Sicherung in mehrere Backup-Aufträge aufteilen, mit weniger "
 "Dateien je Auftrag."
 
-#: inc/class-job.php:1818
+#: inc/class-job.php:1821
 #, php-format
 msgid "Archive size is %s."
 msgstr "Archivgröße ist %s."
 
-#: inc/class-job.php:1822
+#: inc/class-job.php:1825
 #, php-format
 msgid "%1$d Files with %2$s in Archive."
 msgstr "%1$d Dateien mit %2$s im Archiv."
 
-#: inc/class-job.php:1863
+#: inc/class-job.php:1866
 msgid "No encryption key was provided. Aborting encryption."
 msgstr ""
 "Es wurde kein Verschlüsselungsschlüssel eingegeben. Die Verschlüsselung wird "
 "abgebrochen."
 
-#: inc/class-job.php:1871
+#: inc/class-job.php:1874
 #, php-format
 msgid "%d. Trying to encrypt archive &hellip;"
 msgstr "%d. Versuche Archiv zu verschlüsseln &hellip;"
 
-#: inc/class-job.php:1883
+#: inc/class-job.php:1886
 msgid "Cannot open the archive for reading. Aborting encryption."
 msgstr ""
 "Das Archiv kann nicht zum Lesen geöffnet werden. Verschlüsselung wird "
 "abgebrochen."
 
-#: inc/class-job.php:1890
+#: inc/class-job.php:1893
 msgid "Cannot write the encrypted archive. Aborting encryption."
 msgstr ""
 "Das verschlüsselte Archiv kann nicht erstellt werden. Verschlüsselung wird "
 "abgebrochen."
 
-#: inc/class-job.php:1947
+#: inc/class-job.php:1950
 #, php-format
 msgid "Encrypted %s of data."
 msgstr "Verschlüsselt %s der Daten."
 
-#: inc/class-job.php:1952
+#: inc/class-job.php:1955
 msgid "Unable to delete unencrypted archive."
 msgstr "Das verschlüsselte Archiv kann nicht gelöscht werden."
 
-#: inc/class-job.php:1958
+#: inc/class-job.php:1961
 msgid "Unable to rename encrypted archive."
 msgstr "Verschlüsseltes Archiv kann nicht umbenannt werden."
 
-#: inc/class-job.php:1964
+#: inc/class-job.php:1967
 msgid "Archive has been successfully encrypted."
 msgstr "Archiv wurde erfolgreich verschlüsselt."
 
-#: inc/class-job.php:2013
+#: inc/class-job.php:2016
 #, php-format
 msgctxt "Folder name"
 msgid "Folder %s does not exist"
 msgstr "Verzeichnis %s existiert nicht"
 
-#: inc/class-job.php:2020
+#: inc/class-job.php:2023
 #, php-format
 msgctxt "Folder name"
 msgid "Folder %s is not readable"
 msgstr "Verzeichnis %s ist nicht lesbar"
 
-#: inc/class-job.php:2046
+#: inc/class-job.php:2049
 #, php-format
 msgid "Link \"%s\" not following."
 msgstr "Link „%s“ wird nicht gefolgt."
 
-#: inc/class-job.php:2051
+#: inc/class-job.php:2054
 #, php-format
 msgid "File \"%s\" is not readable!"
 msgstr "Datei „%s“ ist nicht lesbar!"
 
-#: inc/class-job.php:2058
+#: inc/class-job.php:2061
 #, php-format
 msgid ""
 "File size of “%s” cannot be retrieved. File might be too large and will not "
@@ -1798,18 +1834,18 @@ msgstr ""
 "Dateigröße von „%s“ kann nicht abgefragt werden. Die Datei könnte zu groß "
 "sein und wird nicht zur Warteschlange hinzugefügt."
 
-#: inc/class-job.php:2144
+#: inc/class-job.php:2147
 #, php-format
 msgid "%d. Trying to generate a manifest file&#160;&hellip;"
 msgstr "%d. Versuche, eine Manifest-Datei zu generieren&#160;&hellip;"
 
-#: inc/class-job.php:2214
+#: inc/class-job.php:2217
 msgid ""
 "You may have noticed the backuppilot_manifest.json file in this archive."
 msgstr ""
 "Du wirst die Datei backuppilot_manifest.json in diesem Archiv bemerkt haben."
 
-#: inc/class-job.php:2215
+#: inc/class-job.php:2218
 msgid ""
 "backuppilot_manifest.json might be needed for later restoring a backup from "
 "this archive."
@@ -1817,7 +1853,7 @@ msgstr ""
 "Die Datei backuppilot_manifest.json könnte für das spätere Wiederherstellen "
 "des Backups aus diesem Archiv benötigt werden."
 
-#: inc/class-job.php:2217
+#: inc/class-job.php:2220
 msgid ""
 "Please leave backuppilot_manifest.json untouched and in place. Otherwise it "
 "is safe to be ignored."
@@ -1825,159 +1861,159 @@ msgstr ""
 "Bitte lasse die backuppilot_manifest.json unberührt an ihrem Platz. Du "
 "kannst sie ansonsten einfach ignorieren."
 
-#: inc/class-job.php:2228
+#: inc/class-job.php:2231
 #, php-format
 msgid "Added backuppilot_manifest.json file with %1$s to backup file list."
 msgstr ""
 "Die Datei backuppilot_manifest.json mit %1$s wurde zur Backup-Datei-Liste "
 "hinzugefügt."
 
-#: inc/class-job.php:2270
+#: inc/class-job.php:2273
 msgid "Wrong BackupPilot JobID"
 msgstr "Falsche BackupPilot-JobID"
 
-#: inc/class-job.php:2283
+#: inc/class-job.php:2286
 msgid "A BackupPilot job is already running"
 msgstr "Es läuft bereits ein BackupPilot-Auftrag"
 
-#: inc/class-job.php:2449
+#: inc/class-job.php:2452
 msgid "exec command is not active."
 msgstr "Der Befehl „exec“ ist nicht aktiv."
 
-#: inc/class-job.php:2455
+#: inc/class-job.php:2458
 msgid "mysqldump binary not found."
 msgstr "Die Binärdatei „mysqldump“ wurde nicht gefunden."
 
-#: inc/class-job.php:2482
+#: inc/class-job.php:2485
 msgctxt ""
 "SIGHUP: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Hangup detected on controlling terminal or death of controlling process"
 msgstr "Hangup detektiert auf Steueranschluss oder Tod des Controlling-Prozess"
 
-#: inc/class-job.php:2488
+#: inc/class-job.php:2491
 msgctxt ""
 "SIGINT: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Interrupt from keyboard"
 msgstr "Interrupt von der Tastatur"
 
-#: inc/class-job.php:2494
+#: inc/class-job.php:2497
 msgctxt ""
 "SIGQUIT: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Quit from keyboard"
 msgstr "Beendet von der Tastatur"
 
-#: inc/class-job.php:2500
+#: inc/class-job.php:2503
 msgctxt ""
 "SIGILL: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Illegal Instruction"
 msgstr "Illegale Instruktion"
 
-#: inc/class-job.php:2506
+#: inc/class-job.php:2509
 msgctxt ""
 "SIGABRT: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Abort signal from abort(3)"
 msgstr "Abbruchsignal von Abbruch(3)"
 
-#: inc/class-job.php:2512
+#: inc/class-job.php:2515
 msgctxt ""
 "SIGBUS: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Bus error (bad memory access)"
 msgstr "Bus-Fehler (fehlerhafter Speicherzugriff)"
 
-#: inc/class-job.php:2518
+#: inc/class-job.php:2521
 msgctxt ""
 "SIGFPE: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Floating point exception"
 msgstr "Gleitkomma-Ausnahme"
 
-#: inc/class-job.php:2524
+#: inc/class-job.php:2527
 msgctxt ""
 "SIGSEGV: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Invalid memory reference"
 msgstr "Ungültige Speicherreferenz"
 
-#: inc/class-job.php:2530
+#: inc/class-job.php:2533
 msgctxt ""
 "SIGTERM: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Termination signal"
 msgstr "Abbruch-Signal"
 
-#: inc/class-job.php:2536
+#: inc/class-job.php:2539
 msgctxt ""
 "SIGSTKFLT: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Stack fault on coprocessor"
 msgstr "Stapelfehler auf Coprozessor"
 
-#: inc/class-job.php:2542
+#: inc/class-job.php:2545
 msgctxt ""
 "SIGUSR1: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "User-defined signal 1"
 msgstr "Benutzerdefiniertes Signal 1"
 
-#: inc/class-job.php:2548
+#: inc/class-job.php:2551
 msgctxt ""
 "SIGUSR2: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "User-defined signal 2"
 msgstr "Benutzerdefiniertes Signal 2"
 
-#: inc/class-job.php:2554
+#: inc/class-job.php:2557
 msgctxt ""
 "SIGURG: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Urgent condition on socket"
 msgstr "Dringend Zustand auf socket"
 
-#: inc/class-job.php:2560
+#: inc/class-job.php:2563
 msgctxt ""
 "SIGXCPU: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "CPU time limit exceeded"
 msgstr "CPU-Zeitlimit überschritten"
 
-#: inc/class-job.php:2566
+#: inc/class-job.php:2569
 msgctxt ""
 "SIGXFSZ: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "File size limit exceeded"
 msgstr "Dateigrößenlimit überschritten"
 
-#: inc/class-job.php:2572
+#: inc/class-job.php:2575
 msgctxt ""
 "SIGPWR: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Power failure"
 msgstr "Stromausfall"
 
-#: inc/class-job.php:2578
+#: inc/class-job.php:2581
 msgctxt ""
 "SIGSYS: Please see http://man7.org/linux/man-pages/man7/signal.7.html for "
 "details"
 msgid "Bad argument to routine"
 msgstr "Falsches Argument für die Routine"
 
-#: inc/class-job.php:2587
+#: inc/class-job.php:2590
 #, php-format
 msgid "Signal \"%1$s\" (%2$s) is sent to script!"
 msgstr "Signal „%1$s“ (%2$s) wurde an das Skript gesendet!"
 
-#: inc/class-job.php:2624 inc/class-job.php:2637
+#: inc/class-job.php:2627 inc/class-job.php:2640
 #, php-format
 msgid "System: %s"
 msgstr "System: %s"
 
-#: inc/class-job.php:2652
+#: inc/class-job.php:2655
 #, php-format
 msgid "Exception caught in %1$s: %2$s"
 msgstr "Ausnahme eingefangen in %1$s: %2$s"
@@ -2076,8 +2112,8 @@ msgid "Backup file compression"
 msgstr "Backup-Dateikomprimierung"
 
 #: inc/class-jobtype-dbdump.php:97 inc/class-jobtype-wpexp.php:71
-#: inc/class-jobtype-wpplugin.php:51 inc/class-page-backwpup.php:190
-#: inc/class-page-backwpup.php:270 inc/class-page-settings.php:991
+#: inc/class-jobtype-wpplugin.php:51 inc/class-page-backwpup.php:208
+#: inc/class-page-backwpup.php:288 inc/class-page-settings.php:991
 msgid "none"
 msgstr "keine"
 
@@ -2181,8 +2217,8 @@ msgstr "Spezielle Dateien einschließen"
 
 #: inc/class-jobtype-file.php:179
 msgid ""
-"Backup wp-config.php, robots.txt, nginx.conf, .htaccess, .htpasswd, favicon."
-"ico, and Web.config from root if it is not included in backup."
+"Backup wp-config.php, robots.txt, nginx.conf, .htaccess, .htpasswd, "
+"favicon.ico, and Web.config from root if it is not included in backup."
 msgstr ""
 "Dateien wp-config.php, robots.txt, nginx.conf, .htaccess, .htpasswd und "
 "favicon.ico des Hauptverzeichnisses sichern, wenn dieses nicht in der "
@@ -2210,8 +2246,8 @@ msgstr ""
 #, php-format
 msgid "%d. Trying to make a list of folders to back up&#160;&hellip;"
 msgstr ""
-"%d. Versuche, eine Liste der Verzeichnisse für das Backup zu erstellen&#160;"
-"&hellip;"
+"%d. Versuche, eine Liste der Verzeichnisse für das Backup zu "
+"erstellen&#160;&hellip;"
 
 #: inc/class-jobtype-file.php:390 inc/class-jobtype-file.php:396
 #: inc/class-jobtype-file.php:413
@@ -2307,7 +2343,7 @@ msgstr "Die WP-Export-Datei ist eine gültige WXR-Datei."
 #: inc/class-jobtype-wpexp.php:411
 #, php-format
 msgid "XML WARNING (%s): %s"
-msgstr ""
+msgstr "XML WARNUNG (%s): %s"
 
 #: inc/class-jobtype-wpexp.php:414
 #, php-format
@@ -2317,7 +2353,7 @@ msgstr "XML WIEDERHERSTELLBAR (%s): %s"
 #: inc/class-jobtype-wpexp.php:417
 #, php-format
 msgid "XML ERROR (%s): %s"
-msgstr ""
+msgstr "XML FEHLER (%s): %s"
 
 #: inc/class-jobtype-wpexp.php:427
 msgid ""
@@ -2439,7 +2475,7 @@ msgstr "Die Länge für Tabellen-Backup ist nicht richtig gesetzt: %1$s"
 msgid "Error while writing file!"
 msgstr "Fehler beim Schreiben!"
 
-#: inc/class-option.php:204 inc/class-page-editjob.php:92
+#: inc/class-option.php:219 inc/class-page-editjob.php:109
 msgid "New Job"
 msgstr "Neuer Auftrag"
 
@@ -2457,8 +2493,8 @@ msgstr "Löschen"
 msgid "Change destination"
 msgstr "Ziel ändern"
 
-#: inc/class-page-backups.php:230 inc/class-page-backwpup.php:140
-#: inc/class-page-backwpup.php:210 inc/class-page-logs.php:162
+#: inc/class-page-backups.php:230 inc/class-page-backwpup.php:146
+#: inc/class-page-backwpup.php:228 inc/class-page-logs.php:162
 msgid "Time"
 msgstr "Zeit"
 
@@ -2471,7 +2507,7 @@ msgid "Size"
 msgstr "Größe"
 
 #: inc/class-page-backups.php:298 inc/class-page-backups.php:611
-#: inc/class-page-jobs.php:391 inc/class-page-logs.php:235
+#: inc/class-page-jobs.php:406 inc/class-page-logs.php:235
 msgid "Download"
 msgstr "Herunterladen"
 
@@ -2483,15 +2519,15 @@ msgstr "Wiederherstellen"
 msgid "?"
 msgstr "?"
 
-#: inc/class-page-backups.php:343 inc/class-page-backwpup.php:182
-#: inc/class-page-backwpup.php:249 inc/class-page-jobs.php:379
+#: inc/class-page-backups.php:343 inc/class-page-backwpup.php:196
+#: inc/class-page-backwpup.php:267 inc/class-page-jobs.php:390
 #: inc/class-page-logs.php:189
 #, php-format
 msgid "%1$s at %2$s"
 msgstr "%1$s um %2$s Uhr"
 
 #: inc/class-page-backups.php:357 inc/class-page-backups.php:395
-#: inc/class-page-editjob.php:31 inc/class-page-jobs.php:459
+#: inc/class-page-editjob.php:40 inc/class-page-jobs.php:489
 msgid "Sorry, you don't have permissions to do that."
 msgstr "Du hast nicht die notwendigen Berechtigungen für diese Aktion."
 
@@ -2533,17 +2569,17 @@ msgstr ""
 "Du bist dabei, dieses Sicherungs-Archiv zu löschen. \n"
 "Klicke 'Abbrechen' um zu stoppen, 'OK' um zu löschen."
 
-#: inc/class-page-backwpup.php:71
+#: inc/class-page-backwpup.php:76
 #, php-format
 msgid "%s &rsaquo; Dashboard"
 msgstr "%s &rsaquo; Dashboard"
 
-#: inc/class-page-backwpup.php:78
+#: inc/class-page-backwpup.php:83
 msgctxt "Dashboard heading"
 msgid "Planning backups"
 msgstr "Backups planen"
 
-#: inc/class-page-backwpup.php:79
+#: inc/class-page-backwpup.php:84
 msgid ""
 "Use the short links in the <strong>First steps</strong> box to plan and "
 "schedule backup jobs."
@@ -2551,7 +2587,7 @@ msgstr ""
 "Benutze die Schnellverweise in <strong>Erste Schritte</strong>, um einen "
 "Backup-Auftrag zu planen und Termine festzulegen."
 
-#: inc/class-page-backwpup.php:79
+#: inc/class-page-backwpup.php:84
 msgid ""
 "Use your backup archives to save your entire WordPress installation "
 "including <code>/wp-content/</code>. Push them to an external storage "
@@ -2562,18 +2598,18 @@ msgstr ""
 "externen Dienst hoch, wenn du deine Backups nicht auf dem selben Server "
 "speichern möchtest."
 
-#: inc/class-page-backwpup.php:80
+#: inc/class-page-backwpup.php:85
 msgctxt "Dashboard heading"
 msgid "Restoring backups"
 msgstr "Backups wiederherstellen"
 
-#: inc/class-page-backwpup.php:81
+#: inc/class-page-backwpup.php:86
 msgid "With a single backup archive you are able to restore an installation."
 msgstr ""
 "Mit einem einzigen Sicherungsarchiv können Sie eine Installation "
 "wiederherstellen."
 
-#: inc/class-page-backwpup.php:82
+#: inc/class-page-backwpup.php:87
 msgid ""
 "BackupPilot does not include an automated restore function — restores are "
 "done manually."
@@ -2581,7 +2617,7 @@ msgstr ""
 "BackupPilot verfügt über keine automatische Wiederherstellungsfunktion – die "
 "Wiederherstellung muss manuell erfolgen."
 
-#: inc/class-page-backwpup.php:83
+#: inc/class-page-backwpup.php:88
 msgid ""
 "Extract the downloaded archive, upload its contents back to your server, "
 "then import the included database dump with a tool like phpMyAdmin or WP-CLI "
@@ -2591,18 +2627,18 @@ msgstr ""
 "Server hoch und importiere anschließend den enthaltenen Datenbank-Dump mit "
 "einem Tool wie phpMyAdmin oder WP-CLI (`wp db import dump.sql`)."
 
-#: inc/class-page-backwpup.php:84
+#: inc/class-page-backwpup.php:89
 msgctxt "Dashboard heading"
 msgid "Ready to set up a backup job?"
 msgstr "Bereit, einen Backup-Auftrag zu erstellen?"
 
-#: inc/class-page-backwpup.php:85
+#: inc/class-page-backwpup.php:90
 #, php-format
 msgid "<a href=\"%s\">Add a new backup job</a> and plan what you want to save."
 msgstr ""
 "<a href=\"%s\">Erstelle einen Backup-Auftrag</a> und plane deine Sicherung."
 
-#: inc/class-page-backwpup.php:86
+#: inc/class-page-backwpup.php:91
 msgid ""
 "<strong>Please note: You are solely responsible for the security of your "
 "data; the authors of this plugin are not.</strong>"
@@ -2610,122 +2646,122 @@ msgstr ""
 "<strong>Bitte beachte: Für die Sicherheit deiner Daten bist du allein "
 "verantwortlich; die Autoren dieses Plugins sind es nicht.</strong>"
 
-#: inc/class-page-backwpup.php:93
+#: inc/class-page-backwpup.php:98
 msgid "First Steps"
 msgstr "Erste Schritte"
 
-#: inc/class-page-backwpup.php:96
+#: inc/class-page-backwpup.php:101
 msgid "Check the installation"
 msgstr "Die Installation überprüfen"
 
-#: inc/class-page-backwpup.php:97
+#: inc/class-page-backwpup.php:102
 msgid "Create a Job"
 msgstr "Auftrag erstellen"
 
-#: inc/class-page-backwpup.php:98
+#: inc/class-page-backwpup.php:103
 msgid "Run the created job"
 msgstr "Erstellten Auftrag starten"
 
-#: inc/class-page-backwpup.php:99
+#: inc/class-page-backwpup.php:104
 msgid "Check the job log"
 msgstr "Logs des Auftrages prüfen"
 
-#: inc/class-page-backwpup.php:107
+#: inc/class-page-backwpup.php:112
 msgid "One click backup"
 msgstr "Ein-Klick-Backup"
 
-#: inc/class-page-backwpup.php:109
+#: inc/class-page-backwpup.php:114
 msgid "Download database backup"
 msgstr "Datenbank-Backup herunterladen"
 
-#: inc/class-page-backwpup.php:137
+#: inc/class-page-backwpup.php:143
 msgid "Next scheduled jobs"
 msgstr "Nächste geplante Aufträge"
 
-#: inc/class-page-backwpup.php:141 inc/class-page-backwpup.php:210
+#: inc/class-page-backwpup.php:147 inc/class-page-backwpup.php:228
 #: inc/class-page-logs.php:163
 msgid "Job"
 msgstr "Auftrag"
 
-#: inc/class-page-backwpup.php:166
+#: inc/class-page-backwpup.php:174
 #, php-format
 msgid "working since %d seconds"
 msgstr "in Arbeit seit %d Sekunden"
 
-#: inc/class-page-backwpup.php:168 inc/class-page-jobs.php:696
+#: inc/class-page-backwpup.php:176 inc/class-page-jobs.php:728
 msgid "Abort"
 msgstr "Abbrechen"
 
-#: inc/class-page-backwpup.php:186
+#: inc/class-page-backwpup.php:203
 msgid "Edit Job"
 msgstr "Auftrag bearbeiten"
 
-#: inc/class-page-backwpup.php:208
+#: inc/class-page-backwpup.php:226
 msgid "Last logs"
 msgstr "Letzte Logs"
 
-#: inc/class-page-backwpup.php:210
+#: inc/class-page-backwpup.php:228
 msgid "Result"
 msgstr "Ergebnis"
 
-#: inc/class-page-backwpup.php:231
+#: inc/class-page-backwpup.php:249
 #, php-format
 msgid "Could not open log folder: %s"
 msgstr "Log-Ordner %s konnte nicht geöffnet werden"
 
-#: inc/class-page-backwpup.php:260
+#: inc/class-page-backwpup.php:278
 msgid "OK"
 msgstr "OK"
 
-#: inc/class-page-editjob.php:93
+#: inc/class-page-editjob.php:110
 #, php-format
 msgid "Job with ID %d"
 msgstr "Auftrag mit der ID %d"
 
-#: inc/class-page-editjob.php:232
+#: inc/class-page-editjob.php:259
 #, php-format
 msgid "Changes for job <i>%s</i> saved."
 msgstr "Änderungen für den Auftrag <i>%s</i> gesichert."
 
-#: inc/class-page-editjob.php:232
+#: inc/class-page-editjob.php:259
 msgid "Jobs overview"
 msgstr "Auftragsübersicht"
 
-#: inc/class-page-editjob.php:232 inc/class-page-jobs.php:202
+#: inc/class-page-editjob.php:259 inc/class-page-jobs.php:202
 msgid "Run now"
 msgstr "Jetzt starten"
 
-#: inc/class-page-editjob.php:337
+#: inc/class-page-editjob.php:371
 #, php-format
 msgid "%1$s &rsaquo; Job: %2$s"
 msgstr "%1$s &rsaquo; Auftrag: %2$s"
 
-#: inc/class-page-editjob.php:340 inc/class-page-settings.php:535
+#: inc/class-page-editjob.php:374 inc/class-page-settings.php:535
 msgid "General"
 msgstr "Allgemein"
 
-#: inc/class-page-editjob.php:340
+#: inc/class-page-editjob.php:374
 msgid "Schedule"
 msgstr "Planen"
 
-#: inc/class-page-editjob.php:355
+#: inc/class-page-editjob.php:392
 #, php-format
 msgid "To: %s"
 msgstr "Zu: %s"
 
-#: inc/class-page-editjob.php:390 inc/class-page-jobs.php:137
+#: inc/class-page-editjob.php:431 inc/class-page-jobs.php:137
 msgid "Job Name"
 msgstr "Auftragsname"
 
-#: inc/class-page-editjob.php:393
+#: inc/class-page-editjob.php:434
 msgid "Please name this job."
 msgstr "Bitte benenne diesen Auftrag."
 
-#: inc/class-page-editjob.php:399 inc/class-page-jobs.php:138
+#: inc/class-page-editjob.php:440 inc/class-page-jobs.php:138
 msgid "Notes"
 msgstr "Notizen"
 
-#: inc/class-page-editjob.php:402
+#: inc/class-page-editjob.php:443
 msgid ""
 "Optional notes visible in the jobs overview. Use this to document what this "
 "job backs up, where it sends files, or any other context."
@@ -2734,27 +2770,27 @@ msgstr ""
 "du dokumentieren, was dieser Job sichert, wohin er Dateien sendet oder "
 "sonstige Hintergrundinformationen."
 
-#: inc/class-page-editjob.php:407
+#: inc/class-page-editjob.php:448
 msgid "Job Tasks"
 msgstr "Auftragsdetails"
 
-#: inc/class-page-editjob.php:410
+#: inc/class-page-editjob.php:451
 msgid "This job is a&#160;&hellip;"
 msgstr "Dieser Auftrag ist ein&#160;&hellip;"
 
-#: inc/class-page-editjob.php:413
+#: inc/class-page-editjob.php:454
 msgid "Job tasks"
 msgstr "Auftragsdetails"
 
-#: inc/class-page-editjob.php:431
+#: inc/class-page-editjob.php:472
 msgid "Backup File Creation"
 msgstr "Erstellen der Backup-Datei"
 
-#: inc/class-page-editjob.php:435
+#: inc/class-page-editjob.php:476
 msgid "Archive name"
 msgstr "Archivname"
 
-#: inc/class-page-editjob.php:438
+#: inc/class-page-editjob.php:479
 msgid ""
 "<em>Note</em>: In order for backup file tracking to work, %hash% must be "
 "included anywhere in the archive name."
@@ -2763,152 +2799,156 @@ msgstr ""
 "funktioniert, muss %hash% an einer beliebigen Stelle im Archivnamen "
 "enthalten sein."
 
-#: inc/class-page-editjob.php:442
+#: inc/class-page-editjob.php:483
 msgid "Preview: "
 msgstr "Vorschau: "
 
-#: inc/class-page-editjob.php:444
+#: inc/class-page-editjob.php:485
 msgid "Replacement patterns:"
 msgstr "Ersetzungsmuster:"
 
-#: inc/class-page-editjob.php:445
+#: inc/class-page-editjob.php:486
 #, php-format
 msgid "%d = Two digit day of the month, with leading zeros"
 msgstr "%d = Zweistelliger Tag des Monats, mit führenden Nullen"
 
-#: inc/class-page-editjob.php:446
+#: inc/class-page-editjob.php:487
 msgid "%j = Day of the month, without leading zeros"
 msgstr "%j = Tag des Monats, ohne führende Nullen"
 
-#: inc/class-page-editjob.php:447
+#: inc/class-page-editjob.php:488
 msgid "%m = Two-digit representation of the month, with leading zeros"
 msgstr "%m = Zweistellige Darstellung des Monats mit führenden Nullen"
 
-#: inc/class-page-editjob.php:448
+#: inc/class-page-editjob.php:489
 msgid "%n = Representation of the month (without leading zeros)"
 msgstr "%n = Monat als Zahl (ohne führende Nullen)"
 
-#: inc/class-page-editjob.php:449
+#: inc/class-page-editjob.php:490
 msgid "%Y = Four digit representation of the year"
 msgstr "%Y = Vierstellige Jahreszahl"
 
-#: inc/class-page-editjob.php:450
+#: inc/class-page-editjob.php:491
 msgid "%y = Two digit representation of the year"
 msgstr "%y = Zweistellige Jahreszahl"
 
-#: inc/class-page-editjob.php:451
+#: inc/class-page-editjob.php:492
 msgid "%a = Lowercase ante meridiem (am) and post meridiem (pm)"
 msgstr "%a = Kleingeschriebenes ante meridiem (am) und post meridiem (pm)"
 
-#: inc/class-page-editjob.php:452
+#: inc/class-page-editjob.php:493
 msgid "%A = Uppercase ante meridiem (AM) and post meridiem (PM)"
 msgstr "%A = Großgeschriebenes ante meridiem (AM) and post meridiem (PM)"
 
-#: inc/class-page-editjob.php:453
+#: inc/class-page-editjob.php:494
 msgid "%B = Swatch Internet Time"
 msgstr "%B = Swatch Internet Time"
 
-#: inc/class-page-editjob.php:454
+#: inc/class-page-editjob.php:495
+#, php-format
 msgid "%g = Hour in 12-hour format, without leading zeros"
 msgstr "%g = Stunde im 12-Stunden-Format, ohne führende Nullen"
 
-#: inc/class-page-editjob.php:455
+#: inc/class-page-editjob.php:496
+#, php-format
 msgid "%G = Hour in 24-hour format, without leading zeros"
 msgstr "%G = Stunde im 24-Stunden-Format, ohne führende Nullen"
 
-#: inc/class-page-editjob.php:456
+#: inc/class-page-editjob.php:497
+#, php-format
 msgid "%h = Two-digit hour in 12-hour format, with leading zeros"
 msgstr ""
 "%h = Zweistellige Stunde im 12-Stunden-Format, mit vorangestellten Nullen"
 
-#: inc/class-page-editjob.php:457
+#: inc/class-page-editjob.php:498
+#, php-format
 msgid "%H = Two-digit hour in 24-hour format, with leading zeros"
 msgstr ""
 "%H = Zweistellige Stunde im 24-Stunden-Format, mit vorangestellten Nullen"
 
-#: inc/class-page-editjob.php:458
+#: inc/class-page-editjob.php:499
 msgid "%i = Two digit representation of the minute"
 msgstr "%i = Zweistellige Minute"
 
-#: inc/class-page-editjob.php:459
+#: inc/class-page-editjob.php:500
 #, php-format
 msgid "%s = Two digit representation of the second"
 msgstr "%s = Zweistellige Sekunde"
 
-#: inc/class-page-editjob.php:465 inc/class-page-editjob.php:468
+#: inc/class-page-editjob.php:506 inc/class-page-editjob.php:509
 msgid "Archive Format"
 msgstr "Archiv-Format"
 
-#: inc/class-page-editjob.php:471 inc/class-page-editjob.php:475
+#: inc/class-page-editjob.php:512 inc/class-page-editjob.php:516
 msgid "Zip"
 msgstr "Zip"
 
-#: inc/class-page-editjob.php:476
+#: inc/class-page-editjob.php:517
 msgid ""
 "ZipArchive PHP class is missing, so BackupPilot will use PclZip instead."
 msgstr ""
 "PHP-Klasse ZipArchive fehlt, BackupPilot wird stattdessen PclZip verwenden."
 
-#: inc/class-page-editjob.php:478
+#: inc/class-page-editjob.php:519
 msgid "Tar"
 msgstr "Tar"
 
-#: inc/class-page-editjob.php:480 inc/class-page-editjob.php:484
+#: inc/class-page-editjob.php:521 inc/class-page-editjob.php:525
 msgid "Tar GZip"
 msgstr "Tar GZip"
 
-#: inc/class-page-editjob.php:485
+#: inc/class-page-editjob.php:526
 #, php-format
 msgid "Disabled due to missing %s PHP function."
 msgstr "Deaktiviert, da die PHP-Funktion %s fehlt."
 
-#: inc/class-page-editjob.php:493
+#: inc/class-page-editjob.php:534
 msgid "Job Destination"
 msgstr "Zielverzeichnis des Auftrags"
 
-#: inc/class-page-editjob.php:497 inc/class-page-editjob.php:500
+#: inc/class-page-editjob.php:538 inc/class-page-editjob.php:541
 msgid "Where should your backup file be stored?"
 msgstr "Wo soll die Backup-Datei gespeichert werden?"
 
-#: inc/class-page-editjob.php:518
+#: inc/class-page-editjob.php:559
 msgid "Log Files"
 msgstr "Protokoll-Dateien"
 
-#: inc/class-page-editjob.php:522
+#: inc/class-page-editjob.php:563
 msgid "Send log to email address"
 msgstr "Protokoll-Datei an E-Mail-Adresse senden"
 
-#: inc/class-page-editjob.php:529
+#: inc/class-page-editjob.php:570
 msgid "Email FROM field"
 msgstr "VON-Feld der E-Mail"
 
-#: inc/class-page-editjob.php:535
+#: inc/class-page-editjob.php:576
 msgid "Errors only"
 msgstr "Nur bei Fehlern"
 
-#: inc/class-page-editjob.php:540
+#: inc/class-page-editjob.php:581
 msgid "Send email with log only when errors occur during job execution."
 msgstr ""
 "Sende eine E-Mail mit Protokoll nur dann, wenn während der "
 "Auftragsausführung ein Fehler aufgetreten ist."
 
-#: inc/class-page-editjob.php:551
+#: inc/class-page-editjob.php:592
 msgid "Job Schedule"
 msgstr "Auftragsplanung"
 
-#: inc/class-page-editjob.php:555 inc/class-page-editjob.php:558
+#: inc/class-page-editjob.php:596 inc/class-page-editjob.php:599
 msgid "Start job"
 msgstr "Auftrag starten"
 
-#: inc/class-page-editjob.php:562
+#: inc/class-page-editjob.php:603
 msgid "manually only"
 msgstr "nur manuell"
 
-#: inc/class-page-editjob.php:566
+#: inc/class-page-editjob.php:607
 msgid "with WordPress cron"
 msgstr "mit WordPress Cron"
 
-#: inc/class-page-editjob.php:575
+#: inc/class-page-editjob.php:616
 msgid ""
 "with <a href=\"https://www.easycron.com?ref=36673\" title=\"Affiliate Link!"
 "\">EasyCron.com</a>"
@@ -2916,201 +2956,201 @@ msgstr ""
 "mit <a href=\"https://www.easycron.com?ref=36673\" title=\"Affiliate Link!"
 "\">EasyCron.com</a>"
 
-#: inc/class-page-editjob.php:577
+#: inc/class-page-editjob.php:618
 #, php-format
 msgid "First setup <a href=\"%s\">API Key</a>."
 msgstr "Richten Sie zunächst <a href=\"%s\">den API-Schlüssel</a> ein."
 
-#: inc/class-page-editjob.php:586
+#: inc/class-page-editjob.php:627
 msgid "with a link"
 msgstr "mit einem Link"
 
-#: inc/class-page-editjob.php:594
+#: inc/class-page-editjob.php:635
 msgid "Start job with CLI"
 msgstr "Auftrag per CLI starten"
 
-#: inc/class-page-editjob.php:597
+#: inc/class-page-editjob.php:638
 msgid ""
 "Use <a href=\"http://wp-cli.org/\">WP-CLI</a> to run jobs from commandline."
 msgstr ""
 "Benutze <a href=\"http://wp-cli.org/\">WP-CLI</a>, um Aufträge von der "
 "Kommandozeile aus zu starten."
 
-#: inc/class-page-editjob.php:602
+#: inc/class-page-editjob.php:643
 msgid "Schedule execution time"
 msgstr "Ausführungszeit planen"
 
-#: inc/class-page-editjob.php:606 inc/class-page-editjob.php:609
+#: inc/class-page-editjob.php:647 inc/class-page-editjob.php:650
 msgid "Scheduler type"
 msgstr "Planungstyp"
 
-#: inc/class-page-editjob.php:613
+#: inc/class-page-editjob.php:654
 msgid "basic"
 msgstr "Grundlegend"
 
-#: inc/class-page-editjob.php:617
+#: inc/class-page-editjob.php:658
 msgid "advanced"
 msgstr "erweitert"
 
-#: inc/class-page-editjob.php:646 inc/class-page-editjob.php:714
+#: inc/class-page-editjob.php:692 inc/class-page-editjob.php:762
 msgid "Scheduler"
 msgstr "Planer"
 
-#: inc/class-page-editjob.php:651 inc/class-page-jobs.php:139
+#: inc/class-page-editjob.php:697 inc/class-page-jobs.php:139
 #: inc/class-page-logs.php:165
 msgid "Type"
 msgstr "Typ"
 
-#: inc/class-page-editjob.php:656
+#: inc/class-page-editjob.php:702
 msgid "Hour"
 msgstr "Stunde"
 
-#: inc/class-page-editjob.php:659
+#: inc/class-page-editjob.php:705
 msgid "Minute"
 msgstr "Minute"
 
-#: inc/class-page-editjob.php:663
+#: inc/class-page-editjob.php:709
 msgid "monthly"
 msgstr "monatlich"
 
-#: inc/class-page-editjob.php:665
+#: inc/class-page-editjob.php:711
 msgid "on"
 msgstr "am"
 
-#: inc/class-page-editjob.php:675
+#: inc/class-page-editjob.php:721
 msgid "weekly"
 msgstr "wöchentlich"
 
-#: inc/class-page-editjob.php:677 inc/class-page-editjob.php:784
+#: inc/class-page-editjob.php:724 inc/class-page-editjob.php:832
 msgid "Sunday"
 msgstr "Sonntag"
 
-#: inc/class-page-editjob.php:678 inc/class-page-editjob.php:785
+#: inc/class-page-editjob.php:725 inc/class-page-editjob.php:833
 msgid "Monday"
 msgstr "Montag"
 
-#: inc/class-page-editjob.php:679 inc/class-page-editjob.php:786
+#: inc/class-page-editjob.php:726 inc/class-page-editjob.php:834
 msgid "Tuesday"
 msgstr "Dienstag"
 
-#: inc/class-page-editjob.php:680 inc/class-page-editjob.php:787
+#: inc/class-page-editjob.php:727 inc/class-page-editjob.php:835
 msgid "Wednesday"
 msgstr "Mittwoch"
 
-#: inc/class-page-editjob.php:681 inc/class-page-editjob.php:788
+#: inc/class-page-editjob.php:728 inc/class-page-editjob.php:836
 msgid "Thursday"
 msgstr "Donnerstag"
 
-#: inc/class-page-editjob.php:682 inc/class-page-editjob.php:789
+#: inc/class-page-editjob.php:729 inc/class-page-editjob.php:837
 msgid "Friday"
 msgstr "Freitag"
 
-#: inc/class-page-editjob.php:683 inc/class-page-editjob.php:790
+#: inc/class-page-editjob.php:730 inc/class-page-editjob.php:838
 msgid "Saturday"
 msgstr "Samstag"
 
-#: inc/class-page-editjob.php:693
+#: inc/class-page-editjob.php:741
 msgid "daily"
 msgstr "täglich"
 
-#: inc/class-page-editjob.php:703
+#: inc/class-page-editjob.php:751
 msgid "hourly"
 msgstr "stündlich"
 
-#: inc/class-page-editjob.php:717
+#: inc/class-page-editjob.php:765
 msgid "Minutes:"
 msgstr "Minuten:"
 
-#: inc/class-page-editjob.php:719 inc/class-page-editjob.php:732
-#: inc/class-page-editjob.php:744 inc/class-page-editjob.php:758
-#: inc/class-page-editjob.php:780
+#: inc/class-page-editjob.php:767 inc/class-page-editjob.php:780
+#: inc/class-page-editjob.php:792 inc/class-page-editjob.php:806
+#: inc/class-page-editjob.php:828
 msgid "Any (*)"
 msgstr "Alle (*)"
 
-#: inc/class-page-editjob.php:729
+#: inc/class-page-editjob.php:777
 msgid "Hours:"
 msgstr "Stunden:"
 
-#: inc/class-page-editjob.php:742
+#: inc/class-page-editjob.php:790
 msgid "Day of Month:"
 msgstr "Tag des Monats:"
 
-#: inc/class-page-editjob.php:756
+#: inc/class-page-editjob.php:804
 msgid "Month:"
 msgstr "Monat:"
 
-#: inc/class-page-editjob.php:762
+#: inc/class-page-editjob.php:810
 msgid "January"
 msgstr "Januar"
 
-#: inc/class-page-editjob.php:763
+#: inc/class-page-editjob.php:811
 msgid "February"
 msgstr "Februar"
 
-#: inc/class-page-editjob.php:764
+#: inc/class-page-editjob.php:812
 msgid "March"
 msgstr "März"
 
-#: inc/class-page-editjob.php:765
+#: inc/class-page-editjob.php:813
 msgid "April"
 msgstr "April"
 
-#: inc/class-page-editjob.php:766
+#: inc/class-page-editjob.php:814
 msgid "May"
 msgstr "Mai"
 
-#: inc/class-page-editjob.php:767
+#: inc/class-page-editjob.php:815
 msgid "June"
 msgstr "Juni"
 
-#: inc/class-page-editjob.php:768
+#: inc/class-page-editjob.php:816
 msgid "July"
 msgstr "Juli"
 
-#: inc/class-page-editjob.php:769
+#: inc/class-page-editjob.php:817
 msgid "August"
 msgstr "August"
 
-#: inc/class-page-editjob.php:770
+#: inc/class-page-editjob.php:818
 msgid "September"
 msgstr "September"
 
-#: inc/class-page-editjob.php:771
+#: inc/class-page-editjob.php:819
 msgid "October"
 msgstr "Oktober"
 
-#: inc/class-page-editjob.php:772
+#: inc/class-page-editjob.php:820
 msgid "November"
 msgstr "November"
 
-#: inc/class-page-editjob.php:773
+#: inc/class-page-editjob.php:821
 msgid "December"
 msgstr "Dezember"
 
-#: inc/class-page-editjob.php:778
+#: inc/class-page-editjob.php:826
 msgid "Day of Week:"
 msgstr "Wochentag:"
 
-#: inc/class-page-editjob.php:814
+#: inc/class-page-editjob.php:866
 msgid "Save changes"
 msgstr "Änderungen speichern"
 
-#: inc/class-page-editjob.php:903
+#: inc/class-page-editjob.php:973
 msgid ""
 "Working as <a href=\"http://wikipedia.org/wiki/Cron\">Cron</a> schedule:"
 msgstr ""
 "Als <a href=\\\"http://de.wikipedia.org/wiki/Cron\\\">Cron-Job</a> ausführen:"
 
-#: inc/class-page-editjob.php:912
+#: inc/class-page-editjob.php:983
 #, php-format
 msgid "ATTENTION: Job runs every %d minutes!"
 msgstr "ACHTUNG: Auftrag läuft alle %d Minuten!"
 
-#: inc/class-page-editjob.php:916
+#: inc/class-page-editjob.php:989
 msgid "ATTENTION: Can't calculate cron!"
 msgstr "ACHTUNG: Kann cron nicht berechnen!"
 
-#: inc/class-page-editjob.php:919
+#: inc/class-page-editjob.php:993
 msgid "Next runtime:"
 msgstr "Nächster Durchlauf:"
 
@@ -3147,72 +3187,72 @@ msgstr "Kopieren"
 msgid "Last log"
 msgstr "Letztes Log"
 
-#: inc/class-page-jobs.php:308
+#: inc/class-page-jobs.php:309
 msgid "Not needed or set"
 msgstr "Nicht gebraucht oder eingestellt"
 
-#: inc/class-page-jobs.php:330
+#: inc/class-page-jobs.php:332
 #, php-format
 msgid "Running for: %s seconds"
 msgstr "Läuft seit %s Sekunden"
 
-#: inc/class-page-jobs.php:337 inc/class-page-jobs.php:348
+#: inc/class-page-jobs.php:343 inc/class-page-jobs.php:357
 #, php-format
 msgid "Cron: %s"
 msgstr "Cron: %s"
 
-#: inc/class-page-jobs.php:337
+#: inc/class-page-jobs.php:343
 #, php-format
 msgid "%1$s at %2$s by WP-Cron"
 msgstr "%1$s um %2$s von WP-Cron"
 
-#: inc/class-page-jobs.php:348
+#: inc/class-page-jobs.php:357
 #, php-format
 msgid "%1$s at %2$s by EasyCron"
 msgstr "%1$s um %2$s von EasyCron"
 
-#: inc/class-page-jobs.php:356
+#: inc/class-page-jobs.php:366
 msgid "External link"
 msgstr "Externer Link"
 
-#: inc/class-page-jobs.php:359
+#: inc/class-page-jobs.php:369
 msgid "Inactive"
 msgstr "Inaktiv"
 
-#: inc/class-page-jobs.php:381
+#: inc/class-page-jobs.php:393
 #, php-format
 msgid "Runtime: %d seconds"
 msgstr "Ausführungszeit: %d Sekunden"
 
-#: inc/class-page-jobs.php:385
+#: inc/class-page-jobs.php:397
 msgid "not yet"
 msgstr "noch nicht"
 
-#: inc/class-page-jobs.php:391
+#: inc/class-page-jobs.php:406
 msgid "Download last backup"
 msgstr "Letztes Backup herunterladen"
 
-#: inc/class-page-jobs.php:400
+#: inc/class-page-jobs.php:417
 msgid "Log"
 msgstr "Protokoll"
 
-#: inc/class-page-jobs.php:441
+#: inc/class-page-jobs.php:467
 msgid "Copy of"
 msgstr "Kopie von"
 
-#: inc/class-page-jobs.php:501
+#: inc/class-page-jobs.php:532
 #, php-format
 msgid "The job \"%s\" destination \"%s\" is not configured properly"
-msgstr "Das Ziel „%2$s“ des Auftrags „%1$s“ ist nicht korrekt konfiguriert."
+msgstr "Das Ziel „%2$s“ des Auftrags „%1$s“ ist nicht korrekt konfiguriert"
 
-#: inc/class-page-jobs.php:507
+#: inc/class-page-jobs.php:538
 #, php-format
 msgid "The job \"%s\" needs properly configured destinations to run!"
 msgstr ""
 "Der Aufrag „%s“ benötigt ein korrekt konfiguriertes Ziel, um ausgeführt "
 "werden zu können!"
 
-#: inc/class-page-jobs.php:533
+#: inc/class-page-jobs.php:565
 #, php-format
 msgid ""
 "Job \"%s\" has started, but not responded for 10 seconds. Please check <a "
@@ -3221,50 +3261,50 @@ msgstr ""
 "Auftrag „%1$s“ wurde gestartet, hat aber seit 10 Sekunden nicht geantwortet. "
 "Bitte überprüfe die <a href=\"%2$s\">Informationen</a>."
 
-#: inc/class-page-jobs.php:540
+#: inc/class-page-jobs.php:572
 #, php-format
 msgid "Job \"%s\" started."
 msgstr "Auftrag „%s“ wurde gestartet."
 
-#: inc/class-page-jobs.php:554 inc/class-wp-cli.php:63
+#: inc/class-page-jobs.php:586 inc/class-wp-cli.php:63
 msgid "Job will be terminated."
 msgstr "Auftrag wird beendet."
 
-#: inc/class-page-jobs.php:664
+#: inc/class-page-jobs.php:696
 #, php-format
 msgid "%s &rsaquo; Jobs"
 msgstr "%s &rsaquo; Aufträge"
 
-#: inc/class-page-jobs.php:692
+#: inc/class-page-jobs.php:724
 #, php-format
 msgid "Job currently running: %s"
 msgstr "Aktuell laufender Auftrag: %s"
 
-#: inc/class-page-jobs.php:693
+#: inc/class-page-jobs.php:725
 msgid "Warnings:"
 msgstr "Warnungen:"
 
-#: inc/class-page-jobs.php:694
+#: inc/class-page-jobs.php:726
 msgid "Errors:"
 msgstr "Fehler:"
 
-#: inc/class-page-jobs.php:695
+#: inc/class-page-jobs.php:727
 msgid "Display working log"
 msgstr "Auftragslog anzeigen"
 
-#: inc/class-page-jobs.php:697
+#: inc/class-page-jobs.php:729
 msgid "Close working screen"
 msgstr "Arbeitsfläche schließen"
 
-#: inc/class-page-jobs.php:697
+#: inc/class-page-jobs.php:729
 msgid "Close"
 msgstr "Schließen"
 
-#: inc/class-page-jobs.php:888
+#: inc/class-page-jobs.php:920
 msgid "Job completed"
 msgstr "Auftrag vollständig"
 
-#: inc/class-page-jobs.php:894
+#: inc/class-page-jobs.php:926
 #, php-format
 msgid ""
 "Job has done with warnings in %s seconds. Please resolve them for correct "
@@ -3814,7 +3854,7 @@ msgid ""
 msgstr ""
 "Erzeugt die Ausgabe von Leerzeichen an den Client, wenn ein Auftrag "
 "ausgeführt wird. Dies kann in einigen Fällen helfen, dass ein Auftrag nicht "
-"abgebrochen wird. Du musst diese Option testen. "
+"abgebrochen wird. Du musst diese Option testen."
 
 #: inc/class-page-settings.php:910
 msgid "Windows IIS compatibility"
@@ -4153,7 +4193,7 @@ msgstr "Auftrags-ID existiert nicht!"
 
 #: inc/class-wp-cli.php:58
 msgid "Nothing to abort!"
-msgstr "Es gibt nichts abzubrechen."
+msgstr "Es gibt nichts abzubrechen!"
 
 #: inc/class-wp-cli.php:112
 msgid "No job running"
@@ -4169,7 +4209,7 @@ msgstr "Die angegebene URI ist ungültig."
 
 #: src/Http/Message/Decorator/JsonRequest.php:26
 msgid "Request body is not valid JSON"
-msgstr "Der Request-Body ist kein gültiges JSON."
+msgstr "Der Request-Body ist kein gültiges JSON"
 
 #: src/Http/Message/Decorator/JsonRequest.php:43
 #, php-format
@@ -4202,7 +4242,7 @@ msgid ""
 "This does not appear to be a WXR file, missing/invalid WXR version number"
 msgstr ""
 "Dies scheint keine WXR-Datei zu sein. Die WXR-Versionsnummer fehlt oder ist "
-"ungültig."
+"ungültig"
 
 #: vendor/inpsyde/plugin-environment-checker/src/EnvironmentChecker.php:49
 #, php-format

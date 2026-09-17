@@ -5,7 +5,7 @@
  * Description: WordPress Backup Plugin based on the fantastic BackWPup (GPLv2+)
  * Author: Patrick Mauersberger
  * Author URI: http://dev.patrick-mauersberger.de
- * Version: 1.0.6
+ * Version: 1.0.7
  * Text Domain: backuppilot
  * Domain Path: /languages/
  * Network: true
@@ -72,6 +72,11 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
                 }
 
                 else {
+                    // Watch which arg is being dispatched, ahead of the callback that acts on it,
+                    // so a fatal error during the dispatch itself can still be reported afterwards
+                    add_action( 'backuppilot_cron', array( 'BackupPilot_Cron', 'watch_dispatch' ), 0 );
+                    register_shutdown_function( array( 'BackupPilot_Cron', 'notify_missed_dispatch' ) );
+
                     // Add cron actions
                     add_action( 'backuppilot_cron', array( 'BackupPilot_Cron', 'run' ) );
                     add_action( 'backuppilot_check_cleanup', array( 'BackupPilot_Cron', 'check_cleanup' ) );
