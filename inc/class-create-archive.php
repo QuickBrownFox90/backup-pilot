@@ -773,7 +773,12 @@ class BackupPilot_Create_Archive {
             }
         }
 
+        // Get folder stat; skip the header if the folder is not readable (e.g. open_basedir, permissions).
         $file_stat = @stat( $folder_name );
+        if ( ! $file_stat ) {
+            return true;
+        }
+
         // Retrieve owner and group for the file.
         list( $owner, $group ) = $this->posix_getpwuid( $file_stat['uid'], $file_stat['gid'] );
 
@@ -913,10 +918,16 @@ class BackupPilot_Create_Archive {
         $group = esc_html__( 'Unknown', 'backuppilot' );
 
         if ( function_exists( 'posix_getpwuid' ) ) {
-            $info  = posix_getpwuid( $uid );
-            $owner = $info['name'];
-            $info  = posix_getgrgid( $gid );
-            $group = $info['name'];
+            // Both lookups return false if the ID is not known to the system (e.g. containers, shared hosting).
+            $info = posix_getpwuid( $uid );
+            if ( is_array( $info ) && isset( $info['name'] ) ) {
+                $owner = $info['name'];
+            }
+
+            $info = posix_getgrgid( $gid );
+            if ( is_array( $info ) && isset( $info['name'] ) ) {
+                $group = $info['name'];
+            }
         }
 
         return [

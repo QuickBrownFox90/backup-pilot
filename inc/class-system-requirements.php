@@ -8,14 +8,14 @@ class BackupPilot_System_Requirements {
      *
      * @var string The minimum version required for the plugin
      */
-    private static $wp_minimum_version = '3.9';
+    private static $wp_minimum_version = '6.0';
 
     /**
      * Php Minimum Version Required
      *
      * @var string The minimum version required by the plugin
      */
-    private static $php_minimum_version = '5.6.0';
+    private static $php_minimum_version = '8.1.0';
 
     /**
      * Mysql Minimum version required by the plugin

@@ -5,7 +5,9 @@
  * Description: WordPress Backup Plugin based on the fantastic BackWPup (GPLv2+)
  * Author: Patrick Mauersberger
  * Author URI: http://dev.patrick-mauersberger.de
- * Version: 1.0.7
+ * Version: 1.0.8
+ * Requires PHP: 8.1
+ * Requires at least: 6.0
  * Text Domain: backuppilot
  * Domain Path: /languages/
  * Network: true
@@ -558,20 +560,30 @@ if ( ! class_exists( 'BackupPilot', false ) ) {
     $system_tests        = new BackupPilot_System_Tests( $system_requirements );
 
 
-    // Don't activate on anything less than PHP 8.1 or WordPress 6.0
+    // Don't load on anything less than PHP 8.1 or WordPress 6.0.
+    // This file and the two system classes above must stay free of PHP 8 syntax, otherwise
+    // this check can never run on the old versions it is meant to catch.
     if ( ! $system_tests->is_php_version_compatible() || ! $system_tests->is_wp_version_compatible() ) {
 
         require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
         deactivate_plugins( __FILE__ );
 
-        die(
-            sprintf(
-                esc_html__( 'BackupPilot requires PHP version %1$s with spl extension or greater and WordPress %2$s or greater.', 'backuppilot' ),
-                $system_requirements->php_minimum_version(),
-                $system_requirements->wp_minimum_version()
-            )
+        $backuppilot_requirements_message = sprintf(
+            /* translators: $1 is the minimum PHP version. $2 is the minimum WordPress version. */
+            esc_html__( 'BackupPilot requires PHP version %1$s with spl extension or greater and WordPress %2$s or greater.', 'backuppilot' ),
+            $system_requirements->php_minimum_version(),
+            $system_requirements->wp_minimum_version()
         );
+
+        add_action(
+            'admin_notices',
+            function () use ( $backuppilot_requirements_message ) {
+                echo '<div class="notice notice-error"><p>' . $backuppilot_requirements_message . '</p></div>';
+            }
+        );
+
+        return;
     }
 
     //Start Plugin
